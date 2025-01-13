@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Slot : MonoBehaviour
 {
-    public int x, y;
     [SerializeField] private bool isEmpty = false;
     [SerializeField] private Tray currentTray;
     public bool IsEmpty()

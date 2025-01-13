@@ -27,7 +27,6 @@ public class DragDropSystem : MonoBehaviour
                 if (hit.collider != null && hit.collider.CompareTag("slot"))
                 {
                     ReleaseTrayInToSlot(hit);
-
                 }
                 else
                 {

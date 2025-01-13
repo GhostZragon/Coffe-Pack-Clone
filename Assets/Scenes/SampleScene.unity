@@ -1575,6 +1575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff325b0ff15bd2f498a8d971a8e36362, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCamera: {fileID: 963194227}
   slots:
   - {fileID: 761134878}
   - {fileID: 2055770785}
@@ -1592,13 +1593,14 @@ MonoBehaviour:
   - {fileID: 958547284}
   - {fileID: 1526506064}
   - {fileID: 1491501585}
-  mapBounds:
-    m_Center: {x: -0.94000006, y: -0.17875, z: -0.4000001}
-    m_Extent: {x: 2.25, y: 0.17875, z: 2.25}
   rowAndCol: {x: 0, y: 0}
   spacing: 1
   cellWidth: 0.25
   cellDepth: 0.25
+  cameraOffsetZ: -7.25
+  bounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
 --- !u!114 &2082228493
 MonoBehaviour:
   m_ObjectHideFlags: 0
