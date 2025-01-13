@@ -23,4 +23,8 @@ public class Slot : MonoBehaviour
         currentTray = tray;
     }
 
+    public void Remove()
+    {
+        currentTray = null;
+    }
 }

@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.annulusgames.lit-motion": "2.0.0",
+    "com.annulusgames.lit-motion.animation": "2.0.0",
     "com.dbrizov.naughtyattributes": "2.1.4",
     "com.needle.console": "2.4.2",
     "com.unity.collab-proxy": "2.6.0",
