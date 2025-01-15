@@ -62,6 +62,7 @@ MonoBehaviour:
   index: 0
   maxItem: 6
   size: {x: 0.2, y: 0.2, z: 0.2}
+  randomCount: 3
 --- !u!65 &1875359869581183425
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -179,6 +180,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

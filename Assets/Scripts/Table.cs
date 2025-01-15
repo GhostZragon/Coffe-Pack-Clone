@@ -1,17 +1,15 @@
 using NaughtyAttributes;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Table : MonoBehaviour
 {
+    public static Table Instance;
+    
     [SerializeField] private Camera mainCamera;
     
     [SerializeField] private List<Slot> slots;
-    [SerializeField] private Vector2Int rowAndCol;
     [SerializeField] private float spacing = 1f;
     [SerializeField] private float cellWidth = .25f;
     [SerializeField] private float cellDepth = .25f;
@@ -22,11 +20,20 @@ public class Table : MonoBehaviour
 
     private float startX, startZ;
     private float posX, posZ;
-
+    private int rows, columns;
     [SerializeField] private Bounds bounds;
+
+    private readonly Vector2Int[] directions =
+    {
+        Vector2Int.up,
+        Vector2Int.right,
+        Vector2Int.down,
+        Vector2Int.left
+    };
     
     private void Awake()
     {
+        Instance = this;
         tableMap = new();
         CreateTable();
     }
@@ -49,14 +56,8 @@ public class Table : MonoBehaviour
     {
         isRefresh = true;
 
-        int count = slots.Count;
-        //int row, col;
-
-        //row = rowAndCol.x;
-        //col = rowAndCol.y;
-
-        int rows = 4;
-        int columns = 4;
+        rows = 4;
+        columns = 4;
         
         startX = -(columns * (cellWidth + spacing) - spacing) / 2;
         startZ = -(rows * (cellDepth + spacing) - spacing) / 2;
@@ -86,7 +87,7 @@ public class Table : MonoBehaviour
             child.name = $"Slot; {row} : {col}";
             // Create cell to hold data
             Cell cell = new Cell();
-            cell.actualCell = child.gameObject;
+            cell.actualCell = child.gameObject.GetComponent<Slot>();
             // create table 
             var position = new Vector2Int(row, col);
             tableMap[position] = cell;
@@ -112,6 +113,23 @@ public class Table : MonoBehaviour
 
         return col;
     }
+
+    public Vector2Int TryToGetCell(Vector3 position)
+    {
+        int x = GetGridCoordinates(position.x, startX, cellWidth, spacing);
+        int z = GetGridCoordinates(position.z, startZ, cellDepth, spacing);
+
+        if (tableMap.ContainsKey(new Vector2Int(x, z)))
+        {
+            Debug.Log($"!! You have click in cell {x} {z}", gameObject);
+        }
+        else
+        {
+            Debug.LogWarning($"You dont have this cell in table, pos{position},x{x}, z{z} ",gameObject);
+        }
+
+        return new Vector2Int(x, z);
+    }
     
     [Button]
     private void SetCameraToCenterOfTable()
@@ -120,12 +138,39 @@ public class Table : MonoBehaviour
         mainCamera.transform.position = 
             new Vector3(centerPosition.x, mainCamera.transform.position.y, centerPosition.z + cameraOffsetZ);
     }
-    
-    
+
+
+    public void Checking(Slot slot)
+    {
+        var checkingCell = TryToGetCell(slot.transform.position);
+        int checkX, checkY;
+        Vector2Int checkingPosition = Vector2Int.zero;
+        Debug.Log("================Checking================");
+        foreach (var dir in directions)
+        {
+            checkX = dir.x + checkingCell.x;
+            checkY = dir.y + checkingCell.y;
+           
+            if (checkX >= 0 && checkX < rows && checkY >= 0 && checkY < columns)
+            {
+                checkingPosition.x = checkX;
+                checkingPosition.y = checkY;
+                Debug.Log($"Directions: {dir.x} {dir.y}");
+                var cell = tableMap[checkingPosition].actualCell;
+
+                if (!cell.IsEmpty())
+                {
+                    continue;
+                }
+                Debug.Log("Can checking here",gameObject);
+                
+            }
+        }
+    }
 }
 [Serializable]
 public class Cell
 {
     public Vector2Int position;
-    public GameObject actualCell;
+    public Slot actualCell;
 }

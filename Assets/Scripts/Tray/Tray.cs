@@ -3,11 +3,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Tray : MonoBehaviour
 {
-    [Header("Stand Point")]
-    [SerializeField] private Transform[] points;
+    [Header("Stand Point")] [SerializeField]
+    private Transform[] points;
+
     [SerializeField] private List<Item> items = new();
     [SerializeField] private Transform pointHolder;
     [SerializeField] private Transform itemHolder;
@@ -15,10 +17,18 @@ public class Tray : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private int index;
     [SerializeField] private int maxItem;
-    [Header("Gizmos")]
+    [Header("Gizmos")] 
     [SerializeField] private Vector3 size;
+    [Header("Item settings")]
+    public int randomCount;
 
-    public int Index { get => index; set => index = value; }
+    private const int SLOT_INDEX = -1;
+
+    public int Index
+    {
+        get => index;
+        set => index = value;
+    }
 
     private void Awake()
     {
@@ -34,13 +44,6 @@ public class Tray : MonoBehaviour
         }
     }
 
-    private void SetStandPosition(Item item, int index)
-    {
-        item.name = "Item_" + index;
-        item.transform.parent = itemHolder;
-        item.transform.position = points[index].transform.position;
-    }
-
     public void Remove(Item item)
     {
         if (items.Contains(item))
@@ -49,15 +52,57 @@ public class Tray : MonoBehaviour
         }
     }
 
+
+    private void SetStandPosition(Item item, int index)
+    {
+        item.name = "Item_" + index;
+        item.transform.parent = itemHolder;
+        item.transform.position = points[index].transform.position;
+    }
+
+   
     [Button]
     public void GoBack()
     {
+        if (IsInSlot()) return;
+        
         var stand = TrayManager.instance.GetStandPosition(index);
-        if(stand)
-            transform.position = stand.position;
+        transform.position = stand.position;
     }
 
-    #region  Debug
+    public void DisableCollider()
+    {
+        collider.enabled = false;
+    }
+
+    public void EnableCollider()
+    {
+        collider.enabled = true;
+    }
+
+    public void SetTrayToSlot()
+    {
+        index = -1;
+    }
+
+    public bool IsInSlot()
+    {
+        return index == SLOT_INDEX;
+    }
+
+    [Button]
+    public void RequestItem()
+    {
+        int count = randomCount > maxItem ? maxItem : Random.Range(1, randomCount);
+        for (int i = 0; i < count; i++)
+        {
+            var item = ItemMananger.Instance.GetNewItem();
+            
+            Add(item);
+        }
+    }
+    
+    #region Debug
 
     [Button]
     private void CreatePoint()
@@ -96,19 +141,8 @@ public class Tray : MonoBehaviour
         }
     }
 
-    public void DisableCollider()
-    {
-        collider.enabled = false;
-    }
 
-    public void EnableCollider()
-    {
-        collider.enabled = true;
-    }
-
-    public void SetToSlot()
-    {
-        index = -1;
-    }
     #endregion Debug
+
+    
 }

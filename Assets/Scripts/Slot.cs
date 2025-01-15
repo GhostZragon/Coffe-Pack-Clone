@@ -1,12 +1,30 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using LitMotion;
+using LitMotion.Extensions;
+using NaughtyAttributes;
 using UnityEngine;
 
 public class Slot : MonoBehaviour
 {
     [SerializeField] private bool isEmpty = false;
     [SerializeField] private Tray currentTray;
+    
+    [Header("Settings")]
+    [SerializeField] private float scaleUpTime = .25f;
+    [SerializeField] private float scaleDownTime = .25f;
+    [SerializeField] private float scaleValue = 1.3f;
+    
+    private Vector3 currentScale;
+    private CompositeMotionHandle handles;
+    
+    private void Awake()
+    {
+        currentScale = transform.localScale;
+        handles = new CompositeMotionHandle();
+    }
+
     public bool IsEmpty()
     {
         return isEmpty;
@@ -20,6 +38,8 @@ public class Slot : MonoBehaviour
     public void Add(Tray tray)
     {
         currentTray = tray;
+        currentTray.SetTrayToSlot();
+        currentTray.transform.position = transform.position;
     }
 
     public void Remove()
@@ -27,13 +47,30 @@ public class Slot : MonoBehaviour
         currentTray = null;
     }
 
-    public void Select()
+    
+    [Button]
+    public void OnSelect()
     {
-        
+        Debug.Log("Select Slot");
+        ScaleSlot(scaleUpTime,transform.localScale, currentScale *scaleValue);
     }
 
-    public void DeSelet()
+    [Button]
+    public void UnSelect()
     {
-        
+        Debug.Log("Un Select Slot");
+
+        ScaleSlot(scaleDownTime,transform.localScale, currentScale);
     }
+
+    private void ScaleSlot(float time, Vector3 currentScale, Vector3 targetScale)
+    {
+        handles.Cancel();
+        var motions = LMotion.
+            Create(currentScale, targetScale, time).
+            BindToLocalScale(transform).
+            AddTo(gameObject);
+        handles.Add(motions);
+    }
+
 }
