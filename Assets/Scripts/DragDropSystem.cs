@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using LitMotion;
+using LitMotion.Extensions;
 using UnityEngine;
 
 public class DragDropSystem : MonoBehaviour
@@ -8,8 +10,12 @@ public class DragDropSystem : MonoBehaviour
     [SerializeField] private Vector2 inputDirection;
     [SerializeField] private float dragSpeed = 5;
     [SerializeField] private Tray selectionObject;
+
+
+    private Camera mainCam;
     void Start()
     {
+        mainCam = Camera.main;
     }
 
     private void HandleSelectionObject()
@@ -22,21 +28,8 @@ public class DragDropSystem : MonoBehaviour
             }
             else
             {
-                var hit = CastRay();
-                // try to put tray in to slot
-                if (hit.collider != null && hit.collider.CompareTag("slot"))
-                {
-                    ReleaseTrayInToSlot(hit);
-                }
-                else
-                {
-                    selectionObject.GoBack();
-                    selectionObject.EnableCollider();
-
-                }
-
-
-
+                selectionObject.GoBack();
+                selectionObject.EnableCollider();
                 selectionObject = null;
             }
         }
@@ -47,20 +40,61 @@ public class DragDropSystem : MonoBehaviour
             Vector3 mousePosition = Input.mousePosition;
 
             // Get the current depth (distance from camera) of the object
-            float objectDepth = Camera.main.WorldToScreenPoint(selectionObject.transform.position).z;
+            float objectDepth = mainCam.WorldToScreenPoint(selectionObject.transform.position).z;
 
             // Create a screen space position with the correct depth
             Vector3 screenPosition = new Vector3(mousePosition.x, mousePosition.y, objectDepth);
 
             // Convert screen position to world position
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
+            Vector3 worldPosition = mainCam.ScreenToWorldPoint(screenPosition);
 
             // Update object position, maintaining a fixed height
             selectionObject.transform.position = new Vector3(worldPosition.x, .25f, worldPosition.z);
+
+            
+            Debug.DrawRay(selectionObject.transform.position, Vector3.down, Color.red);
+           
+            CastSlotHandle();
+        }
+    }
+
+    [SerializeField] private GameObject selectionSlot;
+
+    private void CastSlotHandle()
+    {
+        var rayHitSlot = new Ray(selectionObject.transform.position, Vector3.down);
+
+        Physics.Raycast(rayHitSlot,out RaycastHit raycastHit);
+        if (raycastHit.collider != null && raycastHit.collider.CompareTag("slot"))
+        {
+            var hitSlot = raycastHit.collider.gameObject;
+            if (selectionSlot != null)
+            {
+                // if new slot different to current slot
+                // then replace that
+                if (!Equals(selectionSlot, hitSlot))
+                {
+                    Debug.Log($"Replace {selectionSlot.name} by {hitSlot.name}");
+                    selectionSlot = hitSlot;
+                }
+                
+                
+            }
+            else
+            {
+                // update current slot
+                Debug.Log($"Replace {selectionSlot?.name} by {hitSlot.name}");
+                selectionSlot = hitSlot;
+            }
+        }
+        else
+        {
+            Debug.Log($"Release exit slot");
+            selectionSlot = null;
         }
 
     }
-
+    
     private void ReleaseTrayInToSlot(RaycastHit hit)
     {
         Debug.Log(hit.collider.name, hit.collider.gameObject);
@@ -85,14 +119,13 @@ public class DragDropSystem : MonoBehaviour
         Debug.Log("Try find drag item");
         if (hit.collider != null && hit.collider.CompareTag("drag"))
         {
-
             if (hit.collider.TryGetComponent(out Tray tray))
             {
                 selectionObject = tray;
                 selectionObject.DisableCollider();
             }
-            Debug.Log("Finded");
 
+            Debug.Log("Finded");
         }
     }
 
@@ -112,11 +145,5 @@ public class DragDropSystem : MonoBehaviour
         return hit;
     }
 
-    private RaycastHit CastRayFromSelectionObject()
-    {
-        Ray ray = new Ray(selectionObject.transform.position, Vector3.down);
-        RaycastHit hit;
-        Physics.Raycast(ray, out hit, Mathf.Infinity);
-        return hit;
-    }
+   
 }

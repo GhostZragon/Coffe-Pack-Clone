@@ -26,4 +26,14 @@ public class Slot : MonoBehaviour
     {
         currentTray = null;
     }
+
+    public void Select()
+    {
+        
+    }
+
+    public void DeSelet()
+    {
+        
+    }
 }
