@@ -144,37 +144,142 @@ public class Table : MonoBehaviour
 
     List<Tray> emptyTray = new();
     List<Tray> processTray = new();
-    public void Checking(Slot slot, string itemId = null)
-    {
-        var checkingCell = TryToGetCell(slot.transform.position);
-        int checkX, checkY;
-        Vector2Int checkingPosition = Vector2Int.zero;
-        Debug.Log("================Checking================");
-     
-        foreach (var dir in directions)
-        {
-            checkX = dir.x + checkingCell.x;
-            checkY = dir.y + checkingCell.y;
-           
-            if (IsValidSlot(checkX,checkY))
-            {
-                checkingPosition.x = checkX;
-                checkingPosition.y = checkY;
-                Debug.Log($"Directions: {dir.x} {dir.y}");
-                var tableSlot = tableMap[checkingPosition].actualCell;
 
-                if (tableSlot.IsEmpty())
-                {
-                    continue;
-                }
-                
-                Debug.Log($"Can checking here {tableSlot.GetTray() != null}",gameObject);
-                // get tray of slot
-            }
-        }
-        
+    [Serializable]
+    public class VisitedObject
+    {
+        public string itemID;
+        public List<Vector2Int> positions;
+    }
+    [SerializeField] private List<VisitedObject> visitedItems = new List<VisitedObject>();
+
+public void Checking(Slot slot, string itemId = null)
+{
+    // Khởi tạo lại danh sách khi bắt đầu một lượt kiểm tra mới
+    if (itemId == null)
+    {
+        visitedItems.Clear();
     }
 
+    var checkingCell = TryToGetCell(slot.transform.position);
+    Vector2Int currentPos = new Vector2Int(checkingCell.x, checkingCell.y);
+
+    // Kiểm tra xem vị trí này đã được thăm với item hiện tại chưa
+    if (itemId != null)
+    {
+        var currentItemPath = GetOrCreateVisitedObject(itemId);
+        if (currentItemPath.positions.Contains(currentPos))
+        {
+            return;
+        }
+        // Thêm vị trí hiện tại vào danh sách của item
+        currentItemPath.positions.Add(currentPos);
+        Debug.Log($"Thêm vị trí ({currentPos.x}, {currentPos.y}) cho item {itemId}");
+    }
+
+    foreach (var dir in directions)
+    {
+        int checkX = dir.x + checkingCell.x;
+        int checkY = dir.y + checkingCell.y;
+   
+        if (IsValidSlot(checkX, checkY))
+        {
+            Vector2Int checkingPosition = new Vector2Int(checkX, checkY);
+            var tableSlot = tableMap[checkingPosition].actualCell;
+
+            if (tableSlot.IsEmpty())
+            {
+                Debug.Log($"Ô ({checkX}, {checkY}) trống, bỏ qua");
+                continue;
+            }
+
+            // Trường hợp chưa có itemId cụ thể
+            if (itemId == null)
+            {
+                foreach (var item in slot.GetTray().items)
+                {
+                    if (tableSlot.GetTray().IsContainItem(item.itemID))
+                    {
+                        Debug.Log($"Bắt đầu kiểm tra cho item {item.itemID} tại ({checkX}, {checkY})");
+                        Checking(tableSlot, item.itemID);
+                    }
+                }
+            }
+            // Trường hợp đã có itemId cụ thể
+            else if (tableSlot.GetTray().IsContainItem(itemId))
+            {
+                Debug.Log($"Tiếp tục kiểm tra item {itemId} tại ({checkX}, {checkY})");
+                Checking(tableSlot, itemId);
+            }
+        }
+    }
+
+    Processing();
+}
+
+// Phương thức hỗ trợ để lấy hoặc tạo mới VisitedObject cho một item
+private VisitedObject GetOrCreateVisitedObject(string itemId)
+{
+    // Tìm VisitedObject cho itemId trong danh sách
+    var visitedObject = visitedItems.Find(v => v.itemID == itemId);
+    
+    // Nếu chưa có, tạo mới và thêm vào danh sách
+    if (visitedObject == null)
+    {
+        visitedObject = new VisitedObject
+        {
+            itemID = itemId,
+            positions = new List<Vector2Int>()
+        };
+        visitedItems.Add(visitedObject);
+    }
+    
+    return visitedObject;
+}
+
+private void Processing()
+{
+    foreach (var item in visitedItems)
+    {
+        List<Cell> cells = new List<Cell>();
+        foreach (var pos in item.positions)
+        {
+            cells.Add(tableMap[pos]);
+        }
+
+        while (cells.Count > 0)
+        {
+            Cell source = cells[0];
+            cells.RemoveAt(0);
+            MergeToSource(source, cells, item.itemID);
+        }
+    }
+}
+
+private void MergeToSource(Cell source, List<Cell> anothers,string itemID)
+{
+    var sourceTray = source.actualCell.GetTray();
+    int index = 0;
+    while (sourceTray.CanAddMoreItem() && index < anothers.Count)
+    {
+        var tempTray = anothers[index].actualCell.GetTray();
+
+        if (tempTray.IsContainItem(itemID))
+        {
+            var item = tempTray.GetFirstItem(itemID);
+            tempTray.items.Remove(item);
+            sourceTray.Add(item);
+        }
+
+        index++;
+    }
+}
+// Phương thức tiện ích để kiểm tra các vị trí khả dụng cho một item cụ thể
+public List<Vector2Int> GetAvailablePositionsForItem(string itemId)
+{
+    var visitedObject = visitedItems.Find(v => v.itemID == itemId);
+    return visitedObject?.positions ?? new List<Vector2Int>();
+}
     private bool IsValidSlot(int checkX,int checkY)
     {
         return checkX >= 0 && checkX < rows && checkY >= 0 && checkY < columns;

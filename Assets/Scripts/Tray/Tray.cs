@@ -153,5 +153,28 @@ public class Tray : MonoBehaviour
     #endregion Debug
 
 
-   
+    public bool IsContainItem(string ItemID)
+    {
+        foreach (var item in items)
+        {
+            if (item.itemID == ItemID)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Item GetFirstItem(string itemID)
+    {
+        foreach (var item in items)
+        {
+            if (item.itemID == itemID)
+            {
+                return item;
+            }
+        }
+
+        return null;
+    }
 }
