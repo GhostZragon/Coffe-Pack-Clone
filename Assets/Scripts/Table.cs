@@ -1,6 +1,7 @@
 using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using UnityEngine;
@@ -141,20 +142,21 @@ public class Table : MonoBehaviour
             new Vector3(centerPosition.x, mainCamera.transform.position.y, centerPosition.z + cameraOffsetZ);
     }
 
-
-    public void Checking(Slot slot)
+    List<Tray> emptyTray = new();
+    List<Tray> processTray = new();
+    public void Checking(Slot slot, string itemId = null)
     {
         var checkingCell = TryToGetCell(slot.transform.position);
         int checkX, checkY;
         Vector2Int checkingPosition = Vector2Int.zero;
         Debug.Log("================Checking================");
-        List<Tray> trayAround = new();
+     
         foreach (var dir in directions)
         {
             checkX = dir.x + checkingCell.x;
             checkY = dir.y + checkingCell.y;
            
-            if (checkX >= 0 && checkX < rows && checkY >= 0 && checkY < columns)
+            if (IsValidSlot(checkX,checkY))
             {
                 checkingPosition.x = checkX;
                 checkingPosition.y = checkY;
@@ -165,41 +167,21 @@ public class Table : MonoBehaviour
                 {
                     continue;
                 }
+                
                 Debug.Log($"Can checking here {tableSlot.GetTray() != null}",gameObject);
                 // get tray of slot
-                trayAround.Add(tableSlot.GetTray());
             }
         }
         
-        Dictionary<string, List<Tray>> trayWithSameItem = new();
+    }
 
-        foreach (var tray in trayAround)
-        {
-            foreach (var item in tray.GetItems())
-            {
-                if (!trayWithSameItem.ContainsKey(item.itemID))
-                    trayWithSameItem[item.itemID] = new();
-                trayWithSameItem[item.itemID].Add(tray);
-            }
-        }
-
-        foreach (var itemList in trayWithSameItem)
-        {
-            StringBuilder stringBuilder = new($"Item ID: {itemList.Key} List: ");
-            foreach (var item in itemList.Value)
-            {
-                stringBuilder.Append(" "+item.name);
-            }
-            Debug.Log(stringBuilder.ToString());
-        }
+    private bool IsValidSlot(int checkX,int checkY)
+    {
+        return checkX >= 0 && checkX < rows && checkY >= 0 && checkY < columns;
     }
 }
 
-public class PosibleTray
-{
-    public Tray bestTray;
-    public List<Item> Items = new();
-}
+
 [Serializable]
 public class Cell
 {

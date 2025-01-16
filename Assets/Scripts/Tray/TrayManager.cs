@@ -16,15 +16,17 @@ public class TrayManager : MonoBehaviour
         CreateTrays();
     }
 
+    private int totalCount = 0;
     private void CreateTrays()
     {
         for (int i = 0; i < trayStandPositions.Count; i++)
         {
             var tray = Instantiate(trayPrefab, trayStandPositions[i].position, Quaternion.identity);
             tray.Index = i;
+            tray.name = "Tray_" + totalCount;
             tray.RequestItem();
-            tray.name = "Tray_" + i;
             Add(tray);
+            totalCount++;
         }
     }
 

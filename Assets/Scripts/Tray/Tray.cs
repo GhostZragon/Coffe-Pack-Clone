@@ -11,7 +11,7 @@ public class Tray : MonoBehaviour
     [Header("Stand Point")] [SerializeField]
     private Transform[] points;
 
-    [SerializeField] private List<Item> items = new();
+    public List<Item> items = new();
     [SerializeField] private Transform pointHolder;
     [SerializeField] private Transform itemHolder;
     [SerializeField] private Collider collider;
@@ -36,11 +36,7 @@ public class Tray : MonoBehaviour
         collider = GetComponent<Collider>();
     }
     
-    public List<Item> GetItems()
-    {
-        return items;
-    }
-    
+
     public void Add(Item item)
     {
         if (!items.Contains(item))
@@ -58,6 +54,10 @@ public class Tray : MonoBehaviour
         }
     }
     
+    public bool CanAddMoreItem()
+    {
+        return items.Count <= maxItem;
+    }
 
     private void SetStandPosition(Item item, int index)
     {
@@ -107,6 +107,8 @@ public class Tray : MonoBehaviour
             Add(item);
         }
     }
+
+    
     
     #region Debug
 
