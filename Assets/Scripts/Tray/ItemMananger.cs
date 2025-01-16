@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-
+[DefaultExecutionOrder(-99)]
 public class ItemMananger : MonoBehaviour
 {
     public static ItemMananger Instance;

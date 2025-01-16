@@ -11,12 +11,14 @@ public class DragDropSystem : MonoBehaviour
     [SerializeField] private float dragSpeed = 5;
     [SerializeField] private Tray selectionObject;
     [SerializeField] private Transform collideObject;
-
+    [SerializeField] private bool isDestroyByClick = false;
     private Camera mainCam;
+
     void Start()
     {
         mainCam = Camera.main;
     }
+
     // Update is called once per frame
     void Update()
     {
@@ -25,11 +27,23 @@ public class DragDropSystem : MonoBehaviour
 
     private void HandleSelectionObject()
     {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            isDestroyByClick = !isDestroyByClick;
+        }
+        
         if (Input.GetMouseButtonDown(0))
         {
             if (selectionObject == null)
             {
-                PickupTray();
+                if (isDestroyByClick)
+                {
+                    DeleteTrayInSlot();
+                }
+                else
+                {
+                    PickupTray();
+                }
             }
             else
             {
@@ -47,7 +61,7 @@ public class DragDropSystem : MonoBehaviour
             Debug.Log("Slot is empty and add to slot", slot.gameObject);
             slot.SetEmpty(false);
             slot.Add(selectionObject);
-                    
+
             // logic checking here
             Table.Instance.Checking(slot);
             //
@@ -55,7 +69,6 @@ public class DragDropSystem : MonoBehaviour
             TrayManager.instance.TryCreateNextTrays();
 
             selectionObject = null;
-
         }
         else
         {
@@ -66,25 +79,32 @@ public class DragDropSystem : MonoBehaviour
         }
     }
 
+    private void DeleteTrayInSlot()
+    {
+        if (slotObject != null && slotObject.TryGetComponent(out Slot slot))
+        {
+            slot.RemoveCurrentTray();
+        }
+    }
+
     private void HandleDragging()
     {
         Vector3 mousePosition = Input.mousePosition;
         // collide Object using for detect tray and slot
         if (collideObject != null)
         {
-            SetWorldPositionByMouse(collideObject ,mousePosition);
+            SetWorldPositionByMouse(collideObject, mousePosition);
         }
+
         // create dragging visual
         if (selectionObject != null && selectionObject.IsInSlot() == false)
         {
-
             SetWorldPositionByMouse(selectionObject.transform, mousePosition);
             Debug.DrawRay(selectionObject.transform.position, Vector3.down, Color.red);
-           
         }
     }
 
-    private void SetWorldPositionByMouse(Transform moveObject,Vector3 mousePosition)
+    private void SetWorldPositionByMouse(Transform moveObject, Vector3 mousePosition)
     {
         // Get the current depth (distance from camera) of the object
         float objectDepth = mainCam.WorldToScreenPoint(moveObject.transform.position).z;
@@ -123,9 +143,10 @@ public class DragDropSystem : MonoBehaviour
         if (other.CompareTag("drag"))
         {
             if (selectionObject != null) return;
-            
+
             trayObject = other.gameObject;
         }
+
         // if slot not contain tray, then use it
         if (other.CompareTag("slot"))
         {
@@ -144,16 +165,16 @@ public class DragDropSystem : MonoBehaviour
         {
             trayObject = null;
         }
+
         // if Collider Object trigger is the current, Call UnSelect()
-        if (other.CompareTag("slot")&& other.gameObject == slotObject)
+        if (other.CompareTag("slot") && other.gameObject == slotObject)
         {
             if (slotObject != null && slotObject.TryGetComponent(out Slot slot))
             {
                 slot.UnSelect();
             }
+
             slotObject = null;
         }
     }
-
-    
 }

@@ -1,6 +1,8 @@
 using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
+using System.Text;
+using NUnit.Framework;
 using UnityEngine;
 
 public class Table : MonoBehaviour
@@ -146,6 +148,7 @@ public class Table : MonoBehaviour
         int checkX, checkY;
         Vector2Int checkingPosition = Vector2Int.zero;
         Debug.Log("================Checking================");
+        List<Tray> trayAround = new();
         foreach (var dir in directions)
         {
             checkX = dir.x + checkingCell.x;
@@ -156,17 +159,46 @@ public class Table : MonoBehaviour
                 checkingPosition.x = checkX;
                 checkingPosition.y = checkY;
                 Debug.Log($"Directions: {dir.x} {dir.y}");
-                var cell = tableMap[checkingPosition].actualCell;
+                var tableSlot = tableMap[checkingPosition].actualCell;
 
-                if (!cell.IsEmpty())
+                if (tableSlot.IsEmpty())
                 {
                     continue;
                 }
-                Debug.Log("Can checking here",gameObject);
-                
+                Debug.Log($"Can checking here {tableSlot.GetTray() != null}",gameObject);
+                // get tray of slot
+                trayAround.Add(tableSlot.GetTray());
             }
         }
+        
+        Dictionary<string, List<Tray>> trayWithSameItem = new();
+
+        foreach (var tray in trayAround)
+        {
+            foreach (var item in tray.GetItems())
+            {
+                if (!trayWithSameItem.ContainsKey(item.itemID))
+                    trayWithSameItem[item.itemID] = new();
+                trayWithSameItem[item.itemID].Add(tray);
+            }
+        }
+
+        foreach (var itemList in trayWithSameItem)
+        {
+            StringBuilder stringBuilder = new($"Item ID: {itemList.Key} List: ");
+            foreach (var item in itemList.Value)
+            {
+                stringBuilder.Append(" "+item.name);
+            }
+            Debug.Log(stringBuilder.ToString());
+        }
     }
+}
+
+public class PosibleTray
+{
+    public Tray bestTray;
+    public List<Item> Items = new();
 }
 [Serializable]
 public class Cell

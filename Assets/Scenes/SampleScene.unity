@@ -1789,7 +1789,6 @@ MonoBehaviour:
   - {fileID: 958547284}
   - {fileID: 1526506064}
   - {fileID: 1491501585}
-  rowAndCol: {x: 0, y: 0}
   spacing: 1
   cellWidth: 0.25
   cellDepth: 0.25
@@ -2006,6 +2005,6 @@ SceneRoots:
   - {fileID: 705507995}
   - {fileID: 162662038}
   - {fileID: 2082228491}
+  - {fileID: 2015758603}
   - {fileID: 2590431244517764400}
   - {fileID: 4053559344774582822}
-  - {fileID: 2015758603}

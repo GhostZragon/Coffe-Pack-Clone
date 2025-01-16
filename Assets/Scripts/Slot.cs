@@ -42,24 +42,24 @@ public class Slot : MonoBehaviour
         currentTray.transform.position = transform.position;
     }
 
-    public void Remove()
+    [Button]
+    public void RemoveCurrentTray()
     {
-        currentTray = null;
+        isEmpty = true;
+        if(currentTray != null)
+            Destroy(currentTray.gameObject);
     }
 
     
     [Button]
     public void OnSelect()
     {
-        Debug.Log("Select Slot");
         ScaleSlot(scaleUpTime,transform.localScale, currentScale *scaleValue);
     }
 
     [Button]
     public void UnSelect()
     {
-        Debug.Log("Un Select Slot");
-
         ScaleSlot(scaleDownTime,transform.localScale, currentScale);
     }
 
@@ -73,4 +73,8 @@ public class Slot : MonoBehaviour
         handles.Add(motions);
     }
 
+    public Tray GetTray()
+    {
+        return currentTray;
+    }
 }

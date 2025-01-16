@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,7 +23,7 @@ public class TrayManager : MonoBehaviour
             var tray = Instantiate(trayPrefab, trayStandPositions[i].position, Quaternion.identity);
             tray.Index = i;
             tray.RequestItem();
-           
+            tray.name = "Tray_" + i;
             Add(tray);
         }
     }

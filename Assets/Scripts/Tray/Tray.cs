@@ -2,6 +2,7 @@ using NaughtyAttributes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -34,7 +35,12 @@ public class Tray : MonoBehaviour
     {
         collider = GetComponent<Collider>();
     }
-
+    
+    public List<Item> GetItems()
+    {
+        return items;
+    }
+    
     public void Add(Item item)
     {
         if (!items.Contains(item))
@@ -51,7 +57,7 @@ public class Tray : MonoBehaviour
             items.Remove(item);
         }
     }
-
+    
 
     private void SetStandPosition(Item item, int index)
     {
@@ -144,5 +150,6 @@ public class Tray : MonoBehaviour
 
     #endregion Debug
 
-    
+
+   
 }
