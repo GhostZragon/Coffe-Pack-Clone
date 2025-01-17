@@ -2,6 +2,8 @@
   "dependencies": {
     "com.annulusgames.lit-motion": "2.0.0",
     "com.annulusgames.lit-motion.animation": "2.0.0",
+    "com.audune.utils.dictionary": "1.0.5",
+    "com.audune.utils.unityeditor": "2.0.7",
     "com.dbrizov.naughtyattributes": "2.1.4",
     "com.needle.console": "2.4.2",
     "com.unity.collab-proxy": "2.6.0",
@@ -50,7 +52,9 @@
       "scopes": [
         "com.needle.console",
         "com.annulusgames.lit-motion",
-        "com.dbrizov.naughtyattributes"
+        "com.dbrizov.naughtyattributes",
+        "com.audune.utils.dictionary",
+        "com.audune.utils.unityeditor"
       ],
       "overrideBuiltIns": false
     }

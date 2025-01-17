@@ -1796,6 +1796,11 @@ MonoBehaviour:
   bounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
+  groupOfItems:
+    _entries: []
+  test:
+    _entries: []
+  visualizeItemID: 
 --- !u!114 &2082228493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1940,9 +1945,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3544916791533392878, guid: b1d40d85603865142a4f088ed2bc502c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4133820834651064771, guid: b1d40d85603865142a4f088ed2bc502c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.732
+      objectReference: {fileID: 0}
+    - target: {fileID: 4462290103294482062, guid: b1d40d85603865142a4f088ed2bc502c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7428011687072757302, guid: b1d40d85603865142a4f088ed2bc502c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7522028278692869077, guid: b1d40d85603865142a4f088ed2bc502c, type: 3}
       propertyPath: m_LocalPosition.x
