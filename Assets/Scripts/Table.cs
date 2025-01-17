@@ -208,9 +208,11 @@ public class Table : MonoBehaviour
             InitPriorityTray(cell.actualCell.GetTray(), itemID, true);
 
             SortGroupOfItemID(itemID);
+            
+            // merging
         }
     }
-
+    
     private List<PriorityTray> nextTimeChecking = new();
     
     private void InitPriorityTray(Tray checkingTray, string itemID, bool isCheckingSlot = false)
@@ -240,7 +242,8 @@ public class Table : MonoBehaviour
             Visualize();
         }
     }
-    public void Visualize()
+
+    private void Visualize()
     {
         foreach(var item in groupOfItems)
             foreach (var priorityTray in item.Value)
