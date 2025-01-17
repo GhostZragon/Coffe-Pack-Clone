@@ -1617,7 +1617,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnCount: 3
   isRandom: 0
-  maxRandomCount: 3
+  maxRandomCount: 6
   itemsList:
   - {fileID: 84894186345341861, guid: d53aa5a7ad72e5e47bee3e8e732a6a84, type: 3}
   - {fileID: 2270308657763802344, guid: b99ccbc4a3b17494aae75bea269882ce, type: 3}

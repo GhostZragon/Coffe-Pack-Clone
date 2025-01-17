@@ -144,32 +144,58 @@ public class Table : MonoBehaviour
 
     List<Tray> emptyTray = new();
     List<Tray> processTray = new();
+    private Dictionary<string, List<PriorityTray>> groupOfItems = new();
     public void Checking(Slot slot, string itemId = null)
     {
-        var checkingCell = TryToGetCell(slot.transform.position);
-        int checkX, checkY;
-        Vector2Int checkingPosition = Vector2Int.zero;
+        var cellOfSlot = TryToGetCell(slot.transform.position);
+        int StartX, StartY;
         Debug.Log("================Checking================");
-     
-        foreach (var dir in directions)
+        
+        // search for item in current tray
+        foreach (var itemID in tableMap[cellOfSlot].actualCell.GetTray().GetUniqueItemIDs())
         {
-            checkX = dir.x + checkingCell.x;
-            checkY = dir.y + checkingCell.y;
-           
-            if (IsValidSlot(checkX,checkY))
+            // Init
+            if (groupOfItems.ContainsKey(itemID) == false)
             {
-                checkingPosition.x = checkX;
-                checkingPosition.y = checkY;
-                Debug.Log($"Directions: {dir.x} {dir.y}");
-                var tableSlot = tableMap[checkingPosition].actualCell;
-
-                if (tableSlot.IsEmpty())
+                groupOfItems[itemID] = new List<PriorityTray>();
+                Debug.Log("Khởi tạo Group of item priority tray");
+            }
+            // Checking direction
+            Debug.Log($"Bắt đầu kiểm tra ItemID {itemID} ở vị trí {cellOfSlot}");
+            foreach (var dir in directions)
+            {
+                StartX = dir.x + cellOfSlot.x;
+                StartY = dir.y + cellOfSlot.y;
+                Vector2Int checkingPosition = new Vector2Int(StartX, StartY);
+                if (!IsValidSlot(StartX, StartY))
                 {
+                    Debug.Log($"Vị trí kiểm tra không hợp lệ {checkingPosition}");
                     continue;
                 }
+                Debug.Log($"Vị trí kiểm tra hợp lệ {checkingPosition}");
                 
-                Debug.Log($"Can checking here {tableSlot.GetTray() != null}",gameObject);
-                // get tray of slot
+                var checkingCell = tableMap[checkingPosition];
+
+                if (checkingCell.actualCell.TryGetTray(out Tray checkingTray))
+                {
+                    PriorityTray priorityTray = new();
+                    
+                    int uniqueItemCount = checkingTray.GetUniqueItemIDs().Count;
+                    int itemCount = checkingTray.GetCountOfItem(itemID);
+
+                    // If the tray is full, add 0; otherwise, add 1
+                    int trayFullBonus = checkingTray.CanAddMoreItem() ? 0 : 1;
+
+                    // If this slot was just placed by the player, add 1
+                    int playerPlacedSlotBonus = slot == checkingCell.actualCell ? 1 : 0;
+
+                    priorityTray.Tray = checkingTray;
+                    priorityTray.MainItemID = itemID;
+                    priorityTray.MainLevel = uniqueItemCount;
+                    priorityTray.SubLevel = itemCount + trayFullBonus + playerPlacedSlotBonus;
+                  
+                    groupOfItems[itemID].Add(priorityTray); ;
+                }
             }
         }
         
@@ -187,4 +213,13 @@ public class Cell
 {
     public Vector2Int position;
     public Slot actualCell;
+}
+
+
+public class PriorityTray
+{
+    public Tray Tray;
+    public string MainItemID;
+    public int MainLevel;
+    public int SubLevel;
 }

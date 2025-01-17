@@ -42,7 +42,7 @@ public class Tray : MonoBehaviour
         if (!items.Contains(item))
         {
             items.Add(item);
-            SetStandPosition(item, items.Count);
+            SetStandPosition(item);
         }
     }
 
@@ -56,14 +56,42 @@ public class Tray : MonoBehaviour
     
     public bool CanAddMoreItem()
     {
-        return items.Count <= maxItem;
+        return items.Count < maxItem;
     }
 
-    private void SetStandPosition(Item item, int index)
+    public List<string> GetUniqueItemIDs()
     {
-        item.name = "Item_" + index;
-        item.transform.parent = itemHolder;
-        item.transform.position = points[index].transform.position;
+        List<string> itemIDs = new();
+        foreach (var item in items)
+        {
+            if(itemIDs.Contains(item.itemID) == false)
+                itemIDs.Add(item.itemID);
+        }
+
+        return itemIDs;
+    }
+    
+    public int GetCountOfItem(string itemID)
+    {
+        int count = 0;
+        foreach (var item in items)
+        {
+            if (item.itemID == itemID)
+                count++;
+        }
+
+        return count;
+    }
+    
+    private void SetStandPosition(Item item)
+    {
+        for (int i = 0; i < items.Count; i++)
+        {
+            items[i].name = "Item_" + i;
+            item.transform.parent = itemHolder;
+            item.transform.position = points[i].transform.position;
+            item.transform.SetSiblingIndex(i);
+        }
     }
 
    
@@ -153,5 +181,5 @@ public class Tray : MonoBehaviour
     #endregion Debug
 
 
-   
+    
 }

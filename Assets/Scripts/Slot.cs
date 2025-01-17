@@ -77,4 +77,10 @@ public class Slot : MonoBehaviour
     {
         return currentTray;
     }
+
+    public bool TryGetTray(out Tray tray)
+    {
+        tray = currentTray;
+        return currentTray != null;
+    }
 }
