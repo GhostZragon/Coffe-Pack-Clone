@@ -201,17 +201,19 @@ public class Table : MonoBehaviour
 
                 if (checkingCell.actualCell.TryGetTray(out Tray checkingTray) && checkingTray.GetCountOfItem(itemID) > 0)
                 {
-                    NewMethod(checkingTray, itemID);
+                    InitPriorityTray(checkingTray, itemID);
                 }
             }
             Debug.Log("Thêm cell người chơi đã đặt vào");
-            NewMethod(cell.actualCell.GetTray(), itemID, true);
+            InitPriorityTray(cell.actualCell.GetTray(), itemID, true);
+
+            SortGroupOfItemID(itemID);
         }
     }
 
     private List<PriorityTray> nextTimeChecking = new();
     
-    private void NewMethod(Tray checkingTray, string itemID, bool isCheckingSlot = false)
+    private void InitPriorityTray(Tray checkingTray, string itemID, bool isCheckingSlot = false)
     {
         PriorityTray priorityTray = new();
         priorityTray.Init(checkingTray, itemID, isCheckingSlot);
@@ -222,6 +224,14 @@ public class Table : MonoBehaviour
             nextTimeChecking.Add(priorityTray);
     }
 
+    private void SortGroupOfItemID(string itemID)
+    {
+        if (groupOfItems.TryGetValue(itemID, out var list))
+        {
+            list.Sort();
+        }
+    }
+    
     public string visualizeItemID;
     private void HandleVisualizeDebugInput()
     {
@@ -263,7 +273,7 @@ public class Cell
 }
 
 [Serializable]
-public class PriorityTray
+public class PriorityTray: IComparable<PriorityTray>
 {
     public Tray Tray;
     public string MainItemID;
@@ -310,5 +320,21 @@ public class PriorityTray
         
         MainLevel = uniqueItemCount;
         SubLevel = itemCount + trayFullBonus + playerPlacedSlotBonus;
+    }
+    
+    public int CompareTo(PriorityTray other)
+    {
+        if (other == null) return 1;
+
+        // So sánh MainLevel trước (tăng dần)
+        int mainLevelComparison = this.MainLevel.CompareTo(other.MainLevel);
+        
+        // Nếu MainLevel bằng nhau thì so sánh SubLevel (tăng dần)
+        if (mainLevelComparison == 0)
+        {
+            return this.SubLevel.CompareTo(other.SubLevel);
+        }
+        
+        return mainLevelComparison;
     }
 }
