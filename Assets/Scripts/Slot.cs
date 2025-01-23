@@ -10,15 +10,14 @@ public class Slot : MonoBehaviour
 {
     [SerializeField] private bool isEmpty = false;
     [SerializeField] private Tray currentTray;
-    
-    [Header("Settings")]
-    [SerializeField] private float scaleUpTime = .25f;
+
+    [Header("Settings")] [SerializeField] private float scaleUpTime = .25f;
     [SerializeField] private float scaleDownTime = .25f;
     [SerializeField] private float scaleValue = 1.3f;
-    
+
     private Vector3 currentScale;
     private CompositeMotionHandle handles;
-    
+
     private void Awake()
     {
         currentScale = transform.localScale;
@@ -46,30 +45,27 @@ public class Slot : MonoBehaviour
     public void RemoveCurrentTray()
     {
         isEmpty = true;
-        if(currentTray != null)
+        if (currentTray != null)
             Destroy(currentTray.gameObject);
     }
 
-    
+
     [Button]
     public void OnSelect()
     {
-        ScaleSlot(scaleUpTime,transform.localScale, currentScale *scaleValue);
+        ScaleSlot(scaleUpTime, transform.localScale, currentScale * scaleValue);
     }
 
     [Button]
     public void UnSelect()
     {
-        ScaleSlot(scaleDownTime,transform.localScale, currentScale);
+        ScaleSlot(scaleDownTime, transform.localScale, currentScale);
     }
 
     private void ScaleSlot(float time, Vector3 currentScale, Vector3 targetScale)
     {
         handles.Cancel();
-        var motions = LMotion.
-            Create(currentScale, targetScale, time).
-            BindToLocalScale(transform).
-            AddTo(gameObject);
+        var motions = LMotion.Create(currentScale, targetScale, time).BindToLocalScale(transform).AddTo(gameObject);
         handles.Add(motions);
     }
 
@@ -82,5 +78,36 @@ public class Slot : MonoBehaviour
     {
         tray = currentTray;
         return currentTray != null;
+    }
+
+    public void TryToDestroyEmptyTray()
+    {
+        if (currentTray != null && currentTray.items.Count == 0)
+        {
+            ClearTray();
+        }
+    }
+
+    private void ClearTray()
+    {
+        Debug.Log("Clear Tray and destroy it");
+        Destroy(currentTray.gameObject);
+        currentTray = null;
+        isEmpty = true;
+    }
+
+    public void TryToDestroyFullTray()
+    {
+        
+        // try to destroy full of item with max count
+        if (currentTray == null) return;
+
+        var uniqueItem = currentTray.GetUniqueItemIDs();
+
+        if (uniqueItem.Count == 1 && 
+            currentTray.GetCountOfItem(uniqueItem[0]) == currentTray.MaxCount)
+        {
+            ClearTray();
+        }
     }
 }

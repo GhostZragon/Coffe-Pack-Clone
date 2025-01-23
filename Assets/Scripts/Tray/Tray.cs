@@ -15,15 +15,17 @@ public class Tray : MonoBehaviour
     [SerializeField] private Transform pointHolder;
     [SerializeField] private Transform itemHolder;
     [SerializeField] private Collider collider;
-    [Header("Settings")]
-    [SerializeField] private int index;
+    [Header("Settings")] [SerializeField] private int index;
     [SerializeField] private int maxItem;
-    [Header("Gizmos")] 
-    [SerializeField] private Vector3 size;
-    [Header("Item settings")]
-    public int randomCount;
+    [Header("Gizmos")] [SerializeField] private Vector3 size;
+    [Header("Item settings")] public int randomCount;
 
     private const int SLOT_INDEX = -1;
+
+    public int MaxCount
+    {
+        get => maxItem;
+    }
 
     public int Index
     {
@@ -35,15 +37,16 @@ public class Tray : MonoBehaviour
     {
         collider = GetComponent<Collider>();
     }
-    
+
 
     public void Add(Item item)
     {
         if (!items.Contains(item))
         {
             items.Add(item);
-            SetStandPosition(item);
         }
+
+        SetStandPosition();
     }
 
     public void Remove(Item item)
@@ -53,7 +56,7 @@ public class Tray : MonoBehaviour
             items.Remove(item);
         }
     }
-    
+
     public bool CanAddMoreItem()
     {
         return items.Count < maxItem;
@@ -64,13 +67,13 @@ public class Tray : MonoBehaviour
         List<string> itemIDs = new();
         foreach (var item in items)
         {
-            if(itemIDs.Contains(item.itemID) == false)
+            if (itemIDs.Contains(item.itemID) == false)
                 itemIDs.Add(item.itemID);
         }
 
         return itemIDs;
     }
-    
+
     public int GetCountOfItem(string itemID)
     {
         int count = 0;
@@ -82,24 +85,36 @@ public class Tray : MonoBehaviour
 
         return count;
     }
-    
-    private void SetStandPosition(Item item)
+
+    public Item GetFirstOfItem(string itemID)
+    {
+        foreach (var item in items)
+        {
+            if (item.itemID == itemID)
+                return item;
+        }
+
+        return null;
+    }
+
+
+    private void SetStandPosition()
     {
         for (int i = 0; i < items.Count; i++)
         {
             items[i].name = "Item_" + i;
-            item.transform.parent = itemHolder;
-            item.transform.position = points[i].transform.position;
-            item.transform.SetSiblingIndex(i);
+            items[i].transform.parent = itemHolder;
+            items[i].transform.position = points[i].transform.position;
+            items[i].transform.SetSiblingIndex(i);
         }
     }
 
-   
+
     [Button]
     public void GoBack()
     {
         if (IsInSlot()) return;
-        
+
         var stand = TrayManager.instance.GetStandPosition(index);
         transform.position = stand.position;
     }
@@ -131,13 +146,12 @@ public class Tray : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             var item = ItemMananger.Instance.GetNewItem();
-            
+
             Add(item);
         }
     }
 
-    
-    
+
     #region Debug
 
     [Button]
@@ -177,9 +191,5 @@ public class Tray : MonoBehaviour
         }
     }
 
-
     #endregion Debug
-
-
-    
 }

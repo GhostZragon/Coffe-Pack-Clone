@@ -55,6 +55,15 @@ public class Table : MonoBehaviour
             CreateTable();
         }
 
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            MergeGroupOfItems();
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            ClearCurrentTray();
+        }
+   
         HandleVisualizeDebugInput();
     }
 
@@ -210,9 +219,14 @@ public class Table : MonoBehaviour
             SortGroupOfItemID(itemID);
             
             // merging
+
         }
+        Debug.Log("End of merge");
+        // MergeGroupOfItems();
     }
+        
     
+   
     private List<PriorityTray> nextTimeChecking = new();
     
     private void InitPriorityTray(Tray checkingTray, string itemID, bool isCheckingSlot = false)
@@ -233,7 +247,23 @@ public class Table : MonoBehaviour
             list.Sort();
         }
     }
-    
+
+    private void SortAllItem()
+    {
+        // calculator
+        foreach (var item in groupOfItems.Values)
+        {
+            foreach (var _item in item)
+            {
+                _item.Calculator();
+            }
+        }
+        foreach (var item in groupOfItems)
+        {
+            SortGroupOfItemID(item.Key);
+        }
+    }
+    [Header("Debug")]
     public string visualizeItemID;
     private void HandleVisualizeDebugInput()
     {
@@ -259,12 +289,91 @@ public class Table : MonoBehaviour
             }
         }
     }
-
+    
 
     private bool IsValidSlot(int checkX,int checkY)
     {
         return checkX >= 0 && checkX < rows && checkY >= 0 && checkY < columns;
     }
+
+    [Button]
+    private void MergeGroupOfItems()
+    {
+        foreach (var item in groupOfItems)
+        {
+            Merge(item.Value, item.Key);
+            SortAllItem();
+        }
+
+        // ClearCurrentTray();
+    }
+    
+    private void Merge(List<PriorityTray> sources,string itemIDMerge)
+    {
+        if (sources.Count < 2)
+        {
+            Debug.Log("Danh sách tray này không đủ để merge",gameObject);
+            return;
+        }
+        
+
+        Queue<Tray> queueTray = new();
+
+        foreach (var priorityTray in sources)
+        {
+            queueTray.Enqueue(priorityTray.Tray);
+        }
+        
+        var source = queueTray.Dequeue();
+        var nextTray = queueTray.Dequeue();
+        
+        while (nextTray != null)
+        {
+            
+            if (nextTray.GetCountOfItem(itemIDMerge) == 0)
+            {
+                // go to next tray
+                if(queueTray.Count == 0)
+                    break;
+                
+                nextTray = queueTray.Dequeue();
+            }
+            
+            // if net tray have item, then try to add it into source tray
+            // if source tray is full
+            // 1. Swap source to next;
+            // 2. Next tray go next
+            if (source.CanAddMoreItem())
+            {
+                var item = nextTray.GetFirstOfItem(itemIDMerge);
+                nextTray.Remove(item);
+                source.Add(item);
+            }
+            else
+            {
+                source = nextTray;
+                if (queueTray.Count == 0)
+                    break;
+                nextTray = queueTray.Dequeue();
+            }
+
+            if (source == null)
+            {
+                Debug.Log("Kết thúc vòng lặp");
+                break;
+            }
+        }
+    }
+    [Button]
+    private void ClearCurrentTray()
+    {
+        foreach (var item in tableMap)
+        {
+            item.Value.actualCell.TryToDestroyEmptyTray();
+            item.Value.actualCell.TryToDestroyFullTray();
+        }
+    }
+
 }
 
 
@@ -319,7 +428,7 @@ public class PriorityTray: IComparable<PriorityTray>
         int trayFullBonus = Tray.CanAddMoreItem() ? 0 : 1;
 
         // If this slot was just placed by the player, add 1
-        int playerPlacedSlotBonus = isPlacedSlot ? 1 : 0;
+        int playerPlacedSlotBonus = isPlacedSlot ? 5 : 0;
         
         MainLevel = uniqueItemCount;
         SubLevel = itemCount + trayFullBonus + playerPlacedSlotBonus;
@@ -328,7 +437,8 @@ public class PriorityTray: IComparable<PriorityTray>
     public int CompareTo(PriorityTray other)
     {
         if (other == null) return 1;
-
+        
+        
         // So sánh MainLevel trước (tăng dần)
         int mainLevelComparison = this.MainLevel.CompareTo(other.MainLevel);
         
