@@ -300,22 +300,23 @@ public class Table : MonoBehaviour
     {
         foreach (var item in groupOfItems)
         {
-            Merge(item.Value, item.Key);
+            Merge(item.Value);
             SortAllItem();
         }
 
         // ClearCurrentTray();
     }
     
-    private void Merge(List<PriorityTray> sources,string itemIDMerge)
+    private void Merge(List<PriorityTray> sources)
     {
         if (sources.Count < 2)
         {
             Debug.Log("Danh sách tray này không đủ để merge",gameObject);
             return;
         }
-        
 
+        string mainMergeItemID = sources[0].MainItemID;
+        
         Queue<Tray> queueTray = new();
 
         foreach (var priorityTray in sources)
@@ -329,7 +330,7 @@ public class Table : MonoBehaviour
         while (nextTray != null)
         {
             
-            if (nextTray.GetCountOfItem(itemIDMerge) == 0)
+            if (nextTray.GetCountOfItem(mainMergeItemID) == 0)
             {
                 // go to next tray
                 if(queueTray.Count == 0)
@@ -338,13 +339,9 @@ public class Table : MonoBehaviour
                 nextTray = queueTray.Dequeue();
             }
             
-            // if net tray have item, then try to add it into source tray
-            // if source tray is full
-            // 1. Swap source to next;
-            // 2. Next tray go next
             if (source.CanAddMoreItem())
             {
-                var item = nextTray.GetFirstOfItem(itemIDMerge);
+                var item = nextTray.GetFirstOfItem(mainMergeItemID);
                 nextTray.Remove(item);
                 source.Add(item);
             }
