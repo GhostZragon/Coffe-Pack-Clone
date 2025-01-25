@@ -207,7 +207,6 @@ public class Table : MonoBehaviour
                 Debug.Log($"Vị trí kiểm tra hợp lệ {checkingPosition}");
 
                 var checkingCell = tableMap[checkingPosition];
-
                 if (checkingCell.actualCell.TryGetTray(out Tray checkingTray) && checkingTray.GetCountOfItem(itemID) > 0)
                 {
                     InitPriorityTray(checkingTray, itemID);
