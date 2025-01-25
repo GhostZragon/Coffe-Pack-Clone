@@ -20,7 +20,7 @@ public class Tray : MonoBehaviour
     [Header("Gizmos")] [SerializeField] private Vector3 size;
     [Header("Item settings")] public int randomCount;
 
-    private const int SLOT_INDEX = -1;
+    private const int OutsideSlotIndex = -1;
 
     public int MaxCount
     {
@@ -41,6 +41,12 @@ public class Tray : MonoBehaviour
 
     public void Add(Item item)
     {
+        if (items.Count == maxItem)
+        {
+            Debug.LogWarning("Already have full of item in tray, dont add more",gameObject);
+            return;
+        }
+        
         if (!items.Contains(item))
         {
             items.Add(item);
@@ -136,7 +142,7 @@ public class Tray : MonoBehaviour
 
     public bool IsInSlot()
     {
-        return index == SLOT_INDEX;
+        return index == OutsideSlotIndex;
     }
 
     [Button]
@@ -145,15 +151,26 @@ public class Tray : MonoBehaviour
         int count = randomCount > maxItem ? maxItem : Random.Range(1, randomCount);
         for (int i = 0; i < count; i++)
         {
+            if (ItemMananger.Instance == null)
+            {
+                Debug.LogWarning("Item Manager is null",gameObject);
+                return;
+            }
+            
             var item = ItemMananger.Instance.GetNewItem();
-
+            
+            if (item == null)
+            {
+                Debug.LogWarning("Item get from Item Manager is null",gameObject);
+                return;
+            }
             Add(item);
         }
     }
 
 
     #region Debug
-
+#if UNITY_EDITOR
     [Button]
     private void CreatePoint()
     {
@@ -190,6 +207,7 @@ public class Tray : MonoBehaviour
             Gizmos.DrawWireCube(point.transform.position, size);
         }
     }
+#endif
 
     #endregion Debug
 }
