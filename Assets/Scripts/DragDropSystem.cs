@@ -63,7 +63,7 @@ public class DragDropSystem : MonoBehaviour
             slot.Add(selectionObject);
 
             // logic checking here
-            Table.Instance.Checking(slot);
+            Table.Instance.CheckingMergeSlot(slot);
             //
             TrayManager.instance.Remove(selectionObject);
             TrayManager.instance.TryCreateNextTrays();

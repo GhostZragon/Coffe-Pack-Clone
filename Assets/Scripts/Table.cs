@@ -7,6 +7,7 @@ using Audune.Utils.Dictionary;
 using NUnit.Framework;
 using UnityEngine;
 
+
 public class Table : MonoBehaviour
 {
     public static Table Instance;
@@ -159,7 +160,7 @@ public class Table : MonoBehaviour
     public SerializableDictionary<string, List<PriorityTray>> groupOfItems = new();
     public SerializableDictionary<string, int> test;
 
-    public void Checking(Slot slot, string itemId = null)
+    public void CheckingMergeSlot(Slot slot)
     {
         var positionOfSlot = TryToGetCell(slot.transform.position);
         int StartX, StartY;
