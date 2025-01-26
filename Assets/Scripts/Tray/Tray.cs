@@ -2,6 +2,8 @@ using NaughtyAttributes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using LitMotion;
+using LitMotion.Extensions;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -22,6 +24,7 @@ public class Tray : MonoBehaviour
 
     private const int OutsideSlotIndex = -1;
 
+
     public int MaxCount
     {
         get => maxItem;
@@ -39,7 +42,7 @@ public class Tray : MonoBehaviour
     }
 
 
-    public void Add(Item item)
+    public void Add(Item item, bool isUsingAnimation = true)
     {
         if (items.Count == maxItem)
         {
@@ -52,9 +55,11 @@ public class Tray : MonoBehaviour
             items.Add(item);
         }
 
-        SetStandPosition();
+        // MoveAnimation(items.Count - 1, isUsingAnimation);
+        SetStandPosition(isUsingAnimation);
     }
-
+    
+    
     public void Remove(Item item)
     {
         if (items.Contains(item))
@@ -79,7 +84,7 @@ public class Tray : MonoBehaviour
 
         return itemIDs;
     }
-
+    
     public int GetCountOfItem(string itemID)
     {
         int count = 0;
@@ -104,14 +109,23 @@ public class Tray : MonoBehaviour
     }
 
 
-    private void SetStandPosition()
+    private void SetStandPosition(bool isUsingAnimation)
     {
         for (int i = 0; i < items.Count; i++)
         {
             items[i].name = "Item_" + i;
             items[i].transform.parent = itemHolder;
-            items[i].transform.position = points[i].transform.position;
+            // items[i].transform.position = points[i].transform.position;
             items[i].transform.SetSiblingIndex(i);
+
+            if (isUsingAnimation)
+            {
+                AnimationManager.Instance.TransferItem(items[i].transform, points[i].position);
+            }
+            else
+            {
+                items[i].transform.position = points[i].transform.position;
+            }
         }
     }
 
@@ -164,7 +178,7 @@ public class Tray : MonoBehaviour
                 Debug.LogWarning("Item get from Item Manager is null",gameObject);
                 return;
             }
-            Add(item);
+            Add(item,false);
         }
     }
 

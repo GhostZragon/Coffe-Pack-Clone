@@ -121,7 +121,7 @@ public class DragDropSystem : MonoBehaviour
 
     private bool TryToReleaseTrayInSlot(out Slot slot)
     {
-        return slotObject.TryGetComponent(out slot) && slot.IsEmpty();
+        return slotObject.TryGetComponent(out slot) && slot.CanPlacedTray();
     }
 
     private void PickupTray()
@@ -151,7 +151,7 @@ public class DragDropSystem : MonoBehaviour
         if (other.CompareTag("slot"))
         {
             slotObject = other.gameObject;
-            if (slotObject.TryGetComponent(out Slot slot) && slot.IsEmpty())
+            if (slotObject.TryGetComponent(out Slot slot) && slot.CanPlacedTray())
             {
                 slot.OnSelect();
                 Table.Instance.TryToGetCell(slot.transform.position);

@@ -6,6 +6,13 @@ using LitMotion.Extensions;
 using NaughtyAttributes;
 using UnityEngine;
 
+public enum SlotType
+{
+    Normal,
+    Blocking,
+    Explosion,
+    Rewards
+}
 public class Slot : MonoBehaviour
 {
     [SerializeField] private bool isEmpty = false;
@@ -14,19 +21,21 @@ public class Slot : MonoBehaviour
     [Header("Settings")] [SerializeField] private float scaleUpTime = .25f;
     [SerializeField] private float scaleDownTime = .25f;
     [SerializeField] private float scaleValue = 1.3f;
-
     private Vector3 currentScale;
     private CompositeMotionHandle handles;
 
+    public SlotType SlotType;
+    public event Action<Vector3> OnRemoveTrayAction;
+    
     private void Awake()
     {
         currentScale = transform.localScale;
         handles = new CompositeMotionHandle();
     }
 
-    public bool IsEmpty()
+    public bool CanPlacedTray()
     {
-        return isEmpty;
+        return isEmpty && SlotType == SlotType.Normal;
     }
 
     public void SetEmpty(bool _isEmpty)
