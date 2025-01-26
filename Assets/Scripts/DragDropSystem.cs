@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using LitMotion;
+using LitMotion.Extensions;
 using UnityEngine;
 
 public class DragDropSystem : MonoBehaviour
@@ -8,93 +10,13 @@ public class DragDropSystem : MonoBehaviour
     [SerializeField] private Vector2 inputDirection;
     [SerializeField] private float dragSpeed = 5;
     [SerializeField] private Tray selectionObject;
+    [SerializeField] private Transform collideObject;
+    [SerializeField] private bool isDestroyByClick = false;
+    private Camera mainCam;
+
     void Start()
     {
-    }
-
-    private void HandleSelectionObject()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (selectionObject == null)
-            {
-                PickupTray();
-            }
-            else
-            {
-                var hit = CastRay();
-                // try to put tray in to slot
-                if (hit.collider != null && hit.collider.CompareTag("slot"))
-                {
-                    ReleaseTrayInToSlot(hit);
-
-                }
-                else
-                {
-                    selectionObject.GoBack();
-                    selectionObject.EnableCollider();
-
-                }
-
-
-
-                selectionObject = null;
-            }
-        }
-
-
-        if (selectionObject != null)
-        {
-            Vector3 mousePosition = Input.mousePosition;
-
-            // Get the current depth (distance from camera) of the object
-            float objectDepth = Camera.main.WorldToScreenPoint(selectionObject.transform.position).z;
-
-            // Create a screen space position with the correct depth
-            Vector3 screenPosition = new Vector3(mousePosition.x, mousePosition.y, objectDepth);
-
-            // Convert screen position to world position
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
-
-            // Update object position, maintaining a fixed height
-            selectionObject.transform.position = new Vector3(worldPosition.x, .25f, worldPosition.z);
-        }
-
-    }
-
-    private void ReleaseTrayInToSlot(RaycastHit hit)
-    {
-        Debug.Log(hit.collider.name, hit.collider.gameObject);
-        // it hit is slot then check can put try into slot
-        if (hit.collider.TryGetComponent(out Slot slot) && slot.IsEmpty())
-        {
-            Debug.Log("Slot is empty and add to slot", slot.gameObject);
-            selectionObject.SetToSlot();
-            slot.SetEmpty(true);
-            slot.Add(selectionObject);
-            // set position
-            selectionObject.transform.position = slot.transform.position;
-            // logic checking here
-
-            //
-        }
-    }
-
-    private void PickupTray()
-    {
-        var hit = CastRay();
-        Debug.Log("Try find drag item");
-        if (hit.collider != null && hit.collider.CompareTag("drag"))
-        {
-
-            if (hit.collider.TryGetComponent(out Tray tray))
-            {
-                selectionObject = tray;
-                selectionObject.DisableCollider();
-            }
-            Debug.Log("Finded");
-
-        }
+        mainCam = Camera.main;
     }
 
     // Update is called once per frame
@@ -103,21 +25,152 @@ public class DragDropSystem : MonoBehaviour
         HandleSelectionObject();
     }
 
-    private RaycastHit CastRay()
+    private void HandleSelectionObject()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        // Cast ray from camera through mouse position
-        Physics.Raycast(ray, out hit, Mathf.Infinity);
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            isDestroyByClick = !isDestroyByClick;
+        }
+        
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (selectionObject == null)
+            {
+                if (isDestroyByClick)
+                {
+                    DeleteTrayInSlot();
+                }
+                else
+                {
+                    PickupTray();
+                }
+            }
+            else
+            {
+                ReleaseTray();
+            }
+        }
 
-        return hit;
+        HandleDragging();
     }
 
-    private RaycastHit CastRayFromSelectionObject()
+    private void ReleaseTray()
     {
-        Ray ray = new Ray(selectionObject.transform.position, Vector3.down);
-        RaycastHit hit;
-        Physics.Raycast(ray, out hit, Mathf.Infinity);
-        return hit;
+        if (slotObject != null && TryToReleaseTrayInSlot(out Slot slot))
+        {
+            Debug.Log("Slot is empty and add to slot", slot.gameObject);
+            slot.Add(selectionObject);
+        
+            TrayManager.instance.Remove(selectionObject);
+            TrayManager.instance.TryCreateNextTrays();
+
+            selectionObject = null;
+        }
+        else
+        {
+            selectionObject.GoBack();
+            selectionObject.EnableCollider();
+            selectionObject = null;
+            trayObject = null;
+        }
+    }
+
+    private void DeleteTrayInSlot()
+    {
+        if (slotObject != null && slotObject.TryGetComponent(out Slot slot))
+        {
+            slot.ClearTray();
+        }
+    }
+
+    private void HandleDragging()
+    {
+        Vector3 mousePosition = Input.mousePosition;
+        // collide Object using for detect tray and slot
+        if (collideObject != null)
+        {
+            SetWorldPositionByMouse(collideObject, mousePosition);
+        }
+
+        // create dragging visual
+        if (selectionObject != null && selectionObject.IsInSlot() == false)
+        {
+            SetWorldPositionByMouse(selectionObject.transform, mousePosition);
+            Debug.DrawRay(selectionObject.transform.position, Vector3.down, Color.red);
+        }
+    }
+
+    private void SetWorldPositionByMouse(Transform moveObject, Vector3 mousePosition)
+    {
+        // Get the current depth (distance from camera) of the object
+        float objectDepth = mainCam.WorldToScreenPoint(moveObject.transform.position).z;
+
+        // Create a screen space position with the correct depth
+        Vector3 screenPosition = new Vector3(mousePosition.x, mousePosition.y, objectDepth);
+
+        // Convert screen position to world position
+        Vector3 worldPosition = mainCam.ScreenToWorldPoint(screenPosition);
+
+        // Update object position, maintaining a fixed height
+        moveObject.transform.position = new Vector3(worldPosition.x, .25f, worldPosition.z);
+    }
+
+    private bool TryToReleaseTrayInSlot(out Slot slot)
+    {
+        return slotObject.TryGetComponent(out slot) && slot.CanPlacedTray();
+    }
+
+    private void PickupTray()
+    {
+        Debug.Log("Try find drag item");
+        if (trayObject != null && trayObject.TryGetComponent(out Tray tray) && tray.IsInSlot() == false)
+        {
+            selectionObject = tray;
+            selectionObject.DisableCollider();
+            Debug.Log("Finded");
+        }
+    }
+
+    [SerializeField] private GameObject trayObject;
+    [SerializeField] private GameObject slotObject;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("drag"))
+        {
+            if (selectionObject != null) return;
+
+            trayObject = other.gameObject;
+        }
+
+        // if slot not contain tray, then use it
+        if (other.CompareTag("slot"))
+        {
+            slotObject = other.gameObject;
+            if (slotObject.TryGetComponent(out Slot slot) && slot.CanPlacedTray())
+            {
+                slot.OnSelect();
+                Table.Instance.TryToGetCell(slot.transform.position);
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("drag") && other.gameObject == trayObject)
+        {
+            trayObject = null;
+        }
+
+        // if Collider Object trigger is the current, Call UnSelect()
+        if (other.CompareTag("slot") && other.gameObject == slotObject)
+        {
+            if (slotObject != null && slotObject.TryGetComponent(out Slot slot))
+            {
+                slot.UnSelect();
+            }
+
+            slotObject = null;
+        }
     }
 }

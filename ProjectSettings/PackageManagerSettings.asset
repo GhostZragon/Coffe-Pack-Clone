@@ -34,6 +34,8 @@ MonoBehaviour:
     - com.needle.console
     - com.annulusgames.lit-motion
     - com.dbrizov.naughtyattributes
+    - com.audune.utils.dictionary
+    - com.audune.utils.unityeditor
     m_IsDefault: 0
     m_Capabilities: 0
     m_ConfigSource: 4

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b461f1d063dad643b252da1b9f622e8, type: 3}
+  m_Name: Anm_Cfg_Normal
+  m_EditorClassIdentifier: 
+  itemTransferDuration: 0.2
+  itemTransferStartDelay: 0.2
+  itemTransferEase: 0
+  releaseTrayDuration: 0.1
+  releaseTrayEase: 0
+  destroyTrayDuration: 0.1
+  destroyTrayEase: 25

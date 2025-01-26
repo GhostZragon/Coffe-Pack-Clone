@@ -20,6 +20,22 @@
       },
       "url": "https://package.openupm.com"
     },
+    "com.audune.utils.dictionary": {
+      "version": "1.0.5",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.audune.utils.unityeditor": "2.0.7"
+      },
+      "url": "https://package.openupm.com"
+    },
+    "com.audune.utils.unityeditor": {
+      "version": "2.0.7",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
+    },
     "com.dbrizov.naughtyattributes": {
       "version": "2.1.4",
       "depth": 0,

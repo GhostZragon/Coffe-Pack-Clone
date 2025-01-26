@@ -1,37 +1,56 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class TrayManager : MonoBehaviour
 {
     public static TrayManager instance;
 
     [SerializeField] private List<Transform> trayStandPositions;
-    [SerializeField] private List<Item> itemsList;
     [SerializeField] private bool isUsingTestCaseSO = false;
-
+    [SerializeField] private List<Tray> currentTrayList = new();
     public Tray trayPrefab;
     private void Awake()
     {
         instance = this;
+        CreateTrays();
+    }
+
+    private int totalCount = 0;
+    private void CreateTrays()
+    {
         for (int i = 0; i < trayStandPositions.Count; i++)
         {
             var tray = Instantiate(trayPrefab, trayStandPositions[i].position, Quaternion.identity);
             tray.Index = i;
-            AddItemToTray(tray);
+            tray.name = "Tray_" + totalCount;
+            tray.RequestItem();
+            Add(tray);
+            totalCount++;
         }
     }
 
-    private void AddItemToTray(Tray tray)
-    {
-        var item = Instantiate(itemsList[Random.Range(0, itemsList.Count)]);
-        tray.Add(item);
-    }
 
     public Transform GetStandPosition(int index)
     {
-        if (index == -1) return null;
-
         return trayStandPositions[index];
+    }
+
+    public void TryCreateNextTrays()
+    {
+        if (currentTrayList.Count == 0)
+        {
+            CreateTrays();
+        }
+    }
+
+    public void Add(Tray tray)
+    {
+        currentTrayList.Add(tray);
+    }
+
+    public void Remove(Tray tray)
+    {
+        currentTrayList.Remove(tray);
     }
 }
