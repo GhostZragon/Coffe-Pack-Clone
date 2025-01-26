@@ -1,30 +1,15 @@
 using LitMotion;
-using LitMotion.Extensions;
 using UnityEngine;
-
+[CreateAssetMenu(fileName = "Anm_Cfg_",menuName = "SO/ Animation Config ")]
 public class AnimationConfig : ScriptableObject
 {
     public float itemTransferDuration;
     public Ease itemTransferEase;
 
+    public float releaseTrayDuration;
+    public Ease releaseTrayEase;
+    
     public float destroyTrayDuration;
     public Ease destroyTrayEase;
-    
-}
-
-public class AnimationManager : MonoBehaviour
-{
-    public static AnimationManager Instance;
-    public AnimationConfig AnimationConfig;
-    private void Awake()
-    {
-        Instance = this;
-    }
-
-    public void TransferItem(Transform MoveTransform, Vector3 position)
-    {
-        LMotion.Create(MoveTransform.position, position, AnimationConfig.itemTransferDuration)
-            .BindToPosition(MoveTransform);
-    }
     
 }

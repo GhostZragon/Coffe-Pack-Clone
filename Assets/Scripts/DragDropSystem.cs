@@ -83,7 +83,7 @@ public class DragDropSystem : MonoBehaviour
     {
         if (slotObject != null && slotObject.TryGetComponent(out Slot slot))
         {
-            slot.RemoveCurrentTray();
+            slot.ClearTray();
         }
     }
 

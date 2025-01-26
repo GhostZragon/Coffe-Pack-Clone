@@ -21,7 +21,7 @@ public class Tray : MonoBehaviour
     [SerializeField] private int maxItem;
     [Header("Gizmos")] [SerializeField] private Vector3 size;
     [Header("Item settings")] public int randomCount;
-
+    [SerializeField] private Transform trayModel;
     private const int OutsideSlotIndex = -1;
 
 

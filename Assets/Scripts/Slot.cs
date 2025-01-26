@@ -13,6 +13,7 @@ public enum SlotType
     Explosion,
     Rewards
 }
+
 public class Slot : MonoBehaviour
 {
     [SerializeField] private bool isEmpty = false;
@@ -26,7 +27,7 @@ public class Slot : MonoBehaviour
 
     public SlotType SlotType;
     public event Action<Vector3> OnRemoveTrayAction;
-    
+
     private void Awake()
     {
         currentScale = transform.localScale;
@@ -47,16 +48,12 @@ public class Slot : MonoBehaviour
     {
         currentTray = tray;
         currentTray.SetTrayToSlot();
-        currentTray.transform.position = transform.position;
+        // currentTray.transform.position = transform.position;
+
+        AnimationManager.Instance.MoveTrayToSlot(currentTray.transform, transform.position);
     }
 
-    [Button]
-    public void RemoveCurrentTray()
-    {
-        isEmpty = true;
-        if (currentTray != null)
-            Destroy(currentTray.gameObject);
-    }
+
 
 
     [Button]
@@ -96,24 +93,23 @@ public class Slot : MonoBehaviour
             ClearTray();
         }
     }
-
-    private void ClearTray()
+    [Button]
+    public void ClearTray()
     {
         Debug.Log("Clear Tray and destroy it");
-        Destroy(currentTray.gameObject);
         currentTray = null;
         isEmpty = true;
+        Destroy(currentTray.gameObject);
     }
-
+  
     public void TryToDestroyFullTray()
     {
-        
         // try to destroy full of item with max count
         if (currentTray == null) return;
 
         var uniqueItem = currentTray.GetUniqueItemIDs();
 
-        if (uniqueItem.Count == 1 && 
+        if (uniqueItem.Count == 1 &&
             currentTray.GetCountOfItem(uniqueItem[0]) == currentTray.MaxCount)
         {
             ClearTray();
