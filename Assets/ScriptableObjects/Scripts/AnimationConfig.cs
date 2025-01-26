@@ -4,6 +4,7 @@ using UnityEngine;
 public class AnimationConfig : ScriptableObject
 {
     public float itemTransferDuration;
+    public float itemTransferStartDelay = .1f;
     public Ease itemTransferEase;
 
     public float releaseTrayDuration;
@@ -11,5 +12,4 @@ public class AnimationConfig : ScriptableObject
     
     public float destroyTrayDuration;
     public Ease destroyTrayEase;
-    
 }

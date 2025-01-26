@@ -60,10 +60,7 @@ public class DragDropSystem : MonoBehaviour
         {
             Debug.Log("Slot is empty and add to slot", slot.gameObject);
             slot.Add(selectionObject);
-
-            // logic checking here
-            Table.Instance.CheckingMergeSlot(slot);
-            //
+        
             TrayManager.instance.Remove(selectionObject);
             TrayManager.instance.TryCreateNextTrays();
 

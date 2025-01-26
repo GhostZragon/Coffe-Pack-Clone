@@ -124,7 +124,11 @@ public class Tray : MonoBehaviour
 
             if (isUsingAnimation)
             {
-                AnimationManager.Instance.TransferItem(items[i].transform, points[i].position);
+                LMotion.Create(items[i].transform.position, points[i].transform.position
+                        , AnimationManager.Instance.AnimationConfig.itemTransferDuration)
+                    .WithDelay( AnimationManager.Instance.AnimationConfig.itemTransferStartDelay)
+                    .BindToPosition(items[i].transform);
+                // AnimationManager.Instance.TransferItem(items[i].transform, points[i].position);
             }
             else
             {
@@ -236,6 +240,9 @@ public class Tray : MonoBehaviour
 
     public void DestroyAnimation()
     {
-        AnimationManager.Instance.DestroyTrayAnimation(this, Destroy);
+        LMotion.Create(Model.localScale, Vector3.zero, AnimationManager.Instance.AnimationConfig.destroyTrayDuration)
+            .WithEase(AnimationManager.Instance.AnimationConfig.destroyTrayEase)
+            .WithOnComplete(Destroy)
+            .BindToLocalScale(Model);
     }
 }

@@ -17,11 +17,18 @@ public class AnimationManager : MonoBehaviour
         MoveTo(MoveTransform, position, AnimationConfig.itemTransferDuration);
     }
 
-    public void MoveTrayToSlot(Transform MoveTransform, Vector3 position)
+    public void MoveTrayToSlot(Transform MoveTransform, Vector3 position, Action callback)
     {
-        MoveTo(MoveTransform, position, AnimationConfig.releaseTrayDuration);
+        MoveTo(MoveTransform, position, AnimationConfig.releaseTrayDuration,callback);
     }
-
+    
+    private void MoveTo(Transform MoveTransform, Vector3 position, float duration, Action callback)
+    {
+        LMotion.Create(MoveTransform.position, position, duration)
+            .WithOnComplete(callback)
+            .BindToPosition(MoveTransform);
+    }
+    
     private void MoveTo(Transform MoveTransform, Vector3 position, float duration)
     {
         LMotion.Create(MoveTransform.position, position, duration)

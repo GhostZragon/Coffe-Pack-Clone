@@ -10,15 +10,14 @@ using UnityEngine;
 public class Table : MonoBehaviour
 {
     public static Table Instance;
-    
     [SerializeField] private Camera mainCamera;
-    
+
     [SerializeField] private List<Slot> slots;
     [SerializeField] private float spacing = 1f;
     [SerializeField] private float cellWidth = .25f;
     [SerializeField] private float cellDepth = .25f;
     [SerializeField] private float cameraOffsetZ = .25f;
-    
+
     private Dictionary<Vector2Int, Cell> tableMap = new();
     private bool isRefresh = false;
 
@@ -34,7 +33,7 @@ public class Table : MonoBehaviour
         Vector2Int.down,
         Vector2Int.left
     };
-    
+
     private void Awake()
     {
         Instance = this;
@@ -50,7 +49,7 @@ public class Table : MonoBehaviour
 
     private void Update()
     {
-        if(isRefresh == false)
+        if (isRefresh == false)
         {
             CreateTable();
         }
@@ -59,11 +58,12 @@ public class Table : MonoBehaviour
         {
             MergeGroupOfItems();
         }
+
         if (Input.GetKeyDown(KeyCode.D))
         {
             ClearCurrentTray();
         }
-   
+
         HandleVisualizeDebugInput();
     }
 
@@ -73,27 +73,27 @@ public class Table : MonoBehaviour
 
         rows = 4;
         columns = 4;
-        
+
         startX = -(columns * (cellWidth + spacing) - spacing) / 2;
         startZ = -(rows * (cellDepth + spacing) - spacing) / 2;
 
         for (int i = 0; i < slots.Count; i++)
         {
-            if(i >= rows * columns)
+            if (i >= rows * columns)
             {
                 break;
             }
-            
+
             int row = i / columns;
             int col = i % columns;
-            
+
             Debug.Log($"Local Row: {row}, Col: {col}");
-            
+
             float posX = startX + col * (cellWidth + spacing);
             float posZ = startZ + row * (cellDepth + spacing);
 
-            Debug.Log(GetGridCoordinates(posX,startX,cellWidth,spacing));
-            Debug.Log(GetGridCoordinates(posZ,startZ,cellDepth,spacing));
+            Debug.Log(GetGridCoordinates(posX, startX, cellWidth, spacing));
+            Debug.Log(GetGridCoordinates(posZ, startZ, cellDepth, spacing));
 
             var child = slots[i].transform;
             float currentY = child.localPosition.y;
@@ -103,27 +103,30 @@ public class Table : MonoBehaviour
             // Create cell to hold data
             Cell cell = new Cell();
             cell.actualCell = child.gameObject.GetComponent<Slot>();
+            cell.actualCell.PlacedCallback = CheckingMergeSlot;
             // create table 
             var position = new Vector2Int(row, col);
             tableMap[position] = cell;
-            
+
             bounds.Encapsulate(child.position);
         }
-        
+
         // bounds.Expand(Vector3.one);
 
         SetCameraToCenterOfTable();
-        
+
         Debug.Log($"Row: {rows}, Col: {columns}");
         Debug.Log("Total count cell: " + tableMap.Count);
     }
-    int GetGridCoordinates(float posX,  float startX,  float cellWidth, float spacing) {
+
+    int GetGridCoordinates(float posX, float startX, float cellWidth, float spacing)
+    {
         // First, offset the position by the grid's start position to get coordinates relative to grid
         float relativeX = posX - startX;
-    
+
         // Calculate column by dividing X position by the size of each grid step (cell + spacing)
         int col = (int)(relativeX / (cellWidth + spacing));
-    
+
         // Calculate row similarly using Z position
 
         return col;
@@ -145,12 +148,12 @@ public class Table : MonoBehaviour
 
         return new Vector2Int(z, x);
     }
-    
+
     [Button]
     private void SetCameraToCenterOfTable()
     {
         Vector3 centerPosition = transform.position + bounds.center;
-        mainCamera.transform.position = 
+        mainCamera.transform.position =
             new Vector3(centerPosition.x, mainCamera.transform.position.y, centerPosition.z + cameraOffsetZ);
     }
 
@@ -168,20 +171,22 @@ public class Table : MonoBehaviour
         // search for item in current tray
         groupOfItems.Clear();
         var cell = tableMap[positionOfSlot];
-        
+
         if (cell.actualCell.GetTray() == null)
         {
             Debug.Log($"Tại vị trí này, cell đang bị null {positionOfSlot} >???");
             return;
         }
+
         // reset độ ưu tiên của slot trước
         foreach (var item in nextTimeChecking)
         {
             item.isPlacedSlot = false;
             item.Calculator();
         }
+
         nextTimeChecking.Clear();
-        
+
         foreach (var itemID in cell.actualCell.GetTray().GetUniqueItemIDs())
         {
             // Init
@@ -207,32 +212,34 @@ public class Table : MonoBehaviour
                 Debug.Log($"Vị trí kiểm tra hợp lệ {checkingPosition}");
 
                 var checkingCell = tableMap[checkingPosition];
-                if (checkingCell.actualCell.TryGetTray(out Tray checkingTray) && checkingTray.GetCountOfItem(itemID) > 0)
+                if (checkingCell.actualCell.TryGetTray(out Tray checkingTray) &&
+                    checkingTray.GetCountOfItem(itemID) > 0)
                 {
                     InitPriorityTray(checkingTray, itemID);
                 }
             }
+
             Debug.Log("Thêm cell người chơi đã đặt vào");
             InitPriorityTray(cell.actualCell.GetTray(), itemID, true);
 
             SortGroupOfItemID(itemID);
-            
-            // merging
 
+            // merging
         }
+
         Debug.Log("End of merge");
-        // MergeGroupOfItems();
+        MergeGroupOfItems();
     }
-        
+
     private List<PriorityTray> nextTimeChecking = new();
-    
+
     private void InitPriorityTray(Tray checkingTray, string itemID, bool isCheckingSlot = false)
     {
         PriorityTray priorityTray = new();
         priorityTray.Init(checkingTray, itemID, isCheckingSlot);
-       
+
         groupOfItems[itemID].Add(priorityTray);
-        
+
         if (isCheckingSlot)
             nextTimeChecking.Add(priorityTray);
     }
@@ -255,14 +262,15 @@ public class Table : MonoBehaviour
                 _item.Calculator();
             }
         }
+
         foreach (var item in groupOfItems)
         {
             SortGroupOfItemID(item.Key);
         }
     }
-    
-    [Header("Debug")]
-    public string visualizeItemID;
+
+    [Header("Debug")] public string visualizeItemID;
+
     private void HandleVisualizeDebugInput()
     {
         if (Input.GetKeyDown(KeyCode.F))
@@ -273,12 +281,12 @@ public class Table : MonoBehaviour
 
     private void Visualize()
     {
-        foreach(var item in groupOfItems)
-            foreach (var priorityTray in item.Value)
-            {
-                 priorityTray.Clear();
-            }
-        
+        foreach (var item in groupOfItems)
+        foreach (var priorityTray in item.Value)
+        {
+            priorityTray.Clear();
+        }
+
         if (groupOfItems.TryGetValue(visualizeItemID, out var list))
         {
             foreach (var item in list)
@@ -287,9 +295,9 @@ public class Table : MonoBehaviour
             }
         }
     }
-    
 
-    private bool IsValidSlot(int checkX,int checkY)
+
+    private bool IsValidSlot(int checkX, int checkY)
     {
         return checkX >= 0 && checkX < rows && checkY >= 0 && checkY < columns;
     }
@@ -303,41 +311,41 @@ public class Table : MonoBehaviour
             SortAllItem();
         }
 
+        Invoke(nameof(ClearCurrentTray), AnimationManager.Instance.AnimationConfig.itemTransferDuration);
         // ClearCurrentTray();
     }
-    
+
     private void Merge(List<PriorityTray> sources)
     {
         if (sources.Count < 2)
         {
-            Debug.Log("Danh sách tray này không đủ để merge",gameObject);
+            Debug.Log("Danh sách tray này không đủ để merge", gameObject);
             return;
         }
 
         string mainMergeItemID = sources[0].MainItemID;
-        
+
         Queue<Tray> queueTray = new();
 
         foreach (var priorityTray in sources)
         {
             queueTray.Enqueue(priorityTray.Tray);
         }
-        
+
         var source = queueTray.Dequeue();
         var nextTray = queueTray.Dequeue();
-        
+
         while (nextTray != null)
         {
-            
             if (nextTray.GetCountOfItem(mainMergeItemID) == 0)
             {
                 // go to next tray
-                if(queueTray.Count == 0)
+                if (queueTray.Count == 0)
                     break;
-                
+
                 nextTray = queueTray.Dequeue();
             }
-            
+
             if (source.CanAddMoreItem())
             {
                 var item = nextTray.GetFirstOfItem(mainMergeItemID);
@@ -359,6 +367,7 @@ public class Table : MonoBehaviour
             }
         }
     }
+
     [Button]
     private void ClearCurrentTray()
     {
@@ -367,6 +376,6 @@ public class Table : MonoBehaviour
             item.Value.actualCell.TryToDestroyEmptyTray();
             item.Value.actualCell.TryToDestroyFullTray();
         }
-    }
 
+    }
 }

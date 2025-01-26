@@ -26,7 +26,7 @@ public class Slot : MonoBehaviour
     private CompositeMotionHandle handles;
 
     public SlotType SlotType;
-
+    public Action<Slot> PlacedCallback;
     private void Awake()
     {
         currentScale = transform.localScale;
@@ -44,7 +44,10 @@ public class Slot : MonoBehaviour
         currentTray.SetTrayToSlot();
         // currentTray.transform.position = transform.position;
         isEmpty = false;
-        AnimationManager.Instance.MoveTrayToSlot(currentTray.transform, transform.position);
+        LMotion.Create(currentTray.transform.position, transform.position, AnimationManager.Instance.AnimationConfig.releaseTrayDuration)
+            .WithOnComplete(() => {PlacedCallback?.Invoke(this);} )
+            .BindToPosition(currentTray.transform);
+        // AnimationManager.Instance.MoveTrayToSlot(currentTray.transform, transform.position, placedCallback);
     }
 
     [Button]
