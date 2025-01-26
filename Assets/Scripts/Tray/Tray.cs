@@ -237,9 +237,10 @@ public class Tray : MonoBehaviour
     {
         Destroy(gameObject);
     }
-
+    [Button]
     public void DestroyAnimation()
     {
+        
         LMotion.Create(Model.localScale, Vector3.zero, AnimationManager.Instance.AnimationConfig.destroyTrayDuration)
             .WithEase(AnimationManager.Instance.AnimationConfig.destroyTrayEase)
             .WithOnComplete(Destroy)

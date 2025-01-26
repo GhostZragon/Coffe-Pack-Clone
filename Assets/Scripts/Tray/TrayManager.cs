@@ -30,6 +30,18 @@ public class TrayManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            foreach (var item in currentTrayList)
+            {
+                Destroy(item.gameObject);
+            }
+            currentTrayList.Clear();
+            TryCreateNextTrays();
+        }
+    }
 
     public Transform GetStandPosition(int index)
     {

@@ -157,9 +157,7 @@ public class Table : MonoBehaviour
             new Vector3(centerPosition.x, mainCamera.transform.position.y, centerPosition.z + cameraOffsetZ);
     }
 
-    List<Tray> emptyTray = new();
-    List<Tray> processTray = new();
-    public SerializableDictionary<string, List<PriorityTray>> groupOfItems = new();
+    private SerializableDictionary<string, List<PriorityTray>> groupOfItems = new();
     public SerializableDictionary<string, int> test;
 
     public void CheckingMergeSlot(Slot slot)
@@ -228,7 +226,8 @@ public class Table : MonoBehaviour
         }
 
         Debug.Log("End of merge");
-        MergeGroupOfItems();
+        Invoke(nameof(MergeGroupOfItems),.2f);
+        // MergeGroupOfItems();
     }
 
     private List<PriorityTray> nextTimeChecking = new();
@@ -307,11 +306,12 @@ public class Table : MonoBehaviour
     {
         foreach (var item in groupOfItems)
         {
+            Debug.Log("Working on: "+item.Key);
             Merge(item.Value);
             SortAllItem();
         }
 
-        Invoke(nameof(ClearCurrentTray), AnimationManager.Instance.AnimationConfig.itemTransferDuration);
+        // Invoke(nameof(ClearCurrentTray), AnimationManager.Instance.AnimationConfig.itemTransferDuration + .1f);
         // ClearCurrentTray();
     }
 

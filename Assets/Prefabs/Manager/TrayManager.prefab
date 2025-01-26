@@ -48,7 +48,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 710569849481715827}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -58,6 +58,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -110,7 +113,7 @@ Transform:
   m_GameObject: {fileID: 790278123220738662}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.453, y: -0.4027, z: 0.159}
+  m_LocalPosition: {x: 1.732, y: -0.4027, z: 0.159}
   m_LocalScale: {x: 0.52411133, y: 0.1946, z: 0.682}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -131,7 +134,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 790278123220738662}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -141,6 +144,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -193,7 +199,7 @@ Transform:
   m_GameObject: {fileID: 6175623702315702449}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0544, y: -0.4027, z: 0.159}
+  m_LocalPosition: {x: -0.247, y: -0.4027, z: 0.159}
   m_LocalScale: {x: 0.52411133, y: 0.1946, z: 0.682}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -214,7 +220,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6175623702315702449}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -224,6 +230,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -300,9 +309,6 @@ MonoBehaviour:
   - {fileID: 7613375209466627291}
   - {fileID: 4514142382857382504}
   - {fileID: 4133820834651064771}
-  itemsList:
-  - {fileID: 84894186345341861, guid: d53aa5a7ad72e5e47bee3e8e732a6a84, type: 3}
-  - {fileID: 2270308657763802344, guid: b99ccbc4a3b17494aae75bea269882ce, type: 3}
-  - {fileID: 2253601374090873514, guid: 776ecfa858427974bb3a06028c716f5f, type: 3}
   isUsingTestCaseSO: 0
+  currentTrayList: []
   trayPrefab: {fileID: 6588364502764084510, guid: 1ee8f5c86fda4c74197686d079f98965, type: 3}
