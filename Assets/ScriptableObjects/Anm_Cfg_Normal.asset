@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemTransferDuration: 1
   itemTransferEase: 0
+  releaseTrayDuration: 1
+  releaseTrayEase: 0
   destroyTrayDuration: 1
-  destroyTrayEase: 0
+  destroyTrayEase: 25

@@ -59,7 +59,6 @@ public class DragDropSystem : MonoBehaviour
         if (slotObject != null && TryToReleaseTrayInSlot(out Slot slot))
         {
             Debug.Log("Slot is empty and add to slot", slot.gameObject);
-            slot.SetEmpty(false);
             slot.Add(selectionObject);
 
             // logic checking here

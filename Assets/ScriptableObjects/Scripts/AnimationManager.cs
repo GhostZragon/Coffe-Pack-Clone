@@ -1,4 +1,5 @@
-﻿using LitMotion;
+﻿using System;
+using LitMotion;
 using LitMotion.Extensions;
 using UnityEngine;
 
@@ -25,5 +26,16 @@ public class AnimationManager : MonoBehaviour
     {
         LMotion.Create(MoveTransform.position, position, duration)
             .BindToPosition(MoveTransform);
+    }
+
+    public void DestroyTrayAnimation(Tray tray, Action callback)
+    {
+        if (tray == null) return;
+        var trayModel = tray.Model;
+        LMotion.Create(trayModel.localScale, Vector3.zero, AnimationConfig.destroyTrayDuration)
+            .WithEase(AnimationConfig.destroyTrayEase)
+            .WithOnComplete(callback)
+            .BindToLocalScale(trayModel);
+        
     }
 }

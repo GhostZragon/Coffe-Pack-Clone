@@ -21,10 +21,14 @@ public class Tray : MonoBehaviour
     [SerializeField] private int maxItem;
     [Header("Gizmos")] [SerializeField] private Vector3 size;
     [Header("Item settings")] public int randomCount;
-    [SerializeField] private Transform trayModel;
+    public Transform Model;
     private const int OutsideSlotIndex = -1;
 
 
+    // [SerializeField] SerializableMotionSettings<Vector3, NoOptions> destroyMotionSettings;
+    
+    
+    
     public int MaxCount
     {
         get => maxItem;
@@ -224,4 +228,14 @@ public class Tray : MonoBehaviour
 #endif
 
     #endregion Debug
+
+    private void Destroy()
+    {
+        Destroy(gameObject);
+    }
+
+    public void DestroyAnimation()
+    {
+        AnimationManager.Instance.DestroyTrayAnimation(this, Destroy);
+    }
 }

@@ -61,6 +61,10 @@ public class PriorityTray: IComparable<PriorityTray>
         // Nếu MainLevel bằng nhau thì so sánh SubLevel (tăng dần)
         if (mainLevelComparison == 0)
         {
+            // Nếu chỉ có item và không phải là slot người chơi đặt xuống, thì ưu tiên khay có nhiều item hơn
+            if(MainLevel == 1 && other.isPlacedSlot == false && isPlacedSlot == false)
+                return -this.SubLevel.CompareTo(other.SubLevel);
+
             return this.SubLevel.CompareTo(other.SubLevel);
         }
         

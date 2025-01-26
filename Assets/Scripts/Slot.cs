@@ -26,7 +26,6 @@ public class Slot : MonoBehaviour
     private CompositeMotionHandle handles;
 
     public SlotType SlotType;
-    public event Action<Vector3> OnRemoveTrayAction;
 
     private void Awake()
     {
@@ -34,14 +33,9 @@ public class Slot : MonoBehaviour
         handles = new CompositeMotionHandle();
     }
 
-    public bool CanPlacedTray()
+    public virtual bool CanPlacedTray()
     {
         return isEmpty && SlotType == SlotType.Normal;
-    }
-
-    public void SetEmpty(bool _isEmpty)
-    {
-        isEmpty = _isEmpty;
     }
 
     public void Add(Tray tray)
@@ -49,12 +43,9 @@ public class Slot : MonoBehaviour
         currentTray = tray;
         currentTray.SetTrayToSlot();
         // currentTray.transform.position = transform.position;
-
+        isEmpty = false;
         AnimationManager.Instance.MoveTrayToSlot(currentTray.transform, transform.position);
     }
-
-
-
 
     [Button]
     public void OnSelect()
@@ -97,9 +88,10 @@ public class Slot : MonoBehaviour
     public void ClearTray()
     {
         Debug.Log("Clear Tray and destroy it");
+        
+        currentTray?.DestroyAnimation();
         currentTray = null;
         isEmpty = true;
-        Destroy(currentTray.gameObject);
     }
   
     public void TryToDestroyFullTray()

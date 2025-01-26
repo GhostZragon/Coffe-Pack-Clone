@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 229365039013625773}
   - component: {fileID: 2056745973486970675}
   m_Layer: 0
-  m_Name: Slot
+  m_Name: Normal_Slot
   m_TagString: slot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
