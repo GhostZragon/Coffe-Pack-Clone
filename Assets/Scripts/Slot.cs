@@ -82,7 +82,8 @@ public class Slot : MonoBehaviour
 
     public void TryToDestroyEmptyTray()
     {
-        if (currentTray != null && currentTray.items.Count == 0)
+        bool isDestroy = currentTray != null && currentTray.items.Count == 0;
+        if (isDestroy)
         {
             ClearTray();
         }
@@ -100,7 +101,7 @@ public class Slot : MonoBehaviour
     public void TryToDestroyFullTray()
     {
         // try to destroy full of item with max count
-        if (currentTray == null) return;
+        if (currentTray == null) return ;
 
         var uniqueItem = currentTray.GetUniqueItemIDs();
 
@@ -109,5 +110,6 @@ public class Slot : MonoBehaviour
         {
             ClearTray();
         }
+
     }
 }

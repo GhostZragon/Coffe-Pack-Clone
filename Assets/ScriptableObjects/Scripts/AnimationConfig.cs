@@ -12,4 +12,6 @@ public class AnimationConfig : ScriptableObject
     
     public float destroyTrayDuration;
     public Ease destroyTrayEase;
+    
+    public float clearTrayDelay = 0.2f;
 }

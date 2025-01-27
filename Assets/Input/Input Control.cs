@@ -32,7 +32,7 @@ public partial class @InputControl: IInputActionCollection2, IDisposable
                     ""type"": ""Value"",
                     ""id"": ""acd84173-87be-4b8f-bf19-c61d3cbfce3f"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": ""NormalizeVector2"",
+                    ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 },
@@ -50,7 +50,7 @@ public partial class @InputControl: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""f964f3fd-c8b7-4ccc-9bb1-dd53adb04a56"",
-                    ""path"": ""<Mouse>/delta"",
+                    ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -61,7 +61,7 @@ public partial class @InputControl: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""14ee5d6f-edc5-4cea-a4ef-fc08916fadc8"",
-                    ""path"": ""<Touchscreen>/delta"",
+                    ""path"": ""<Touchscreen>/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

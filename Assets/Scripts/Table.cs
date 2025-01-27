@@ -281,12 +281,11 @@ public class Table : MonoBehaviour
     [Button]
     private void MergeGroupOfItems()
     {
-        StartCoroutine(testing());
-        // Invoke(nameof(ClearCurrentTray), AnimationManager.Instance.AnimationConfig.itemTransferDuration + .1f);
-        // ClearCurrentTray();
+        StartCoroutine(MergeGroupOfItemsCoroutine());
+   
     }
 
-    private IEnumerator testing()
+    private IEnumerator MergeGroupOfItemsCoroutine()
     {
         foreach (var item in groupOfItems)
         {
@@ -295,7 +294,11 @@ public class Table : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
             SortAllItem();
         }
+
+        yield return new WaitForSeconds(.5f);
+        ClearCurrentTray();
     }
+
     private void Merge(List<PriorityTray> sources)
     {
         if (sources.Count < 2)
@@ -323,7 +326,6 @@ public class Table : MonoBehaviour
                 // go to next tray
                 if (queueTray.Count == 0)
                     break;
-
                 nextTray = queueTray.Dequeue();
             }
 
@@ -352,11 +354,22 @@ public class Table : MonoBehaviour
     [Button]
     private void ClearCurrentTray()
     {
+        StartCoroutine(ClearTrayCoroutine());
+    }
+
+    private IEnumerator ClearTrayCoroutine()
+    {
         foreach (var item in tableMap)
         {
             item.Value.actualCell.TryToDestroyEmptyTray();
+        }
+        yield return new WaitForSeconds(AnimationManager.Instance.AnimationConfig.clearTrayDelay);
+      
+        foreach (var item in tableMap)
+        {
             item.Value.actualCell.TryToDestroyFullTray();
         }
 
     }
+
 }

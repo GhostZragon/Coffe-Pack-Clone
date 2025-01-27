@@ -12,7 +12,7 @@ public class InputManager : MonoBehaviour
     public event Action<bool> OnDraggingAction;
     public event Action<Vector2> OnDraggingInput;
 
-    public Vector2 draggingDirection;
+    public Vector2 touchPosition;
     private void Awake()
     {
         Instance = this;
@@ -38,6 +38,6 @@ public class InputManager : MonoBehaviour
 
     private void DraggingActionOnperformed(InputAction.CallbackContext obj)
     {
-        draggingDirection = draggingAction.ReadValue<Vector2>();
+        touchPosition = draggingAction.ReadValue<Vector2>();
     }
 }
