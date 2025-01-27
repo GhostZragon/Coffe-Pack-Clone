@@ -1,3 +1,4 @@
+using System.Collections;
 using NaughtyAttributes;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,6 @@ public class Table : MonoBehaviour
     private float startX, startZ;
     private float posX, posZ;
     private int rows, columns;
-    [SerializeField] private Bounds bounds;
 
     private readonly Vector2Int[] directions =
     {
@@ -76,7 +76,7 @@ public class Table : MonoBehaviour
 
         startX = -(columns * (cellWidth + spacing) - spacing) / 2;
         startZ = -(rows * (cellDepth + spacing) - spacing) / 2;
-
+        CameraHandler cameraHandler = Camera.main.GetComponent<CameraHandler>();
         for (int i = 0; i < slots.Count; i++)
         {
             if (i >= rows * columns)
@@ -108,12 +108,8 @@ public class Table : MonoBehaviour
             var position = new Vector2Int(row, col);
             tableMap[position] = cell;
 
-            bounds.Encapsulate(child.position);
+            cameraHandler.SetupBound(child.transform);
         }
-
-        // bounds.Expand(Vector3.one);
-
-        SetCameraToCenterOfTable();
 
         Debug.Log($"Row: {rows}, Col: {columns}");
         Debug.Log("Total count cell: " + tableMap.Count);
@@ -121,13 +117,10 @@ public class Table : MonoBehaviour
 
     int GetGridCoordinates(float posX, float startX, float cellWidth, float spacing)
     {
-        // First, offset the position by the grid's start position to get coordinates relative to grid
         float relativeX = posX - startX;
 
-        // Calculate column by dividing X position by the size of each grid step (cell + spacing)
         int col = (int)(relativeX / (cellWidth + spacing));
 
-        // Calculate row similarly using Z position
 
         return col;
     }
@@ -137,27 +130,11 @@ public class Table : MonoBehaviour
         int x = GetGridCoordinates(position.x, startX, cellWidth, spacing);
         int z = GetGridCoordinates(position.z, startZ, cellDepth, spacing);
 
-        // if (tableMap.ContainsKey(new Vector2Int(x, z)))
-        // {
-        //     Debug.Log($"!! You have click in cell {x} {z}", gameObject);
-        // }
-        // else
-        // {
-        //     Debug.LogWarning($"You dont have this cell in table, pos{position},x{x}, z{z} ",gameObject);
-        // }
-
         return new Vector2Int(z, x);
     }
 
-    [Button]
-    private void SetCameraToCenterOfTable()
-    {
-        Vector3 centerPosition = transform.position + bounds.center;
-        mainCamera.transform.position =
-            new Vector3(centerPosition.x, mainCamera.transform.position.y, centerPosition.z + cameraOffsetZ);
-    }
 
-    private SerializableDictionary<string, List<PriorityTray>> groupOfItems = new();
+    public SerializableDictionary<string, List<PriorityTray>> groupOfItems = new();
     public SerializableDictionary<string, int> test;
 
     public void CheckingMergeSlot(Slot slot)
@@ -304,17 +281,21 @@ public class Table : MonoBehaviour
     [Button]
     private void MergeGroupOfItems()
     {
-        foreach (var item in groupOfItems)
-        {
-            Debug.Log("Working on: "+item.Key);
-            Merge(item.Value);
-            SortAllItem();
-        }
-
+        StartCoroutine(testing());
         // Invoke(nameof(ClearCurrentTray), AnimationManager.Instance.AnimationConfig.itemTransferDuration + .1f);
         // ClearCurrentTray();
     }
 
+    private IEnumerator testing()
+    {
+        foreach (var item in groupOfItems)
+        {
+            Debug.Log("Working on: "+item.Key);
+            Merge(item.Value);
+            yield return new WaitForSeconds(0.1f);
+            SortAllItem();
+        }
+    }
     private void Merge(List<PriorityTray> sources)
     {
         if (sources.Count < 2)

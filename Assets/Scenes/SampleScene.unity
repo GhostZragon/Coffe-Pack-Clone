@@ -1640,6 +1640,7 @@ GameObject:
   - component: {fileID: 1697514697}
   - component: {fileID: 1697514696}
   - component: {fileID: 1697514695}
+  - component: {fileID: 1697514698}
   m_Layer: 0
   m_Name: Main Camera_1
   m_TagString: MainCamera
@@ -1665,7 +1666,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 1, g: 1, b: 1, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1690,7 +1691,7 @@ Camera:
   far clip plane: 1000
   field of view: 27
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 7.8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1721,6 +1722,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 51.6, y: 0, z: 0}
+--- !u!114 &1697514698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1697514694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6214b30341b17540b7058fb89442c8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
 --- !u!114 &1728446605 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2056745973486970675, guid: 929650b7342da8449b6fcc58e39c290b, type: 3}

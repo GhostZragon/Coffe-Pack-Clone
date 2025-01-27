@@ -63,7 +63,7 @@ MonoBehaviour:
   itemHolder: {fileID: 2602766792277700572}
   collider: {fileID: 1875359869581183425}
   index: 0
-  maxItem: 6
+  maxItem: 4
   size: {x: 0.2, y: 0.2, z: 0.2}
   randomCount: 3
   Model: {fileID: 7446731140142230819}
