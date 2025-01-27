@@ -1,107 +1,117 @@
-using System.Collections;
-using System.Collections.Generic;
-using LitMotion;
-using LitMotion.Extensions;
+
 using UnityEngine;
 public class DragDropSystem : MonoBehaviour
 {
-    [SerializeField] private Camera camera;
-    [SerializeField] private bool isTrigger = false;
-    [SerializeField] private Vector3 triggerPosition;
+    [SerializeField] private bool isDragging = false;
+    [SerializeField] private Vector3 draggingPosition;
     [SerializeField] private LayerMask dragLayerMask;
     [SerializeField] private LayerMask slotLayerMask;
 
     [SerializeField]  private Tray selectionObject;
     [SerializeField]  private Slot currentSlot;
 
+    private enum DragState { Idle, Dragging }
+    private DragState currentState = DragState.Idle;
+    
+    private Camera cachedCamera;
+    
     private void Awake()
     {
-        camera = Camera.main;
+        cachedCamera = Camera.main;
     }
 
     private void Update()
     {
-        isTrigger = InputManager.Instance.IsTrigger();
-        triggerPosition = InputManager.Instance.GetTouchPosition();
+        isDragging = InputManager.Instance.IsTrigger();
+        draggingPosition = InputManager.Instance.GetTouchPosition();
+    
         HandleTrigger();
-        
         Dragging();
+        
     }
 
-
-    private void SlotChecking()
+    
+    private void SlotIsOverCursor()
     {
-        if (TryRaycast(triggerPosition, slotLayerMask, out var hit))
+        if (TryRaycast(draggingPosition, slotLayerMask, out var hit))
         {
-            if (hit.collider.TryGetComponent(out Slot newSlot))
+            if (!hit.collider.TryGetComponent(out Slot newSlot)) return;
+           
+            currentSlot?.UnSelect();
+
+            currentSlot = newSlot;
+
+            if (newSlot.CanPlacedTray())
             {
-                if (currentSlot != null && newSlot != null)
-                {
-                    currentSlot.UnSelect();
-                }
-
-                currentSlot = newSlot;
-
-                if (newSlot.CanPlacedTray())
-                {
-                    newSlot.OnSelect();
-                }
+                newSlot.OnSelect();
             }
+            return;
         }
-        else if (currentSlot != null)
-        {
-            // Clear slot highlight when not over any slot
-            currentSlot.UnSelect();
-            currentSlot = null;
-        }
+        
+        ClearStateOfSlot();
     }
 
     private void HandleTrigger()
     {
-        if (isTrigger)
+        
+        // in case i need to implement duo tray or triple
+        // do it in releaseTrayInSlot
+        if (isDragging)
         {
-            if (TryRaycast(triggerPosition, dragLayerMask, out var hit) && selectionObject == null)
-            {
-                if (hit.collider.TryGetComponent(out Tray tray) && !tray.IsInSlot())
-                {
-                    selectionObject = tray;
-                    selectionObject.DisableCollider();
-                }
-            }
-            SlotChecking();
+            Pickup();
+            SlotIsOverCursor();
         }
         else
         {
-            if (selectionObject != null)
-            {
-                
-                if (TryRaycast(triggerPosition, slotLayerMask, out var hit))
-                {
-                    if (hit.collider.TryGetComponent(out Slot slot) && slot.CanPlacedTray())
-                    {
-                        slot.Add(selectionObject);
-                        selectionObject = null;
-                    }
-                }
-                else
-                {
-                    selectionObject.EnableCollider();
-                    selectionObject.GoBack();
-                    selectionObject = null;
-                }
-            }
-            if (currentSlot != null)
-            {
-                currentSlot.UnSelect();
-                currentSlot = null;
-            }
+            ReleaseTrayInSlot();
+            // reset trigger when hold back
+            ClearStateOfSlot();
         }
     }
+    
+    private void ClearStateOfSlot()
+    {
+        if (currentSlot == null) return;
+        // Clear slot highlight when not over any slot
+        currentSlot.UnSelect();
+        currentSlot = null;
+    }
+    
+    private void ReleaseTrayInSlot()
+    {
+        if (selectionObject == null) return;
+
+        if (TryRaycast(draggingPosition, slotLayerMask, out var hit))
+        {
+            if (hit.collider.TryGetComponent(out Slot slot) && slot.CanPlacedTray())
+            {
+                slot.Add(selectionObject);
+                selectionObject = null;
+            }
+        }
+        else
+        {
+            selectionObject.EnableCollider();
+            selectionObject.SetTrayToOriginalPosition();
+            selectionObject = null;
+        }
+    }
+
+    private void Pickup()
+    {
+        if (!TryRaycast(draggingPosition, dragLayerMask, out var hit) || selectionObject != null) return;
+
+        if (!hit.collider.TryGetComponent(out Tray tray) || tray.IsInSlot()) return;
+       
+        selectionObject = tray;
+        selectionObject.DisableCollider();
+    }
+
     private RaycastHit[] raycastHits = new RaycastHit[1];
 
     bool TryRaycast(Vector3 position, LayerMask mask, out RaycastHit hit)
     {
-        var ray = camera.ScreenPointToRay(position);
+        var ray = cachedCamera.ScreenPointToRay(position);
         int count = Physics.RaycastNonAlloc(ray, raycastHits, 100, mask);
         hit = count > 0 ? raycastHits[0] : default;
         return count > 0;
@@ -111,21 +121,20 @@ public class DragDropSystem : MonoBehaviour
     {
         if (selectionObject != null)
         {
-            SetWorldPositionByMouse(selectionObject.transform,triggerPosition);
+            SetWorldPositionByMouse(selectionObject.transform,draggingPosition);
         }
     }
-    private readonly Vector3 workingPosition = new Vector3(); // Reuse this vector
 
     private void SetWorldPositionByMouse(Transform moveObject, Vector3 mousePosition)
     {
         // Get the current depth (distance from camera) of the object
-        float objectDepth = camera.WorldToScreenPoint(moveObject.transform.position).z;
+        float objectDepth = cachedCamera.WorldToScreenPoint(moveObject.transform.position).z;
 
         // Create a screen space position with the correct depth
         Vector3 screenPosition = new Vector3(mousePosition.x, mousePosition.y, objectDepth);
 
         // Convert screen position to world position
-        Vector3 worldPosition = camera.ScreenToWorldPoint(screenPosition);
+        Vector3 worldPosition = cachedCamera.ScreenToWorldPoint(screenPosition);
 
         // Update object position, maintaining a fixed height
         moveObject.transform.position = new Vector3(worldPosition.x, .25f, worldPosition.z);

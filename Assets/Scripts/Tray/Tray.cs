@@ -139,7 +139,7 @@ public class Tray : MonoBehaviour
 
 
     [Button]
-    public void GoBack()
+    public void SetTrayToOriginalPosition()
     {
         if (IsInSlot()) return;
 
