@@ -141,18 +141,18 @@ public class Tray : MonoBehaviour
     [Button]
     public void SetTrayToOriginalPosition()
     {
-        if (IsInSlot()) return;
+        if (CanBeDragged()) return;
 
         var stand = TrayManager.instance.GetStandPosition(index);
         transform.position = stand.position;
     }
 
-    public void DisableCollider()
+    public void OnPickup()
     {
         collider.enabled = false;
     }
 
-    public void EnableCollider()
+    public void OnRelease()
     {
         collider.enabled = true;
     }
@@ -164,7 +164,7 @@ public class Tray : MonoBehaviour
         TrayManager.instance.TryCreateNextTrays();
     }
 
-    public bool IsInSlot()
+    public bool CanBeDragged()
     {
         return index == OutsideSlotIndex;
     }
@@ -242,7 +242,6 @@ public class Tray : MonoBehaviour
     [Button]
     public void DestroyAnimation()
     {
-        
         LMotion.Create(Model.localScale, Vector3.zero, AnimationManager.Instance.AnimationConfig.destroyTrayDuration)
             .WithEase(AnimationManager.Instance.AnimationConfig.destroyTrayEase)
             .WithOnComplete(Destroy)

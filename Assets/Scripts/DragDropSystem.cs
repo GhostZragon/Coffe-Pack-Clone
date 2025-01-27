@@ -91,7 +91,7 @@ public class DragDropSystem : MonoBehaviour
         }
         else
         {
-            selectionObject.EnableCollider();
+            selectionObject.OnRelease();
             selectionObject.SetTrayToOriginalPosition();
             selectionObject = null;
         }
@@ -101,10 +101,10 @@ public class DragDropSystem : MonoBehaviour
     {
         if (!TryRaycast(draggingPosition, dragLayerMask, out var hit) || selectionObject != null) return;
 
-        if (!hit.collider.TryGetComponent(out Tray tray) || tray.IsInSlot()) return;
+        if (!hit.collider.TryGetComponent(out Tray tray) || tray.CanBeDragged()) return;
        
         selectionObject = tray;
-        selectionObject.DisableCollider();
+        selectionObject.OnPickup();
     }
 
     private RaycastHit[] raycastHits = new RaycastHit[1];
