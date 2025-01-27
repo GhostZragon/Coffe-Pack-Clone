@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb74e9f695d52354287efd3ba7c92caf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  draggingDirection: {x: 0, y: 0}
+  touchPosition: {x: 0, y: 0}
 --- !u!4 &135316914
 Transform:
   m_ObjectHideFlags: 0
@@ -2184,6 +2184,14 @@ PrefabInstance:
     - target: {fileID: 5447556536554954445, guid: f64f45e5b49560e4dab9033b2844f945, type: 3}
       propertyPath: m_Name
       value: DragDropSystem
+      objectReference: {fileID: 0}
+    - target: {fileID: 7840580186394979329, guid: f64f45e5b49560e4dab9033b2844f945, type: 3}
+      propertyPath: dragLayerMask.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 7840580186394979329, guid: f64f45e5b49560e4dab9033b2844f945, type: 3}
+      propertyPath: slotLayerMask.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

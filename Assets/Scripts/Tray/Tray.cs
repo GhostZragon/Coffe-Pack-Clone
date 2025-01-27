@@ -160,6 +160,8 @@ public class Tray : MonoBehaviour
     public void SetTrayToSlot()
     {
         index = -1;
+        TrayManager.instance.Remove(this);
+        TrayManager.instance.TryCreateNextTrays();
     }
 
     public bool IsInSlot()

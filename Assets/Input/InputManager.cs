@@ -9,10 +9,8 @@ public class InputManager : MonoBehaviour
     private InputControl inputControl;
     private InputAction draggingAction;
     private InputAction manupilationAction;
-    public event Action<bool> OnDraggingAction;
-    public event Action<Vector2> OnDraggingInput;
-
-    public Vector2 touchPosition;
+   [SerializeField] private bool isTrigger;
+   [SerializeField] private Vector2 touchPosition;
     private void Awake()
     {
         Instance = this;
@@ -26,8 +24,8 @@ public class InputManager : MonoBehaviour
 
         manupilationAction = inputControl.Player.Manipulation;
         manupilationAction.Enable();
-        manupilationAction.started += context => { OnDraggingAction?.Invoke(true); };
-        manupilationAction.canceled += context => { OnDraggingAction?.Invoke(false); };
+        manupilationAction.started += context => { isTrigger = true; };
+        manupilationAction.canceled += context => { isTrigger = false;};
 
     }
 
@@ -39,5 +37,15 @@ public class InputManager : MonoBehaviour
     private void DraggingActionOnperformed(InputAction.CallbackContext obj)
     {
         touchPosition = draggingAction.ReadValue<Vector2>();
+    }
+
+    public Vector3 GetTouchPosition()
+    {
+        return touchPosition;
+    }
+
+    public bool IsTrigger()
+    {
+        return isTrigger;
     }
 }
