@@ -31,9 +31,7 @@ public class DragDropSystem : MonoBehaviour
 
     private void SlotChecking()
     {
-        var ray = camera.ScreenPointToRay(triggerPosition);
-
-        if (Physics.Raycast(ray, out var hit, 100, slotLayerMask))
+        if (TryRaycast(triggerPosition, slotLayerMask, out var hit))
         {
             if (hit.collider.TryGetComponent(out Slot newSlot))
             {
@@ -62,9 +60,7 @@ public class DragDropSystem : MonoBehaviour
     {
         if (isTrigger)
         {
-            var ray = camera.ScreenPointToRay(triggerPosition);
-
-            if (Physics.Raycast(ray, out var hit, 100, dragLayerMask) && selectionObject == null)
+            if (TryRaycast(triggerPosition, dragLayerMask, out var hit) && selectionObject == null)
             {
                 if (hit.collider.TryGetComponent(out Tray tray) && !tray.IsInSlot())
                 {
@@ -79,8 +75,7 @@ public class DragDropSystem : MonoBehaviour
             if (selectionObject != null)
             {
                 
-                var ray = camera.ScreenPointToRay(triggerPosition);
-                if (Physics.Raycast(ray, out var hit, 100, slotLayerMask))
+                if (TryRaycast(triggerPosition, slotLayerMask, out var hit))
                 {
                     if (hit.collider.TryGetComponent(out Slot slot) && slot.CanPlacedTray())
                     {
@@ -102,10 +97,14 @@ public class DragDropSystem : MonoBehaviour
             }
         }
     }
+    private RaycastHit[] raycastHits = new RaycastHit[1];
 
-    private void SlotRelease()
+    bool TryRaycast(Vector3 position, LayerMask mask, out RaycastHit hit)
     {
-        
+        var ray = camera.ScreenPointToRay(position);
+        int count = Physics.RaycastNonAlloc(ray, raycastHits, 100, mask);
+        hit = count > 0 ? raycastHits[0] : default;
+        return count > 0;
     }
     
     private void Dragging()
