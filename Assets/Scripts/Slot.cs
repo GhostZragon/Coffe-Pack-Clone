@@ -74,38 +74,45 @@ public class Slot : MonoBehaviour
         return currentTray;
     }
 
-
-
-    public void TryToDestroyEmptyTray()
+    public void PlayClearAnimation()
     {
-        bool isDestroy = currentTray != null && currentTray.items.Count == 0;
-        if (isDestroy)
+        if (currentTray == null) return;
+        StartCoroutine(DestroyTrayWithDelay());
+    }
+
+    private IEnumerator  DestroyTrayWithDelay()
+    {
+        bool isDelay = false;
+        bool canDestroy = false;
+        if (currentTray.items.Count == 0)
         {
+            canDestroy = true;
+        }
+        else if(currentTray.IsFullOfItem())
+        {
+            canDestroy = true;
+            isDelay = true;
+        }
+
+        if (canDestroy)
+        {
+            yield return new WaitForSeconds( isDelay ? AnimationManager.Instance.AnimationConfig.clearTrayDelay : 0.1f);
             ClearTray();
         }
+        
+        yield return null;
+        
     }
+
+
     [Button]
     public void ClearTray()
     {
         Debug.Log("Clear Tray and destroy it");
-        
         currentTray?.DestroyAnimation();
         currentTray = null;
         isEmpty = true;
     }
   
-    public void TryToDestroyFullTray()
-    {
-        // try to destroy full of item with max count
-        if (currentTray == null) return ;
-
-        var uniqueItem = currentTray.GetUniqueItemIDs();
-
-        if (uniqueItem.Count == 1 &&
-            currentTray.GetCountOfItem(uniqueItem[0]) == currentTray.MaxCount)
-        {
-            ClearTray();
-        }
-
-    }
+ 
 }

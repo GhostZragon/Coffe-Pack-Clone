@@ -247,4 +247,11 @@ public class Tray : MonoBehaviour
             .WithOnComplete(Destroy)
             .BindToLocalScale(Model);
     }
+
+    public bool IsFullOfItem()
+    {
+        var uniqueItem = GetUniqueItemIDs();
+
+        return uniqueItem.Count == 1 && GetCountOfItem(uniqueItem[0]) == MaxCount;
+    }
 }

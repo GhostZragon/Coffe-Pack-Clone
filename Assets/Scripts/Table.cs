@@ -26,6 +26,7 @@ public class Table : MonoBehaviour
     // private float posX, posZ;
     // private int rows, columns;
     [SerializeField] private GridManager gridManager;
+
     private readonly Vector2Int[] directions =
     {
         Vector2Int.up,
@@ -44,7 +45,6 @@ public class Table : MonoBehaviour
 
     private void Update()
     {
-     
         if (Input.GetKeyDown(KeyCode.S))
         {
             MergeGroupOfItems();
@@ -78,7 +78,7 @@ public class Table : MonoBehaviour
     {
         var gridPos = gridManager.WorldToGridPosition(slot.transform.position);
         Debug.Log("================Checking================");
-      
+
         groupOfItems.Clear();
         var cell = gridManager.GetCell(gridPos);
 
@@ -94,11 +94,11 @@ public class Table : MonoBehaviour
         FindNeighborItems(cell, gridPos);
 
         Debug.Log("End of merge");
-        Invoke(nameof(MergeGroupOfItems),.2f);
+        Invoke(nameof(MergeGroupOfItems), .2f);
         // MergeGroupOfItems();
     }
 
-    private void FindNeighborItems(Cell cell,Vector2Int gridPos)
+    private void FindNeighborItems(Cell cell, Vector2Int gridPos)
     {
         foreach (var itemID in cell.Tray.GetUniqueItemIDs())
         {
@@ -107,10 +107,11 @@ public class Table : MonoBehaviour
                 groupOfItems[itemID] = new List<PriorityTray>();
                 Debug.Log("Khởi tạo Group of item priority tray");
             }
+
             FindPotentialNeighbors(gridPos, itemID);
-         
+
             InitPriorityTray(cell.Tray, itemID, true);
-            
+
             SortGroupOfItemID(itemID);
         }
     }
@@ -120,7 +121,7 @@ public class Table : MonoBehaviour
         foreach (var direction in directions)
         {
             var neighbourPosition = new Vector2Int(direction.x + centerPosition.x, direction.y + centerPosition.y);
-            if (ShouldProcessNeighbor(neighbourPosition, out var tray) && CanProcessTray(tray,itemID))
+            if (ShouldProcessNeighbor(neighbourPosition, out var tray) && CanProcessTray(tray, itemID))
             {
                 InitPriorityTray(tray, itemID);
             }
@@ -131,7 +132,7 @@ public class Table : MonoBehaviour
     {
         return tray.GetCountOfItem(itemID) > 0;
     }
-    
+
     private bool ShouldProcessNeighbor(Vector2Int gridPos, out Tray tray)
     {
         tray = null;
@@ -143,7 +144,7 @@ public class Table : MonoBehaviour
 
         return tray != null;
     }
-    
+
     private void ClearPreviousPriorityData()
     {
         foreach (var item in previusPriorityPlaced)
@@ -219,19 +220,18 @@ public class Table : MonoBehaviour
             }
         }
     }
- 
+
     [Button]
     private void MergeGroupOfItems()
     {
         StartCoroutine(MergeGroupOfItemsCoroutine());
-   
     }
 
     private IEnumerator MergeGroupOfItemsCoroutine()
     {
         foreach (var item in groupOfItems)
         {
-            Debug.Log("Working on: "+item.Key);
+            Debug.Log("Working on: " + item.Key);
             Merge(item.Value);
             yield return new WaitForSeconds(0.1f);
             SortAllItem();
@@ -296,22 +296,9 @@ public class Table : MonoBehaviour
     [Button]
     private void ClearCurrentTray()
     {
-        StartCoroutine(ClearTrayCoroutine());
-    }
-
-    private IEnumerator ClearTrayCoroutine()
-    {
         foreach (var item in gridManager.TableMap)
         {
-            item.Value.Slot.TryToDestroyEmptyTray();
+            item.Value.Slot.PlayClearAnimation();
         }
-        yield return new WaitForSeconds(AnimationManager.Instance.AnimationConfig.clearTrayDelay);
-      
-        foreach (var item in gridManager.TableMap)
-        {
-            item.Value.Slot.TryToDestroyFullTray();
-        }
-
     }
-
 }
