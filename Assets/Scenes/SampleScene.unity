@@ -148,6 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb74e9f695d52354287efd3ba7c92caf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isTrigger: 0
   touchPosition: {x: 0, y: 0}
 --- !u!4 &135316914
 Transform:
@@ -2059,9 +2060,8 @@ MonoBehaviour:
   cellWidth: 0.25
   cellDepth: 0.25
   cameraOffsetZ: -7.25
+  gridManager: {fileID: 2082228493}
   groupOfItems:
-    _entries: []
-  test:
     _entries: []
   visualizeItemID: 
 --- !u!114 &2082228493
@@ -2076,6 +2076,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09be929934d43ec44ba3e26bdae78f0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rows: 4
+  _columns: 4
+  _spacing: 1
+  _cellWidth: 0.25
+  _cellDepth: 0.25
 --- !u!1001 &1869666484904722805
 PrefabInstance:
   m_ObjectHideFlags: 0

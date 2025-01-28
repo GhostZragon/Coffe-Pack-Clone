@@ -19,13 +19,13 @@ public class Table : MonoBehaviour
     [SerializeField] private float cellDepth = .25f;
     [SerializeField] private float cameraOffsetZ = .25f;
 
-    private Dictionary<Vector2Int, Cell> tableMap = new();
+    // private Dictionary<Vector2Int, Cell> tableMap = new();
     private bool isRefresh = false;
 
-    private float startX, startZ;
-    private float posX, posZ;
-    private int rows, columns;
-
+    // private float startX, startZ;
+    // private float posX, posZ;
+    // private int rows, columns;
+    [SerializeField] private GridManager gridManager;
     private readonly Vector2Int[] directions =
     {
         Vector2Int.up,
@@ -37,23 +37,14 @@ public class Table : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        tableMap = new();
-        CreateTable();
+        gridManager.InitializeGrid(slots);
+        SetupSlots();
     }
 
-    [Button]
-    private void Refresh()
-    {
-        isRefresh = false;
-    }
 
     private void Update()
     {
-        if (isRefresh == false)
-        {
-            CreateTable();
-        }
-
+     
         if (Input.GetKeyDown(KeyCode.S))
         {
             MergeGroupOfItems();
@@ -67,102 +58,49 @@ public class Table : MonoBehaviour
         HandleVisualizeDebugInput();
     }
 
-    private void CreateTable()
+    private void SetupSlots()
     {
         isRefresh = true;
-
-        rows = 4;
-        columns = 4;
-
-        startX = -(columns * (cellWidth + spacing) - spacing) / 2;
-        startZ = -(rows * (cellDepth + spacing) - spacing) / 2;
         CameraHandler cameraHandler = Camera.main.GetComponent<CameraHandler>();
         for (int i = 0; i < slots.Count; i++)
         {
-            if (i >= rows * columns)
-            {
-                break;
-            }
-
-            int row = i / columns;
-            int col = i % columns;
-
-            Debug.Log($"Local Row: {row}, Col: {col}");
-
-            float posX = startX + col * (cellWidth + spacing);
-            float posZ = startZ + row * (cellDepth + spacing);
-
-            Debug.Log(GetGridCoordinates(posX, startX, cellWidth, spacing));
-            Debug.Log(GetGridCoordinates(posZ, startZ, cellDepth, spacing));
-
             var child = slots[i].transform;
-            float currentY = child.localPosition.y;
-            // set position and name
-            child.localPosition = new Vector3(posX, currentY, posZ);
-            child.name = $"Slot; {row} : {col}";
-            // Create cell to hold data
-            Cell cell = new Cell();
-            cell.actualCell = child.gameObject.GetComponent<Slot>();
-            cell.actualCell.PlacedCallback = CheckingMergeSlot;
+            var slot = child.gameObject.GetComponent<Slot>();
+            slot.PlacedCallback = CheckingMergeSlot;
             // create table 
-            var position = new Vector2Int(row, col);
-            tableMap[position] = cell;
-
             cameraHandler.SetupBound(child.transform);
         }
-
-        Debug.Log($"Row: {rows}, Col: {columns}");
-        Debug.Log("Total count cell: " + tableMap.Count);
     }
-
-    int GetGridCoordinates(float posX, float startX, float cellWidth, float spacing)
-    {
-        float relativeX = posX - startX;
-
-        int col = (int)(relativeX / (cellWidth + spacing));
-
-
-        return col;
-    }
-
-    public Vector2Int TryToGetCell(Vector3 position)
-    {
-        int x = GetGridCoordinates(position.x, startX, cellWidth, spacing);
-        int z = GetGridCoordinates(position.z, startZ, cellDepth, spacing);
-
-        return new Vector2Int(z, x);
-    }
-
 
     public SerializableDictionary<string, List<PriorityTray>> groupOfItems = new();
-    public SerializableDictionary<string, int> test;
 
     public void CheckingMergeSlot(Slot slot)
     {
-        var positionOfSlot = TryToGetCell(slot.transform.position);
-        int StartX, StartY;
+        var gridPos = gridManager.WorldToGridPosition(slot.transform.position);
         Debug.Log("================Checking================");
-        // groupOfItems.Clear();
-        // search for item in current tray
+      
         groupOfItems.Clear();
-        var cell = tableMap[positionOfSlot];
+        var cell = gridManager.GetCell(gridPos);
 
-        if (cell.actualCell.GetTray() == null)
+        if (cell.Tray == null)
         {
-            Debug.Log($"Tại vị trí này, cell đang bị null {positionOfSlot} >???");
+            Debug.Log($"Tại vị trí này, cell đang bị null {gridPos} >???");
             return;
         }
 
         // reset độ ưu tiên của slot trước
-        foreach (var item in nextTimeChecking)
-        {
-            item.isPlacedSlot = false;
-            item.Calculator();
-        }
+        ClearPreviousPriorityData();
 
-        nextTimeChecking.Clear();
+        FindNeighborItems(cell, gridPos);
 
-        foreach (var itemID in cell.actualCell.GetTray().GetUniqueItemIDs())
+        Debug.Log("End of merge");
+        Invoke(nameof(MergeGroupOfItems),.2f);
+        // MergeGroupOfItems();
+    }
+
+    private void FindNeighborItems(Cell cell,Vector2Int gridPos)
+    {
+        foreach (var itemID in cell.Tray.GetUniqueItemIDs())
         {
             // Init
             if (groupOfItems.ContainsKey(itemID) == false)
@@ -172,39 +110,56 @@ public class Table : MonoBehaviour
             }
 
             // Checking direction
-            Debug.Log($"Bắt đầu kiểm tra ItemID {itemID} ở vị trí {positionOfSlot}");
-            foreach (var dir in directions)
-            {
-                StartX = dir.x + positionOfSlot.x;
-                StartY = dir.y + positionOfSlot.y;
-                Vector2Int checkingPosition = new Vector2Int(StartX, StartY);
-                if (!IsValidSlot(StartX, StartY))
-                {
-                    Debug.Log($"Vị trí kiểm tra không hợp lệ {checkingPosition}");
-                    continue;
-                }
-
-                Debug.Log($"Vị trí kiểm tra hợp lệ {checkingPosition}");
-
-                var checkingCell = tableMap[checkingPosition];
-                if (checkingCell.actualCell.TryGetTray(out Tray checkingTray) &&
-                    checkingTray.GetCountOfItem(itemID) > 0)
-                {
-                    InitPriorityTray(checkingTray, itemID);
-                }
-            }
+            Debug.Log($"Bắt đầu kiểm tra ItemID {itemID} ở vị trí {gridPos}");
+            FindPotentialNeighbors(gridPos, itemID);
 
             Debug.Log("Thêm cell người chơi đã đặt vào");
-            InitPriorityTray(cell.actualCell.GetTray(), itemID, true);
+            InitPriorityTray(cell.Tray, itemID, true);
 
             SortGroupOfItemID(itemID);
 
             // merging
         }
+    }
 
-        Debug.Log("End of merge");
-        Invoke(nameof(MergeGroupOfItems),.2f);
-        // MergeGroupOfItems();
+    private void FindPotentialNeighbors(Vector2Int centerPosition, string itemID)
+    {
+        foreach (var direction in directions)
+        {
+            var neighbourPosition = new Vector2Int(direction.x + centerPosition.x, direction.y + centerPosition.y);
+            if (ShouldProcessNeighbor(neighbourPosition, out var tray) && CanProcessTray(tray,itemID))
+            {
+                InitPriorityTray(tray, itemID);
+            }
+        }
+    }
+
+    private bool CanProcessTray(Tray tray, string itemID)
+    {
+        return tray.GetCountOfItem(itemID) > 0;
+    }
+    
+    private bool ShouldProcessNeighbor(Vector2Int gridPos, out Tray tray)
+    {
+        tray = null;
+        if (gridManager.IsValidGridPosition(gridPos) &&
+            gridManager.TryGetCell(gridPos, out var cell) && cell.HasTray)
+        {
+            tray = cell.Tray;
+        }
+
+        return tray != null;
+    }
+    
+    private void ClearPreviousPriorityData()
+    {
+        foreach (var item in nextTimeChecking)
+        {
+            item.isPlacedSlot = false;
+            item.Calculator();
+        }
+
+        nextTimeChecking.Clear();
     }
 
     private List<PriorityTray> nextTimeChecking = new();
@@ -271,13 +226,7 @@ public class Table : MonoBehaviour
             }
         }
     }
-
-
-    private bool IsValidSlot(int checkX, int checkY)
-    {
-        return checkX >= 0 && checkX < rows && checkY >= 0 && checkY < columns;
-    }
-
+ 
     [Button]
     private void MergeGroupOfItems()
     {
@@ -359,15 +308,15 @@ public class Table : MonoBehaviour
 
     private IEnumerator ClearTrayCoroutine()
     {
-        foreach (var item in tableMap)
+        foreach (var item in gridManager.TableMap)
         {
-            item.Value.actualCell.TryToDestroyEmptyTray();
+            item.Value.Slot.TryToDestroyEmptyTray();
         }
         yield return new WaitForSeconds(AnimationManager.Instance.AnimationConfig.clearTrayDelay);
       
-        foreach (var item in tableMap)
+        foreach (var item in gridManager.TableMap)
         {
-            item.Value.actualCell.TryToDestroyFullTray();
+            item.Value.Slot.TryToDestroyFullTray();
         }
 
     }
