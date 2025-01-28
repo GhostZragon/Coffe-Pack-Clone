@@ -102,23 +102,16 @@ public class Table : MonoBehaviour
     {
         foreach (var itemID in cell.Tray.GetUniqueItemIDs())
         {
-            // Init
             if (groupOfItems.ContainsKey(itemID) == false)
             {
                 groupOfItems[itemID] = new List<PriorityTray>();
                 Debug.Log("Khởi tạo Group of item priority tray");
             }
-
-            // Checking direction
-            Debug.Log($"Bắt đầu kiểm tra ItemID {itemID} ở vị trí {gridPos}");
             FindPotentialNeighbors(gridPos, itemID);
-
-            Debug.Log("Thêm cell người chơi đã đặt vào");
+         
             InitPriorityTray(cell.Tray, itemID, true);
-
+            
             SortGroupOfItemID(itemID);
-
-            // merging
         }
     }
 
@@ -153,16 +146,16 @@ public class Table : MonoBehaviour
     
     private void ClearPreviousPriorityData()
     {
-        foreach (var item in nextTimeChecking)
+        foreach (var item in previusPriorityPlaced)
         {
             item.isPlacedSlot = false;
             item.Calculator();
         }
 
-        nextTimeChecking.Clear();
+        previusPriorityPlaced.Clear();
     }
 
-    private List<PriorityTray> nextTimeChecking = new();
+    private List<PriorityTray> previusPriorityPlaced = new();
 
     private void InitPriorityTray(Tray checkingTray, string itemID, bool isCheckingSlot = false)
     {
@@ -172,7 +165,7 @@ public class Table : MonoBehaviour
         groupOfItems[itemID].Add(priorityTray);
 
         if (isCheckingSlot)
-            nextTimeChecking.Add(priorityTray);
+            previusPriorityPlaced.Add(priorityTray);
     }
 
     private void SortGroupOfItemID(string itemID)
