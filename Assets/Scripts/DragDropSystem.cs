@@ -87,14 +87,12 @@ public class DragDropSystem : MonoBehaviour
             {
                 slot.Add(selectionObject);
                 selectionObject = null;
+                return;
             }
         }
-        else
-        {
-            selectionObject.OnRelease();
-            selectionObject.SetTrayToOriginalPosition();
-            selectionObject = null;
-        }
+        selectionObject.OnRelease();
+        selectionObject.SetTrayToOriginalPosition();
+        selectionObject = null;
     }
 
     private void Pickup()

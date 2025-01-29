@@ -257,37 +257,38 @@ public class Table : MonoBehaviour
             queueTray.Enqueue(priorityTray.Tray);
         }
 
-        var source = queueTray.Dequeue();
-        var nextTray = queueTray.Dequeue();
-
-        while (nextTray != null)
+        Tray currentSource = queueTray.Dequeue();
+    
+        while (queueTray.Count > 0)
         {
+            Tray nextTray = queueTray.Peek(); // Only peek, don't dequeue yet
+        
+            // If current source is full, move to next source
+            if (!currentSource.CanAddMoreItem())
+            {
+                currentSource = queueTray.Dequeue();
+                continue;
+            }
+
+            // If next tray has no relevant items, skip it
             if (nextTray.GetCountOfItem(mainMergeItemID) == 0)
             {
-                // go to next tray
-                if (queueTray.Count == 0)
-                    break;
-                nextTray = queueTray.Dequeue();
+                queueTray.Dequeue();
+                continue;
             }
 
-            if (source.CanAddMoreItem())
+            // Transfer item
+            var item = nextTray.GetFirstOfItem(mainMergeItemID);
+            if (item != null)
             {
-                var item = nextTray.GetFirstOfItem(mainMergeItemID);
                 nextTray.Remove(item);
-                source.Add(item);
-            }
-            else
-            {
-                source = nextTray;
-                if (queueTray.Count == 0)
-                    break;
-                nextTray = queueTray.Dequeue();
-            }
-
-            if (source == null)
-            {
-                Debug.Log("Kết thúc vòng lặp");
-                break;
+                currentSource.Add(item);
+            
+                // If next tray is empty, remove it from queue
+                if (nextTray.GetCountOfItem(mainMergeItemID) == 0)
+                {
+                    queueTray.Dequeue();
+                }
             }
         }
     }
