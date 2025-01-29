@@ -112,7 +112,7 @@ public class Table : MonoBehaviour
 
             InitPriorityTray(cell.Tray, itemID, true);
 
-            SortGroupOfItemID(itemID);
+            UpdatePrioritiesForGroup(itemID);
         }
     }
 
@@ -169,30 +169,21 @@ public class Table : MonoBehaviour
             previusPriorityPlaced.Add(priorityTray);
     }
 
-    private void SortGroupOfItemID(string itemID)
+
+
+   
+    private void UpdatePrioritiesForGroup(string itemID)
     {
         if (groupOfItems.TryGetValue(itemID, out var list))
         {
+            foreach (var item in list)
+            {
+                item.Calculator();
+            }
             list.Sort();
         }
     }
 
-    private void SortAllItem()
-    {
-        // calculator
-        foreach (var item in groupOfItems.Values)
-        {
-            foreach (var _item in item)
-            {
-                _item.Calculator();
-            }
-        }
-
-        foreach (var item in groupOfItems)
-        {
-            SortGroupOfItemID(item.Key);
-        }
-    }
 
     [Header("Debug")] public string visualizeItemID;
 
@@ -234,13 +225,21 @@ public class Table : MonoBehaviour
             Debug.Log("Working on: " + item.Key);
             Merge(item.Value);
             yield return new WaitForSeconds(0.1f);
-            SortAllItem();
+            CalculatorAllGroupPriorityAndSort();
         }
 
         yield return new WaitForSeconds(.5f);
         ClearCurrentTray();
     }
 
+    private void CalculatorAllGroupPriorityAndSort()
+    {
+        foreach (var item in groupOfItems)
+        {
+            UpdatePrioritiesForGroup(item.Key);
+        }
+    }
+    
     private void Merge(List<PriorityTray> sources)
     {
         if (sources.Count < 2)
