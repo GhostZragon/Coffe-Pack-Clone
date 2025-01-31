@@ -1,10 +1,10 @@
 using System.Collections;
-using NaughtyAttributes;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Audune.Utils.Dictionary;
 using NUnit.Framework;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 

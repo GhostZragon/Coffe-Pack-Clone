@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using LitMotion;
 using LitMotion.Extensions;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public enum SlotType

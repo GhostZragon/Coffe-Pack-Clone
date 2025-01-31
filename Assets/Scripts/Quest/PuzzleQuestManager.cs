@@ -1,15 +1,28 @@
 ﻿using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
+
+public enum PuzzleStage
+{
+    First,
+    Second,
+    Third
+}
 
 public class PuzzleQuestManager : MonoBehaviour
 {
     public static PuzzleQuestManager Instance;
-    public PuzzleQuestManagerUI PuzzleQuestManagerUI;
-    public List<PuzzleQuest> puzzleQuests;
+    [SerializeField] private PuzzleQuestManagerUI PuzzleQuestManagerUI;
+    [SerializeField] private List<PuzzleQuest> puzzleQuests;
 
-    public List<string> randomItemsList = new();
-    public int questCount = 3;
-    public int stageCount = 3;
+    [SerializeField] private List<string> randomItemsList = new();
+    [SerializeField] private int stageCount = 3;
+    [SerializeField] private PuzzleQuestData puzzleQuestData;
+    private Dictionary<PuzzleStage, QuestData[]> questDataPerStage;
+    [SerializeField] private PuzzleStage currentStage = PuzzleStage.First;
+
+    [SerializeField] private bool completeOneTime;
+
     private void Awake()
     {
         Instance = this;
@@ -17,23 +30,60 @@ public class PuzzleQuestManager : MonoBehaviour
 
     private void Start()
     {
-        SetupQuest();
+        questDataPerStage = new();
+        questDataPerStage[PuzzleStage.First] = puzzleQuestData.stage1;
+        questDataPerStage[PuzzleStage.Second] = puzzleQuestData.stage2;
+        questDataPerStage[PuzzleStage.Third] = puzzleQuestData.stage3;
+
+        CreateNewQuest();
     }
 
-    private void SetupQuest()
+    [Button]
+    private void CompleteAll()
+    {
+        PuzzleStage previousStage = currentStage;
+        if (questDataPerStage.TryGetValue(currentStage, out var arrayQuest))
+        {
+            foreach (var item in arrayQuest)
+            {
+                for (int i = 0; i < item.TargetQuantity; i++)
+                {
+                    OnCompleteItem(item.ItemID);
+
+                    if (previousStage != currentStage)
+                        break;
+                }
+            }
+        }
+    }
+
+    private void CreateNewQuest()
     {
         puzzleQuests.Clear();
-        for (int i = 0; i < questCount; i++)
+        if (CanGoNextStage(currentStage, out var arrayQuest))
         {
-            var puzzleQuest = new PuzzleQuest();
-            
-            CreateRandomProperty(puzzleQuest);
-            
-            if (PuzzleQuestManagerUI == null) return;
-            
-            PuzzleQuestManagerUI.GetPuzzleQuestUI(puzzleQuest);
-          
-            puzzleQuests.Add(puzzleQuest);
+            foreach (var questData in arrayQuest)
+            {
+                var puzzleQuest = new PuzzleQuest();
+                if (questData.IsRandomly())
+                {
+                    CreateRandomProperty(puzzleQuest);
+                }
+                else
+                {
+                    puzzleQuest.InitByQuestData(questData);
+                }
+
+                if (PuzzleQuestManagerUI == null) return;
+                Debug.Log($"Create quest {puzzleQuest.ItemID} and {puzzleQuest.TargetQuantity}");
+                PuzzleQuestManagerUI.GetPuzzleQuestUI(puzzleQuest);
+
+                puzzleQuests.Add(puzzleQuest);
+            }
+        }
+        else
+        {
+            Win();
         }
     }
 
@@ -41,6 +91,7 @@ public class PuzzleQuestManager : MonoBehaviour
     {
         puzzleQuest.ItemID = GetRandomItemID();
         puzzleQuest.TargetQuantity = GetRandomItemCount();
+        puzzleQuest.isRandom = true;
     }
 
     private int GetRandomItemCount()
@@ -50,9 +101,9 @@ public class PuzzleQuestManager : MonoBehaviour
 
     private string GetRandomItemID()
     {
-        return randomItemsList[Random.Range(0,randomItemsList.Count)];
+        return randomItemsList[Random.Range(0, randomItemsList.Count)];
     }
-    
+
     public void OnCompleteItem(string itemID)
     {
         if (string.IsNullOrWhiteSpace(itemID))
@@ -60,11 +111,12 @@ public class PuzzleQuestManager : MonoBehaviour
             Debug.LogWarning("Item ID is null");
             return;
         }
-        
+
         foreach (var quest in puzzleQuests)
         {
             if (quest.ItemID == itemID && quest.IsComplete == false)
             {
+                Debug.Log("Check complete item: " + itemID);
                 quest.UpdateQuest();
                 break;
             }
@@ -72,11 +124,11 @@ public class PuzzleQuestManager : MonoBehaviour
             quest.RefreshUI();
         }
 
-        CheckCompleteQuestStage();
+        CheckCompleteStage();
     }
-    
-    
-    private void CheckCompleteQuestStage()
+
+    [Button]
+    private void CheckCompleteStage()
     {
         bool isCompleteAllQuest = true;
         foreach (var quest in puzzleQuests)
@@ -90,14 +142,23 @@ public class PuzzleQuestManager : MonoBehaviour
 
         if (isCompleteAllQuest == false) return;
 
-        if (stageCount == 0)
-        {
-            // win Game
-        }
-        else
-        {
-            stageCount--;
-            SetupQuest();
-        }
+        CheckWin();
+    }
+
+    private void CheckWin()
+    {
+        currentStage = currentStage == PuzzleStage.First ? PuzzleStage.Second : PuzzleStage.Third;
+
+        CreateNewQuest();
+    }
+
+    private bool CanGoNextStage(PuzzleStage puzzleStage, out QuestData[] arrayQuest)
+    {
+        return questDataPerStage.TryGetValue(puzzleStage, out arrayQuest);
+    }
+
+    private void Win()
+    {
+        Debug.Log("Win Game");
     }
 }

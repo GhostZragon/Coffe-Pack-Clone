@@ -406,7 +406,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 247
 --- !u!114 &336593481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1403,17 +1403,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PuzzleQuestManagerUI: {fileID: 1973761807}
-  puzzleQuests:
-  - ItemID: 
-    TargetQuantity: 0
-  - ItemID: 
-    TargetQuantity: 0
-  - ItemID: 
-    TargetQuantity: 0
+  puzzleQuests: []
   randomItemsList:
   - 1
   - 2
   - 3
+  stageCount: 3
+  puzzleQuestData: {fileID: 11400000, guid: cdf638b7fffa02e49ab80c537733fa53, type: 2}
+  currentStage: 0
+  completeOneTime: 0
 --- !u!4 &1237944088
 Transform:
   m_ObjectHideFlags: 0

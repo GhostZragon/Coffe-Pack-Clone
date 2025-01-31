@@ -12,10 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8462a727064e40d88e5d56dce002959b, type: 3}
   m_Name: Puzzle Quest Data
   m_EditorClassIdentifier: 
-  puzzleQuestList:
-  - ItemID: 
-    TargetQuantity: 0
-    IsRandom: 0
-  - ItemID: 
-    TargetQuantity: 0
-    IsRandom: 0
+  stage1:
+  - Type: 0
+    ItemID: 2
+    TargetQuantity: 1
+  - Type: 0
+    ItemID: 3
+    TargetQuantity: 2
+  - Type: 0
+    ItemID: 1
+    TargetQuantity: 3
+  stage2: []
+  stage3: []

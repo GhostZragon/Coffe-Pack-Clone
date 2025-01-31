@@ -1,18 +1,24 @@
 ﻿using System;
-using NaughtyAttributes;
+using Sirenix.OdinInspector;
 using UnityEngine;
+
+
+
 
 [Serializable]
 public class PuzzleQuest
 {
-    [ShowIf("IsRandom")]
+    [SerializeField,InfoBox("Game will fully random this quest if is random is true")]
+    public bool isRandom = false;
+    [HideIf(nameof(isRandom))]
     public string ItemID;
-    [ShowIf("IsRandom")]
+    [HideIf(nameof(isRandom))]
     public int TargetQuantity;
+   
+    
     public Action<int> OnUpdateItemCount;
     public Action OnCompleteQuest;
 
-    public bool IsRandom = false;
     public bool IsComplete => TargetQuantity == 0;
 
     public void RefreshUI()
@@ -22,19 +28,22 @@ public class PuzzleQuest
 
     private void CompleteQuest()
     {
-        if(IsComplete)
+        if(TargetQuantity <= 0)
             OnCompleteQuest?.Invoke();
-        OnCompleteQuest = null;
     }
-    
+    [Button]
     public void UpdateQuest()
     {
-        TargetQuantity--;
-        TargetQuantity = Mathf.Min(0, TargetQuantity);
+        --TargetQuantity;
     
         RefreshUI();
 
         CompleteQuest();
     }
-    
+
+    public void InitByQuestData(QuestData questData)
+    {
+        ItemID = questData.ItemID;
+        TargetQuantity = questData.TargetQuantity;
+    }
 }

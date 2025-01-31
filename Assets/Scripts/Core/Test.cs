@@ -1,6 +1,5 @@
 using LitMotion;
 using LitMotion.Extensions;
-using NaughtyAttributes;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
@@ -14,7 +13,6 @@ public class Test : MonoBehaviour
         TestBtt();
     }
 
-    [Button]
     private void TestBtt()
     {
         LMotion.Create(0f, 10f, 2f) // Animates values from 0f to 10f over 2 seconds
