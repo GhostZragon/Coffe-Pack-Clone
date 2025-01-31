@@ -154,13 +154,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2042e2bc756044a4c8f4539fa9ae2333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputDirection: {x: 0, y: 0}
-  dragSpeed: 5
+  isDragging: 0
+  draggingPosition: {x: 0, y: 0, z: 0}
+  dragLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  slotLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
   selectionObject: {fileID: 0}
-  collideObject: {fileID: 3442270172610993766}
-  isDestroyByClick: 0
-  trayObject: {fileID: 0}
-  slotObject: {fileID: 0}
+  currentSlot: {fileID: 0}
 --- !u!54 &7568310331172221679
 Rigidbody:
   m_ObjectHideFlags: 0
