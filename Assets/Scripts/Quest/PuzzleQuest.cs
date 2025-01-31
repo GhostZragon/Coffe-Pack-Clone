@@ -32,10 +32,10 @@ public class PuzzleQuest
             OnCompleteQuest?.Invoke();
     }
     [Button]
-    public void UpdateQuest()
+    public void UpdateQuest(int quantity)
     {
-        --TargetQuantity;
-    
+        TargetQuantity -= quantity;
+        
         RefreshUI();
 
         CompleteQuest();

@@ -117,7 +117,8 @@ public class PuzzleQuestManager : MonoBehaviour
             if (quest.ItemID == itemID && quest.IsComplete == false)
             {
                 Debug.Log("Check complete item: " + itemID);
-                quest.UpdateQuest();
+                int quantity = completeOneTime ? quest.TargetQuantity : 1;
+                quest.UpdateQuest(quantity);
                 break;
             }
 
@@ -126,6 +127,7 @@ public class PuzzleQuestManager : MonoBehaviour
 
         CheckCompleteStage();
     }
+    
 
     [Button]
     private void CheckCompleteStage()
