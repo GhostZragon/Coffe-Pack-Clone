@@ -30,10 +30,12 @@ public class PuzzleQuestManager : MonoBehaviour
 
     private void Start()
     {
-        questDataPerStage = new();
-        questDataPerStage[PuzzleStage.First] = puzzleQuestData.stage1;
-        questDataPerStage[PuzzleStage.Second] = puzzleQuestData.stage2;
-        questDataPerStage[PuzzleStage.Third] = puzzleQuestData.stage3;
+        questDataPerStage = new()
+        {
+            [PuzzleStage.First] = puzzleQuestData.stage1,
+            [PuzzleStage.Second] = puzzleQuestData.stage2,
+            [PuzzleStage.Third] = puzzleQuestData.stage3
+        };
 
         CreateNewQuest();
     }
@@ -162,5 +164,19 @@ public class PuzzleQuestManager : MonoBehaviour
     private void Win()
     {
         Debug.Log("Win Game");
+    }
+
+    public List<string> GetItemTypeInQuest()
+    {
+        List<string> itemList = new();
+
+        foreach (var quest in puzzleQuests)
+        {
+            if (itemList.Contains(quest.ItemID))
+                continue;
+            itemList.Add(quest.ItemID);
+        }
+        
+        return itemList;
     }
 }

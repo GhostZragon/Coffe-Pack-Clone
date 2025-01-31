@@ -14,8 +14,10 @@ public class PuzzleQuestManagerUI : MonoBehaviour
     public void GetPuzzleQuestUI(PuzzleQuest puzzleQuest)
     {
         var questUI = Instantiate(puzzleQuestUIPrefab, container.transform);
+   
         questUI.BindingUI(puzzleQuest);
         questUI.gameObject.SetActive(true);
+    
         Debug.Log("Create item quest UI", questUI.gameObject);
     }
 }
