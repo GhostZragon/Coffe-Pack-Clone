@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1875359869581183425}
   - component: {fileID: 336164327564440238}
   - component: {fileID: 8181761612104297064}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Tray
   m_TagString: drag
   m_Icon: {fileID: 0}
@@ -63,7 +63,7 @@ MonoBehaviour:
   itemHolder: {fileID: 2602766792277700572}
   collider: {fileID: 1875359869581183425}
   index: 0
-  maxItem: 6
+  maxItem: 4
   size: {x: 0.2, y: 0.2, z: 0.2}
   randomCount: 3
   Model: {fileID: 7446731140142230819}

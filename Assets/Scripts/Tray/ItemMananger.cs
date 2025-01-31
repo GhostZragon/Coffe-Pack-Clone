@@ -4,9 +4,9 @@ using UnityEngine;
 public class ItemMananger : MonoBehaviour
 {
     public static ItemMananger Instance;
-    public int spawnCount = 3;
-    public bool isRandom;
-    public int maxRandomCount = 0;
+    [SerializeField] private int spawnCount = 3;
+    [SerializeField] private bool isRandom;
+    [SerializeField] private int maxRandomCount = 0;
     private void Awake()
     {
         Instance = this;

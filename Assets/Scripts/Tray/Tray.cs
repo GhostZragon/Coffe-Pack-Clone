@@ -1,9 +1,7 @@
-using NaughtyAttributes;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using LitMotion;
 using LitMotion.Extensions;
+using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -139,20 +137,20 @@ public class Tray : MonoBehaviour
 
 
     [Button]
-    public void GoBack()
+    public void SetTrayToOriginalPosition()
     {
-        if (IsInSlot()) return;
+        if (CanBeDragged()) return;
 
         var stand = TrayManager.instance.GetStandPosition(index);
         transform.position = stand.position;
     }
 
-    public void DisableCollider()
+    public void OnPickup()
     {
         collider.enabled = false;
     }
 
-    public void EnableCollider()
+    public void OnRelease()
     {
         collider.enabled = true;
     }
@@ -160,9 +158,11 @@ public class Tray : MonoBehaviour
     public void SetTrayToSlot()
     {
         index = -1;
+        TrayManager.instance.Remove(this);
+        TrayManager.instance.TryCreateNextTrays();
     }
 
-    public bool IsInSlot()
+    public bool CanBeDragged()
     {
         return index == OutsideSlotIndex;
     }
@@ -237,12 +237,24 @@ public class Tray : MonoBehaviour
     {
         Destroy(gameObject);
     }
-
+    [Button]
     public void DestroyAnimation()
     {
         LMotion.Create(Model.localScale, Vector3.zero, AnimationManager.Instance.AnimationConfig.destroyTrayDuration)
             .WithEase(AnimationManager.Instance.AnimationConfig.destroyTrayEase)
             .WithOnComplete(Destroy)
             .BindToLocalScale(Model);
+    }
+
+    public bool IsFullOfItem(out string itemID)
+    {
+        var uniqueItem = GetUniqueItemIDs();
+        itemID = "";
+        if (uniqueItem.Count == 1 && GetCountOfItem(uniqueItem[0]) == MaxCount)
+        {
+            itemID = uniqueItem[0];
+            return true;
+        }
+        return false;
     }
 }

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6491461135810922298}
   - component: {fileID: 229365039013625773}
   - component: {fileID: 2056745973486970675}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Normal_Slot
   m_TagString: slot
   m_Icon: {fileID: 0}
@@ -126,3 +126,4 @@ MonoBehaviour:
   scaleUpTime: 0.25
   scaleDownTime: 0.25
   scaleValue: 1.3
+  SlotType: 0

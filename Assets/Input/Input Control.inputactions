@@ -1,0 +1,76 @@
+{
+    "name": "Input Control",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "80462e29-59d0-4eb6-803e-871855b39f21",
+            "actions": [
+                {
+                    "name": "Dragging",
+                    "type": "Value",
+                    "id": "acd84173-87be-4b8f-bf19-c61d3cbfce3f",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Manipulation",
+                    "type": "Button",
+                    "id": "36c282fe-a680-4f10-bc12-aa3d22d63096",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f964f3fd-c8b7-4ccc-9bb1-dd53adb04a56",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dragging",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "14ee5d6f-edc5-4cea-a4ef-fc08916fadc8",
+                    "path": "<Touchscreen>/primaryTouch/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dragging",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3faf2f03-1c50-4b47-a400-21f239c2c064",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Manipulation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c703b93e-78d8-45cf-8e63-8911725fe715",
+                    "path": "<Touchscreen>/Press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Manipulation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
