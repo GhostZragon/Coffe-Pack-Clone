@@ -12,7 +12,6 @@ public class Table : MonoBehaviour
 {
     public static Table Instance;
     [SerializeField] private Camera mainCamera;
-
     [SerializeField] private List<Slot> slots;
     [SerializeField] private float spacing = 1f;
     [SerializeField] private float cellWidth = .25f;
@@ -22,6 +21,7 @@ public class Table : MonoBehaviour
     // private Dictionary<Vector2Int, Cell> tableMap = new();
     private bool isRefresh = false;
 
+    private CameraHandler cameraHandler;
     // private float startX, startZ;
     // private float posX, posZ;
     // private int rows, columns;
@@ -38,10 +38,16 @@ public class Table : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        gridManager.InitializeGrid(slots);
+        mainCamera = Camera.main;
         SetupSlots();
-    }
+        
+        gridManager.InitializeGrid(slots);
+        
 
+        cameraHandler = mainCamera.GetComponent<CameraHandler>();
+        cameraHandler.ClearBound();
+        cameraHandler.SetupBound(slots);
+    }
 
     private void Update()
     {
@@ -61,20 +67,18 @@ public class Table : MonoBehaviour
     private void SetupSlots()
     {
         isRefresh = true;
-        CameraHandler cameraHandler = Camera.main.GetComponent<CameraHandler>();
         for (int i = 0; i < slots.Count; i++)
         {
             var child = slots[i].transform;
             var slot = child.gameObject.GetComponent<Slot>();
             slot.PlacedCallback = CheckingMergeSlot;
-            // create table 
-            cameraHandler.SetupBound(child.transform);
         }
     }
 
+
     public SerializableDictionary<string, List<PriorityTray>> groupOfItems = new();
 
-    public void CheckingMergeSlot(Slot slot)
+    private void CheckingMergeSlot(Slot slot)
     {
         var gridPos = gridManager.WorldToGridPosition(slot.transform.position);
         Debug.Log("================Checking================");

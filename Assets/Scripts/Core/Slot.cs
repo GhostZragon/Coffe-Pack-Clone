@@ -22,11 +22,15 @@ public class Slot : MonoBehaviour
     [Header("Settings")] [SerializeField] private float scaleUpTime = .25f;
     [SerializeField] private float scaleDownTime = .25f;
     [SerializeField] private float scaleValue = 1.3f;
+   
+    
     private Vector3 currentScale;
     private CompositeMotionHandle handles;
 
     public SlotType SlotType;
+  
     public Action<Slot> PlacedCallback;
+
     private void Awake()
     {
         currentScale = transform.localScale;
@@ -88,10 +92,12 @@ public class Slot : MonoBehaviour
         {
             canDestroy = true;
         }
-        else if(currentTray.IsFullOfItem())
+        else if(currentTray.IsFullOfItem(out var itemID))
         {
             canDestroy = true;
             isDelay = true;
+            
+            PuzzleQuestManager.Instance?.OnCompleteItem(itemID);
         }
 
         if (canDestroy)
