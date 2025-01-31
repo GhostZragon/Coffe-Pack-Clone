@@ -17,7 +17,7 @@ public class PuzzleQuestUI : MonoBehaviour
 
     private void UpdateCount(int targetQuantity)
     {
-        itemCountText.text = $"x{targetQuantity}";
+        itemCountText.text = targetQuantity.ToString();
     }
 
     private void OnCompleteQuest()
