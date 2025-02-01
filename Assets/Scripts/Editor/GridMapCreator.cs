@@ -9,7 +9,8 @@ public class GridMapCreator : EditorWindow
     {
         private Rect rect;
         public GUIStyle style;
-        public Node(Vector2 position,float width,float heigh, GUIStyle defaultStyle)
+
+        public Node(Vector2 position, float width, float heigh, GUIStyle defaultStyle)
         {
             rect = new Rect(position.x, position.y, width, heigh);
             style = defaultStyle;
@@ -19,18 +20,18 @@ public class GridMapCreator : EditorWindow
         {
             rect.position += delta;
         }
-        
+
         public void Draw()
         {
-            GUI.Box(rect,"",style);
+            GUI.Box(rect, "", style);
         }
 
         public void SetStyle(GUIStyle newStyle)
         {
             style = newStyle;
         }
-        
     }
+
     private Vector2 offset;
     private Vector2 drag;
     private GUIStyle empty;
@@ -38,14 +39,17 @@ public class GridMapCreator : EditorWindow
     private Vector2 nodePos;
     private StyleManager styleManager;
     private bool isEarsing;
+
+    private Rect MenuBar;
+
     private void OnEnable()
     {
         SetupStyles();
         empty = new GUIStyle();
         var icon = Resources.Load("IconTex/Empty") as Texture2D;
         empty.normal.background = icon;
+        currentStyle = empty;
         SetupNodes();
-     
     }
 
     private void SetupStyles()
@@ -56,7 +60,6 @@ public class GridMapCreator : EditorWindow
         {
             styleManager.ButtonStyles[i].NodeStyle = new GUIStyle();
             styleManager.ButtonStyles[i].NodeStyle.normal.background = styleManager.ButtonStyles[i].icon;
-
         }
     }
 
@@ -68,8 +71,8 @@ public class GridMapCreator : EditorWindow
             nodes.Add(new List<Node>());
             for (int j = 0; j < 20; j++)
             {
-                nodePos.Set(i * 30,j*30);
-                nodes[i].Add(new Node(nodePos,30,30,empty));
+                nodePos.Set(i * 30, j * 30);
+                nodes[i].Add(new Node(nodePos, 30, 30, empty));
             }
         }
     }
@@ -85,6 +88,7 @@ public class GridMapCreator : EditorWindow
     {
         DrawGrid();
         DrawNodes();
+        DrawMenuBar();
         ProcessNodes(Event.current);
         ProcessGrid(Event.current);
         if (GUI.changed)
@@ -93,26 +97,75 @@ public class GridMapCreator : EditorWindow
         }
     }
 
+    private GUIStyle currentStyle;
+
+    private void DrawMenuBar()
+    {
+        MenuBar = new Rect(0, 0, position.width, 20);
+        GUILayout.BeginArea(MenuBar, EditorStyles.toolbar);
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button(new GUIContent("Chicken"), EditorStyles.toolbarButton, GUILayout.Width(80)))
+        {
+            currentStyle = styleManager.ButtonStyles[1].NodeStyle;
+        }
+
+        if (GUILayout.Button(new GUIContent("Cow"), EditorStyles.toolbarButton, GUILayout.Width(80)))
+        {
+            currentStyle = styleManager.ButtonStyles[2].NodeStyle;
+        }
+
+        if (GUILayout.Button(new GUIContent("Lamb"), EditorStyles.toolbarButton, GUILayout.Width(80)))
+        {
+            currentStyle = styleManager.ButtonStyles[3].NodeStyle;
+        }
+
+        if (GUILayout.Button(new GUIContent("Tree"), EditorStyles.toolbarButton, GUILayout.Width(80)))
+        {
+            currentStyle = styleManager.ButtonStyles[4].NodeStyle;
+        }
+
+        GUILayout.EndHorizontal();
+        GUILayout.EndArea();
+    }
+
     private void ProcessNodes(Event e)
     {
         int row = (int)(e.mousePosition.x - offset.x) / 30;
         int col = (int)(e.mousePosition.y - offset.y) / 30;
 
-        if (e.type == EventType.MouseDown)
+        if ((e.mousePosition.x - offset.x) < 0 || (e.mousePosition.x - offset.x) > 600 ||
+            (e.mousePosition.y - offset.y) < 0 || (e.mousePosition.y - offset.y) > 300)
         {
-            isEarsing = nodes[row][col].style.normal.background.name != "Empty";
+        }
+        else
+        {
+            if (e.type == EventType.MouseDown)
+            {
+                isEarsing = nodes[row][col].style.normal.background.name != "Empty";
 
-            if (isEarsing)
-            {
-                nodes[row][col].SetStyle(empty);
-                GUI.changed = true;
+                PaintNodes(row, col);
             }
-            else
+
+            if (e.type == EventType.MouseDrag)
             {
-                nodes[row][col].SetStyle(styleManager.ButtonStyles[1].NodeStyle);
-                GUI.changed = true;
+                PaintNodes(row, col);
+
+                e.Use();
             }
- 
+        }
+    }
+
+    private void PaintNodes(int row, int col)
+    {
+        if (isEarsing)
+        {
+            nodes[row][col].SetStyle(empty);
+            GUI.changed = true;
+        }
+        else
+        {
+            nodes[row][col].SetStyle(currentStyle);
+            GUI.changed = true;
         }
     }
 
@@ -120,7 +173,7 @@ public class GridMapCreator : EditorWindow
     {
         for (int i = 0; i < 20; i++)
         {
-            for (int j = 0; j < 20; j++)
+            for (int j = 0; j < 10; j++)
             {
                 nodes[i][j].Draw();
             }
@@ -138,6 +191,7 @@ public class GridMapCreator : EditorWindow
                 {
                     OnMouseDrag(e.delta);
                 }
+
                 break;
         }
     }
@@ -145,7 +199,7 @@ public class GridMapCreator : EditorWindow
     private void OnMouseDrag(Vector2 delta)
     {
         drag = delta;
-        
+
         for (int i = 0; i < 20; i++)
         {
             nodes.Add(new List<Node>());
@@ -154,7 +208,7 @@ public class GridMapCreator : EditorWindow
                 nodes[i][j].Drag(delta);
             }
         }
-        
+
         GUI.changed = true;
     }
 
@@ -167,7 +221,7 @@ public class GridMapCreator : EditorWindow
         Handles.color = new Color(0.5f, 0.5f, 0.5f, 0.2f);
 
         offset += drag;
-        
+
         Vector3 newOffset = new Vector3(offset.x % 20, offset.y % 20, 0);
 
         for (int i = 0; i < widthDivider; i++)
