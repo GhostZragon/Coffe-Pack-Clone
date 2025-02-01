@@ -41,7 +41,7 @@ public class Table : MonoBehaviour
         mainCamera = Camera.main;
         SetupSlots();
         
-        gridManager.InitializeGrid(slots);
+        gridManager.InitializeGrid();
         
 
         cameraHandler = mainCamera.GetComponent<CameraHandler>();
@@ -67,14 +67,23 @@ public class Table : MonoBehaviour
     private void SetupSlots()
     {
         isRefresh = true;
-        for (int i = 0; i < slots.Count; i++)
-        {
-            var child = slots[i].transform;
-            var slot = child.gameObject.GetComponent<Slot>();
-            slot.PlacedCallback = CheckingMergeSlot;
-        }
+        // for (int i = 0; i < slots.Count; i++)
+        // {
+        //     var child = slots[i].transform;
+        //     var slot = child.gameObject.GetComponent<Slot>();
+        //     slot.PlacedCallback = CheckingMergeSlot;
+        // }
     }
 
+    public Slot slotPrefab;
+
+    public Slot InitSlot()
+    {
+        var slot = Instantiate(slotPrefab, transform);
+        slot.PlacedCallback = CheckingMergeSlot;
+        
+        return slot;
+    }
 
     public SerializableDictionary<string, List<PriorityTray>> groupOfItems = new();
 
