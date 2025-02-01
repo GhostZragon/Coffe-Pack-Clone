@@ -104,30 +104,26 @@ public class GridMapCreator : EditorWindow
         MenuBar = new Rect(0, 0, position.width, 20);
         GUILayout.BeginArea(MenuBar, EditorStyles.toolbar);
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button(new GUIContent("Chicken"), EditorStyles.toolbarButton, GUILayout.Width(80)))
+        for (int i = 0; i < styleManager.ButtonStyles.Length; i++)
         {
-            currentStyle = styleManager.ButtonStyles[1].NodeStyle;
+            DrawToggle(styleManager.ButtonStyles[i].ButtonTex, i);
         }
-
-        if (GUILayout.Button(new GUIContent("Cow"), EditorStyles.toolbarButton, GUILayout.Width(80)))
-        {
-            currentStyle = styleManager.ButtonStyles[2].NodeStyle;
-        }
-
-        if (GUILayout.Button(new GUIContent("Lamb"), EditorStyles.toolbarButton, GUILayout.Width(80)))
-        {
-            currentStyle = styleManager.ButtonStyles[3].NodeStyle;
-        }
-
-        if (GUILayout.Button(new GUIContent("Tree"), EditorStyles.toolbarButton, GUILayout.Width(80)))
-        {
-            currentStyle = styleManager.ButtonStyles[4].NodeStyle;
-        }
-
+        // DrawToggle("Chicken", 1);
+        // DrawToggle("Cow", 2);
+        // DrawToggle("Lamb", 3);
+        // DrawToggle("Tree", 4);
         GUILayout.EndHorizontal();
         GUILayout.EndArea();
     }
 
+
+    private void DrawToggle(string toggleName,int index)
+    {
+        if (GUILayout.Toggle(currentStyle == styleManager.ButtonStyles[index].NodeStyle,new GUIContent(toggleName), EditorStyles.toolbarButton, GUILayout.Width(80)))
+        {
+            currentStyle = styleManager.ButtonStyles[index].NodeStyle;
+        }
+    }
     private void ProcessNodes(Event e)
     {
         int row = (int)(e.mousePosition.x - offset.x) / 30;
