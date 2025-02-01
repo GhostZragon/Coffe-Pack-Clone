@@ -12,7 +12,7 @@ public class Table : MonoBehaviour
 {
     public static Table Instance;
     [SerializeField] private Camera mainCamera;
-    [SerializeField] private List<Slot> slots;
+    [SerializeField] private Slot slotPrefab;
     [SerializeField] private float spacing = 1f;
     [SerializeField] private float cellWidth = .25f;
     [SerializeField] private float cellDepth = .25f;
@@ -39,14 +39,12 @@ public class Table : MonoBehaviour
     {
         Instance = this;
         mainCamera = Camera.main;
-        SetupSlots();
+        cameraHandler = mainCamera.GetComponent<CameraHandler>();
         
-        gridManager.InitializeGrid(slots);
+        cameraHandler.ClearBound();
+        gridManager.InitializeGrid();
         
 
-        cameraHandler = mainCamera.GetComponent<CameraHandler>();
-        cameraHandler.ClearBound();
-        cameraHandler.SetupBound(slots);
     }
 
     private void Update()
@@ -64,17 +62,16 @@ public class Table : MonoBehaviour
         HandleVisualizeDebugInput();
     }
 
-    private void SetupSlots()
-    {
-        isRefresh = true;
-        for (int i = 0; i < slots.Count; i++)
-        {
-            var child = slots[i].transform;
-            var slot = child.gameObject.GetComponent<Slot>();
-            slot.PlacedCallback = CheckingMergeSlot;
-        }
-    }
 
+
+    public Slot InitSlot()
+    {
+        var slot = Instantiate(slotPrefab, transform);
+        slot.PlacedCallback = CheckingMergeSlot;
+        cameraHandler.SetupBound(slot);
+
+        return slot;
+    }
 
     public SerializableDictionary<string, List<PriorityTray>> groupOfItems = new();
 

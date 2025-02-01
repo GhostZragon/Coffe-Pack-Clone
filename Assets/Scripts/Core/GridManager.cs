@@ -9,7 +9,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] private float _spacing = 1f;
     [SerializeField] private float _cellWidth = 0.25f;
     [SerializeField] private float _cellDepth = 0.25f;
-
+    [SerializeField] private CSVImport csvImport;
     private Dictionary<Vector2Int, Cell> _cells = new();
     public IReadOnlyDictionary<Vector2Int, Cell> TableMap
     {
@@ -18,10 +18,11 @@ public class GridManager : MonoBehaviour
 
     private float _startX, _startZ;
 
-    public void InitializeGrid(List<Slot> slots)
+    public void InitializeGrid()
     {
+        csvImport.Init();
         CalculateGridOrigin();
-        CreateCells(slots);
+        CreateCells();
     }
     public Cell GetCell(Vector2Int gridPos) => _cells.TryGetValue(gridPos, out var cell) ? cell : null;
     public bool TryGetCell(Vector2Int gridPos, out Cell cell) => _cells.TryGetValue(gridPos, out cell);
@@ -31,19 +32,23 @@ public class GridManager : MonoBehaviour
         _startZ = -(_rows * (_cellDepth + _spacing) - _spacing) / 2;
     }
 
-    private void CreateCells(List<Slot> slots)
+    private void CreateCells()
     {
         _cells.Clear();
-        
-        for (int i = 0; i < slots.Count; i++)
+
+        for (int i = 0; i < csvImport.maze.GetLength(0); i++)
         {
-            if (i >= _rows * _columns) break;
-            
-            Vector2Int gridPos = new(i / _columns, i % _columns);
-            Slot slot = slots[i];
-            
-            PositionSlot(slot.transform, gridPos);
-            _cells[gridPos] = new Cell(slot);
+            for (int j = 0; j < csvImport.maze.GetLength(1); j++)
+            {
+                int value = csvImport.maze[i, j];
+                if (value == 1)
+                {
+                    Vector2Int gridPos = new Vector2Int(i, j);
+                    var slot = Table.Instance.InitSlot();            
+                    PositionSlot(slot.transform, gridPos);
+                    _cells[gridPos] = new Cell(slot);
+                }
+            }
         }
     }
 
