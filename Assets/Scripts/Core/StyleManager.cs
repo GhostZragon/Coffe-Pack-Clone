@@ -13,4 +13,6 @@ public struct ButtonStyle
 
     [HideInInspector]
     public GUIStyle NodeStyle;
+
+    public GameObject PrefabObject;
 }

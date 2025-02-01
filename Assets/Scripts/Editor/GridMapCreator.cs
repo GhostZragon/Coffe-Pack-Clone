@@ -1,7 +1,15 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+public class PartScript : MonoBehaviour
+{
+    public int row, column;
+    public string partName = "Empty";
+    public GameObject Part;
+    public GUIStyle style;
+}
 
 public class GridMapCreator : EditorWindow
 {
@@ -36,20 +44,40 @@ public class GridMapCreator : EditorWindow
     private Vector2 drag;
     private GUIStyle empty;
     private List<List<Node>> nodes;
+    private List<List<PartScript>> parts;
+
     private Vector2 nodePos;
     private StyleManager styleManager;
     private bool isEarsing;
 
     private Rect MenuBar;
+    private GameObject TheMap;
 
     private void OnEnable()
     {
         SetupStyles();
-        empty = new GUIStyle();
-        var icon = Resources.Load("IconTex/Empty") as Texture2D;
-        empty.normal.background = icon;
-        currentStyle = empty;
-        SetupNodes();
+        SetupMap();
+        SetupNodesAndParts();
+    }
+
+    private void SetupMap()
+    {
+        try
+        {
+            TheMap = GameObject.FindGameObjectWithTag("Map");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
+        if (TheMap == null)
+        {
+            TheMap = new GameObject("Map");
+            TheMap.tag = "Map";
+        }
+            
     }
 
     private void SetupStyles()
@@ -61,18 +89,24 @@ public class GridMapCreator : EditorWindow
             styleManager.ButtonStyles[i].NodeStyle = new GUIStyle();
             styleManager.ButtonStyles[i].NodeStyle.normal.background = styleManager.ButtonStyles[i].icon;
         }
+        
+        empty = styleManager.ButtonStyles[0].NodeStyle;
+        currentStyle = styleManager.ButtonStyles[1].NodeStyle;
     }
 
-    private void SetupNodes()
+    private void SetupNodesAndParts()
     {
         nodes = new();
+        parts = new();
         for (int i = 0; i < 20; i++)
         {
             nodes.Add(new List<Node>());
+            parts.Add(new List<PartScript>());
             for (int j = 0; j < 20; j++)
             {
                 nodePos.Set(i * 30, j * 30);
                 nodes[i].Add(new Node(nodePos, 30, 30, empty));
+                parts[i].Add(null);
             }
         }
     }
@@ -108,10 +142,7 @@ public class GridMapCreator : EditorWindow
         {
             DrawToggle(styleManager.ButtonStyles[i].ButtonTex, i);
         }
-        // DrawToggle("Chicken", 1);
-        // DrawToggle("Cow", 2);
-        // DrawToggle("Lamb", 3);
-        // DrawToggle("Tree", 4);
+
         GUILayout.EndHorizontal();
         GUILayout.EndArea();
     }
@@ -160,8 +191,27 @@ public class GridMapCreator : EditorWindow
         }
         else
         {
-            nodes[row][col].SetStyle(currentStyle);
-            GUI.changed = true;
+            if (parts[row][col] != null)
+            {
+                nodes[row][col].SetStyle(currentStyle);
+
+                var go = Instantiate(Resources.Load("MapParts/" + currentStyle.normal.background.name)) as GameObject;
+                go.name = currentStyle.normal.background.name;
+                go.transform.position = new Vector3(col * 10, 0, col * 10);
+                go.transform.parent = TheMap.transform;
+                parts[row][col] = go.GetComponent<PartScript>();
+                parts[row][col].Part = go;
+                parts[row][col].name = go.name;
+                parts[row][col].row = row;
+                parts[row][col].column = col;
+                parts[row][col].style = currentStyle;
+                
+                
+                
+                GUI.changed = true;
+            }
+            
+            
         }
     }
 
