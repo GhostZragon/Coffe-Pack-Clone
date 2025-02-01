@@ -17,6 +17,7 @@ public class CSVImport : MonoBehaviour
                 if (int.TryParse(cols[j].Trim(), out int number))
                 {
                     maze[i,j] = number;
+                    // Debug.Log( $"Value {number} at {i} {j}");
                 }
                 else
                 {

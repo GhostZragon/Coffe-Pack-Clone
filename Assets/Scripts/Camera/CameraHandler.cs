@@ -12,14 +12,17 @@ public class CameraHandler : MonoBehaviour
         levelBounds = new();
     }
 
-    public void SetupBound(List<Slot> slots)
+    public void SetupBound(Slot slot)
     {
-        foreach (var slot in slots)
-        {
-            levelBounds.Encapsulate(slot.transform.position);
-        }
+        levelBounds.Encapsulate(slot.transform.position);
 
-        AdjustCameraToFitBounds();
+        // AdjustCameraToFitBounds();
+
+    }
+
+    private void Update()
+    {
+        transform.position = new Vector3(levelBounds.center.x, transform.position.y, levelBounds.center.z);
     }
 
     public void ClearBound()
