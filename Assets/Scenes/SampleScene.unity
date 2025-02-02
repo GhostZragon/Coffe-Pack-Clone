@@ -255,7 +255,7 @@ GameObject:
   - component: {fileID: 433850574}
   - component: {fileID: 433850573}
   m_Layer: 0
-  m_Name: Slot Factory
+  m_Name: Slot Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1163,6 +1163,7 @@ SceneRoots:
   - {fileID: 1697514697}
   - {fileID: 705507995}
   - {fileID: 2082228491}
+  - {fileID: 433850574}
   - {fileID: 2015758603}
   - {fileID: 135316914}
   - {fileID: 1237944088}
@@ -1171,4 +1172,3 @@ SceneRoots:
   - {fileID: 4053559344774582822}
   - {fileID: 7075154157146819930}
   - {fileID: 290131922}
-  - {fileID: 433850574}

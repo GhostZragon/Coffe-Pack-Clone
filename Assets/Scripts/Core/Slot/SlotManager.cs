@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 
-public class SlotFactory : MonoBehaviour
+public class SlotManager : MonoBehaviour
 {
-    public static SlotFactory Instance;
-    public SlotBase normalSlot;
-    public SlotBase blockingSlot;
+    public static SlotManager Instance;
+    [SerializeField] private SlotBase normalSlot;
+    [SerializeField] private SlotBase blockingSlot;
 
     private void Awake()
     {
         Instance = this;
     }
 
-   
+
     public SlotBase GetSlot(SlotType slotType)
     {
         var prefab = GetSlotPrefab(slotType);
