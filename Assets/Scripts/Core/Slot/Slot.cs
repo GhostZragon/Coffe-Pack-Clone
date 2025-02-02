@@ -35,7 +35,7 @@ public class Slot : SlotBase
 
     private void OnPlacedTray()
     {
-        Table.Instance.CheckingMergeSlot(this);
+        Table.Instance.mergeSystem.TryMergeAtSlot(this);
     }
 
     public void Add(Tray tray)
