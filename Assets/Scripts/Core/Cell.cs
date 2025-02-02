@@ -20,9 +20,10 @@ public class Cell
     {
         if (Slot is Slot slot)
         {
+            Debug.Log("Đã tìm thấy slot");
             return slot.GetTray();
         }
-
+        Debug.Log("không tìm thấy slot");
         return null;
     }
 }

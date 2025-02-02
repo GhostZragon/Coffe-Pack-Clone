@@ -275,7 +275,7 @@ public class Table : MonoBehaviour
             if (gridManager.IsValidGridPosition(checkingPosition))
             {
                 var NeighbourCell = gridManager.GetCell(checkingPosition);
-                // NeighbourCell.Slot?.ActiveSpecialEffect();
+                NeighbourCell.Slot?.ActiveSpecialEffect();
             }
         }
     }
@@ -287,6 +287,5 @@ public class Table : MonoBehaviour
         var cellPosition = gridManager.WorldToGridPosition(currentSlot.transform.position);
         var cell = gridManager.GetCell(cellPosition);
         cell.SetSlot(newSlot as Slot);
-        currentSlot.PlayClearAnimation();
     }
 }
