@@ -8,7 +8,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 
-public class Table : MonoBehaviour
+public partial class Table : MonoBehaviour
 {
     public static Table Instance;
     [SerializeField] private Camera mainCamera;
@@ -18,13 +18,10 @@ public class Table : MonoBehaviour
     [SerializeField] private float cellDepth = .25f;
     [SerializeField] private float cameraOffsetZ = .25f;
 
-    // private Dictionary<Vector2Int, Cell> tableMap = new();
     private bool isRefresh = false;
-
+    private MergeSystem mergeSystem;
     private CameraHandler cameraHandler;
-    // private float startX, startZ;
-    // private float posX, posZ;
-    // private int rows, columns;
+
     [SerializeField] private GridManager gridManager;
 
     private readonly Vector2Int[] directions =
@@ -43,7 +40,7 @@ public class Table : MonoBehaviour
         
         cameraHandler.ClearBound();
         gridManager.InitializeGrid();
-        
+        mergeSystem = new MergeSystem();
 
     }
 
@@ -184,7 +181,7 @@ public class Table : MonoBehaviour
         foreach (var item in groupOfItems)
         {
             Debug.Log("Working on: " + item.Key);
-            Merge(item.Value);
+            mergeSystem.Merge(item.Value);
             yield return new WaitForSeconds(0.1f);
             CalculatorAllGroupPriorityAndSort();
         }
@@ -200,59 +197,7 @@ public class Table : MonoBehaviour
             UpdatePrioritiesForGroup(item.Key);
         }
     }
-    
-    private void Merge(List<PriorityTray> sources)
-    {
-        if (sources.Count < 2)
-        {
-            Debug.Log("Danh sách tray này không đủ để merge", gameObject);
-            return;
-        }
 
-        string mainMergeItemID = sources[0].MainItemID;
-
-        Queue<Tray> queueTray = new();
-
-        foreach (var priorityTray in sources)
-        {
-            queueTray.Enqueue(priorityTray.Tray);
-        }
-
-        Tray currentSource = queueTray.Dequeue();
-    
-        while (queueTray.Count > 0)
-        {
-            Tray nextTray = queueTray.Peek(); // Only peek, don't dequeue yet
-        
-            // If current source is full, move to next source
-            if (!currentSource.CanAddMoreItem())
-            {
-                currentSource = queueTray.Dequeue();
-                continue;
-            }
-
-            // If next tray has no relevant items, skip it
-            if (nextTray.GetCountOfItem(mainMergeItemID) == 0)
-            {
-                queueTray.Dequeue();
-                continue;
-            }
-
-            // Transfer item
-            var item = nextTray.GetFirstOfItem(mainMergeItemID);
-            if (item != null)
-            {
-                nextTray.Remove(item);
-                currentSource.Add(item);
-            
-                // If next tray is empty, remove it from queue
-                if (nextTray.GetCountOfItem(mainMergeItemID) == 0)
-                {
-                    queueTray.Dequeue();
-                }
-            }
-        }
-    }
 
     [Button]
     private void ClearCurrentTray()
