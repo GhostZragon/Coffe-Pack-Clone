@@ -14,32 +14,28 @@ public enum SlotType
     Rewards
 }
 
-public class Slot : MonoBehaviour
+public class Slot : SlotBase
 {
-    [SerializeField] private bool isEmpty = false;
-    [SerializeField] private Tray currentTray;
+    [SerializeField] protected bool isEmpty = false;
+    [SerializeField] protected Tray currentTray;
 
     [Header("Settings")] [SerializeField] private float scaleUpTime = .25f;
     [SerializeField] private float scaleDownTime = .25f;
     [SerializeField] private float scaleValue = 1.3f;
-   
-    
+
+
     private Vector3 currentScale;
     private CompositeMotionHandle handles;
 
-    public SlotType SlotType;
-  
-    public Action<Slot> PlacedCallback;
-
-    private void Awake()
+    protected void Awake()
     {
         currentScale = transform.localScale;
         handles = new CompositeMotionHandle();
     }
 
-    public virtual bool CanPlacedTray()
+    private void OnPlacedTray()
     {
-        return isEmpty && SlotType == SlotType.Normal;
+        Table.Instance.CheckingMergeSlot(this);
     }
 
     public void Add(Tray tray)
@@ -48,8 +44,9 @@ public class Slot : MonoBehaviour
         currentTray.SetTrayToSlot();
         // currentTray.transform.position = transform.position;
         isEmpty = false;
-        LMotion.Create(currentTray.transform.position, transform.position, AnimationManager.Instance.AnimationConfig.releaseTrayDuration)
-            .WithOnComplete(() => {PlacedCallback?.Invoke(this);} )
+        LMotion.Create(currentTray.transform.position, transform.position,
+                AnimationManager.Instance.AnimationConfig.releaseTrayDuration)
+            .WithOnComplete(OnPlacedTray)
             .BindToPosition(currentTray.transform);
         // AnimationManager.Instance.MoveTrayToSlot(currentTray.transform, transform.position, placedCallback);
     }
@@ -78,13 +75,13 @@ public class Slot : MonoBehaviour
         return currentTray;
     }
 
-    public void PlayClearAnimation()
+    public override void PlayClearAnimation()
     {
         if (currentTray == null) return;
         StartCoroutine(DestroyTrayWithDelay());
     }
 
-    private IEnumerator  DestroyTrayWithDelay()
+    private IEnumerator DestroyTrayWithDelay()
     {
         bool isDelay = false;
         bool canDestroy = false;
@@ -92,22 +89,21 @@ public class Slot : MonoBehaviour
         {
             canDestroy = true;
         }
-        else if(currentTray.IsFullOfItem(out var itemID))
+        else if (currentTray.IsFullOfItem(out var itemID))
         {
             canDestroy = true;
             isDelay = true;
-            
+            Table.Instance.OnCompleteItem(this);
             PuzzleQuestManager.Instance?.OnCompleteItem(itemID);
         }
 
         if (canDestroy)
         {
-            yield return new WaitForSeconds( isDelay ? AnimationManager.Instance.AnimationConfig.clearTrayDelay : 0.1f);
+            yield return new WaitForSeconds(isDelay ? AnimationManager.Instance.AnimationConfig.clearTrayDelay : 0.1f);
             ClearTray();
         }
-        
+
         yield return null;
-        
     }
 
 
@@ -119,6 +115,14 @@ public class Slot : MonoBehaviour
         currentTray = null;
         isEmpty = true;
     }
-  
- 
+
+
+    public override bool CanPlacedTray()
+    {
+        return isEmpty;
+    }
+
+    public override void ActiveSpecialEffect()
+    {
+    }
 }

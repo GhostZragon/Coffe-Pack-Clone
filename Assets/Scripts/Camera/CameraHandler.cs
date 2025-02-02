@@ -22,7 +22,7 @@ public class CameraHandler : MonoBehaviour
 
     private void Update()
     {
-        transform.position = new Vector3(levelBounds.center.x, transform.position.y, levelBounds.center.z);
+        // transform.position = new Vector3(levelBounds.center.x, transform.position.y, levelBounds.center.z);
     }
 
     public void ClearBound()

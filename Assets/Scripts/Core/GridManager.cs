@@ -11,6 +11,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] private float _cellDepth = 0.25f;
     [SerializeField] private CSVImport csvImport;
     private Dictionary<Vector2Int, Cell> _cells = new();
+
     public IReadOnlyDictionary<Vector2Int, Cell> TableMap
     {
         get => _cells;
@@ -24,8 +25,10 @@ public class GridManager : MonoBehaviour
         CalculateGridOrigin();
         CreateCells();
     }
+
     public Cell GetCell(Vector2Int gridPos) => _cells.TryGetValue(gridPos, out var cell) ? cell : null;
     public bool TryGetCell(Vector2Int gridPos, out Cell cell) => _cells.TryGetValue(gridPos, out cell);
+
     private void CalculateGridOrigin()
     {
         _startX = -(_columns * (_cellWidth + _spacing) - _spacing) / 2;
@@ -41,13 +44,22 @@ public class GridManager : MonoBehaviour
             for (int j = 0; j < csvImport.maze.GetLength(1); j++)
             {
                 int value = csvImport.maze[i, j];
-                if (value == 1)
+                SlotType slotType = SlotType.Normal;
+                switch (value)
                 {
-                    Vector2Int gridPos = new Vector2Int(i, j);
-                    var slot = Table.Instance.InitSlot();            
-                    PositionSlot(slot.transform, gridPos);
-                    _cells[gridPos] = new Cell(slot);
+                    case 2:
+                        slotType = SlotType.Blocking;
+                        break;
                 }
+
+                if (value == 0) continue;
+
+                var gridPos = new Vector2Int(i, j);
+                var slot = SlotManager.Instance.GetSlot(slotType);
+
+                PositionSlot(slot.transform, gridPos);
+
+                _cells[gridPos] = new Cell(slot);
             }
         }
     }
@@ -72,7 +84,7 @@ public class GridManager : MonoBehaviour
 
     public bool IsValidGridPosition(Vector2Int gridPos)
     {
-        return gridPos.x >= 0 && gridPos.x < _rows && 
+        return gridPos.x >= 0 && gridPos.x < _rows &&
                gridPos.y >= 0 && gridPos.y < _columns;
     }
 }

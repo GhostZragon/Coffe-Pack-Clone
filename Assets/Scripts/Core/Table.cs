@@ -58,24 +58,11 @@ public class Table : MonoBehaviour
         {
             ClearCurrentTray();
         }
-
-        HandleVisualizeDebugInput();
-    }
-
-
-
-    public Slot InitSlot()
-    {
-        var slot = Instantiate(slotPrefab, transform);
-        slot.PlacedCallback = CheckingMergeSlot;
-        cameraHandler.SetupBound(slot);
-
-        return slot;
     }
 
     public SerializableDictionary<string, List<PriorityTray>> groupOfItems = new();
 
-    private void CheckingMergeSlot(Slot slot)
+    public void CheckingMergeSlot(SlotBase slot)
     {
         var gridPos = gridManager.WorldToGridPosition(slot.transform.position);
         Debug.Log("================Checking================");
@@ -184,34 +171,7 @@ public class Table : MonoBehaviour
             list.Sort();
         }
     }
-
-
-    [Header("Debug")] public string visualizeItemID;
-
-    private void HandleVisualizeDebugInput()
-    {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            Visualize();
-        }
-    }
-
-    private void Visualize()
-    {
-        foreach (var item in groupOfItems)
-        foreach (var priorityTray in item.Value)
-        {
-            priorityTray.Clear();
-        }
-
-        if (groupOfItems.TryGetValue(visualizeItemID, out var list))
-        {
-            foreach (var item in list)
-            {
-                item.RefreshDebugView();
-            }
-        }
-    }
+   
 
     [Button]
     private void MergeGroupOfItems()
@@ -301,5 +261,31 @@ public class Table : MonoBehaviour
         {
             item.Value.Slot.PlayClearAnimation();
         }
+    }
+
+    public void OnCompleteItem(SlotBase slot)
+    {
+        var cellPosition = gridManager.WorldToGridPosition(slot.transform.position);
+        Vector2Int checkingPosition = Vector2Int.zero;
+
+        foreach (var direction in directions)
+        {
+            checkingPosition = cellPosition + direction;
+
+            if (gridManager.IsValidGridPosition(checkingPosition))
+            {
+                var NeighbourCell = gridManager.GetCell(checkingPosition);
+                NeighbourCell.Slot?.ActiveSpecialEffect();
+            }
+        }
+    }
+
+    public void ReplaceSlot(SlotBase currentSlot,SlotBase newSlot)
+    {
+        newSlot.transform.position = currentSlot.transform.position;
+        
+        var cellPosition = gridManager.WorldToGridPosition(currentSlot.transform.position);
+        var cell = gridManager.GetCell(cellPosition);
+        cell.SetSlot(newSlot as Slot);
     }
 }
