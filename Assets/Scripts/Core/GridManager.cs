@@ -41,13 +41,21 @@ public class GridManager : MonoBehaviour
             for (int j = 0; j < csvImport.maze.GetLength(1); j++)
             {
                 int value = csvImport.maze[i, j];
-                if (value == 1)
+                SlotType slotType = SlotType.Normal;
+                switch (value)
                 {
-                    Vector2Int gridPos = new Vector2Int(i, j);
-                    var slot = Table.Instance.InitSlot();            
-                    PositionSlot(slot.transform, gridPos);
-                    _cells[gridPos] = new Cell(slot);
+                    case 2 :
+                        slotType = SlotType.Blocking;
+                        break;
                 }
+                if(value == 0) continue;
+           
+                var gridPos = new Vector2Int(i, j);
+                var slot = SlotFactory.Instance.GetSlot(slotType);        
+               
+                PositionSlot(slot.transform, gridPos);
+                
+                _cells[gridPos] = new Cell(slot);
             }
         }
     }

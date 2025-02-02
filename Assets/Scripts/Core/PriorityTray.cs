@@ -8,25 +8,7 @@ public class PriorityTray: IComparable<PriorityTray>
     public int MainLevel;
     public int SubLevel;
     public bool isPlacedSlot = false;
-    private TrayDebugVisualize trayDebugVisualize;
-    public void RefreshDebugView()
-    {
-        if (trayDebugVisualize == null)
-        {
-            trayDebugVisualize = Tray.GetComponent<TrayDebugVisualize>();
-        }
-        trayDebugVisualize.Refresh(this);
-    }
-    
-    public void Clear()
-    {
-        if (trayDebugVisualize == null)
-        {
-            trayDebugVisualize = Tray.GetComponent<TrayDebugVisualize>();
-        }    
-        trayDebugVisualize.Refresh(null);
-    }
-
+ 
     public void Init(Tray checkingTray, string itemID, bool isCheckingSlot = false)
     {
         Tray = checkingTray;
