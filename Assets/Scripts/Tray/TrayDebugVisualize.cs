@@ -11,18 +11,18 @@ public class TrayDebugVisualize : MonoBehaviour
         TextMeshPro.text = "";
     }
 
-    public void Refresh(PriorityTray priorityTray)
+    public void Refresh(TrayMergeCandidate trayMergeCandidate)
     {
-        if (priorityTray == null)
+        if (trayMergeCandidate == null)
         {
             TextMeshPro.text = "";
             return;
         }
         StringBuilder stringBuilder = new("Debug:");
-        stringBuilder.AppendLine($"Current Item Checking: {priorityTray.MainItemID}");
-        stringBuilder.AppendLine($"Main Level: {priorityTray.MainLevel}");
-        stringBuilder.AppendLine($"Sub Level: {priorityTray.SubLevel}");
-        stringBuilder.AppendLine($"Is Placed by Player: {priorityTray.isPlacedSlot}");
+        stringBuilder.AppendLine($"Current Item Checking: {trayMergeCandidate.ItemId}");
+        stringBuilder.AppendLine($"Main Level: {trayMergeCandidate.MainLevel}");
+        stringBuilder.AppendLine($"Sub Level: {trayMergeCandidate.SubLevel}");
+        stringBuilder.AppendLine($"Is Placed by Player: {trayMergeCandidate.isOriginTray}");
         TextMeshPro.text = stringBuilder.ToString();
     }
 }

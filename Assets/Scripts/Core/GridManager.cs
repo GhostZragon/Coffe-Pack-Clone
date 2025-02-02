@@ -38,10 +38,12 @@ public class GridManager : MonoBehaviour
     private void CreateCells()
     {
         _cells.Clear();
-
-        for (int i = 0; i < csvImport.maze.GetLength(0); i++)
+        _rows = csvImport.maze.GetLength(0);
+        _columns = csvImport.maze.GetLength(1);
+        
+        for (int i = 0; i < _rows; i++)
         {
-            for (int j = 0; j < csvImport.maze.GetLength(1); j++)
+            for (int j = 0; j < _columns; j++)
             {
                 int value = csvImport.maze[i, j];
                 SlotType slotType = SlotType.Normal;
@@ -56,12 +58,13 @@ public class GridManager : MonoBehaviour
 
                 var gridPos = new Vector2Int(i, j);
                 var slot = SlotManager.Instance.GetSlot(slotType);
-
+                slot.name += $"{i} : {j}";
                 PositionSlot(slot.transform, gridPos);
 
                 _cells[gridPos] = new Cell(slot);
             }
         }
+        Debug.Log($"level create is {_rows}x{_columns}");
     }
 
     private void PositionSlot(Transform slotTransform, Vector2Int gridPos)

@@ -1,38 +1,38 @@
 ﻿using System;
 
 [Serializable]
-public class PriorityTray: IComparable<PriorityTray>
+public class TrayMergeCandidate: IComparable<TrayMergeCandidate>
 {
     public Tray Tray;
-    public string MainItemID;
+    public string ItemId;
     public int MainLevel;
     public int SubLevel;
-    public bool isPlacedSlot = false;
+    public bool isOriginTray = false;
  
-    public void Init(Tray checkingTray, string itemID, bool isCheckingSlot = false)
+    public void Initialize(Tray checkingTray, string itemID, bool isCheckingSlot = false)
     {
         Tray = checkingTray;
-        MainItemID = itemID;
-        isPlacedSlot = isCheckingSlot;
-        Calculator();
+        ItemId = itemID;
+        isOriginTray = isCheckingSlot;
+        RecalculatePriority();
     }
 
-    public void Calculator()
+    public void RecalculatePriority()
     {
         int uniqueItemCount = Tray.GetUniqueItemIDs().Count;
-        int itemCount = Tray.GetCountOfItem(MainItemID);
+        int itemCount = Tray.GetCountOfItem(ItemId);
 
         // If the tray is full, add 0; otherwise, add 1
         int trayFullBonus = Tray.CanAddMoreItem() ? 0 : 1;
 
         // If this slot was just placed by the player, add 1
-        int playerPlacedSlotBonus = isPlacedSlot ? 5 : 0;
+        int playerPlacedSlotBonus = isOriginTray ? 5 : 0;
         
         MainLevel = uniqueItemCount;
         SubLevel = itemCount + trayFullBonus + playerPlacedSlotBonus;
     }
     
-    public int CompareTo(PriorityTray other)
+    public int CompareTo(TrayMergeCandidate other)
     {
         if (other == null) return 1;
         
@@ -44,7 +44,7 @@ public class PriorityTray: IComparable<PriorityTray>
         if (mainLevelComparison == 0)
         {
             // Nếu chỉ có item và không phải là slot người chơi đặt xuống, thì ưu tiên khay có nhiều item hơn
-            if(MainLevel == 1 && other.isPlacedSlot == false && isPlacedSlot == false)
+            if(MainLevel == 1 && other.isOriginTray == false && isOriginTray == false)
                 return -this.SubLevel.CompareTo(other.SubLevel);
 
             return this.SubLevel.CompareTo(other.SubLevel);
