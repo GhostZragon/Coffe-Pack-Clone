@@ -12,12 +12,48 @@ public class CameraHandler : MonoBehaviour
         levelBounds = new();
     }
 
-    public void SetupBound(Slot slot)
+    public void SetupCamera(Transform container)
     {
-        levelBounds.Encapsulate(slot.transform.position);
+        var bound = GetLevelBounds(container);
+        AdjustCamera(bound);
+    }
+    
+    Bounds GetLevelBounds(Transform container)
+    {
+        Bounds bounds = new Bounds();
+        foreach (Transform tile in container) // levelTiles là danh sách các ô
+        {
+            bounds.Encapsulate(tile.position);
+        }
+        return bounds;
+    }
+    
+    void AdjustCamera(Bounds levelBounds)
+    {
+        Camera cam = Camera.main;
+    
+        float levelWidth = levelBounds.size.x;
+        float levelHeight = levelBounds.size.y;
 
-        // AdjustCameraToFitBounds();
+        float screenRatio = (float)Screen.width / Screen.height;
+        float targetHeight = levelWidth / screenRatio; // Đảm bảo vừa chiều ngang
 
+        float fov = cam.fieldOfView * Mathf.Deg2Rad; // Chuyển FOV sang radian
+
+        float cameraAngle = 50 * Mathf.Deg2Rad; // Góc nghiêng của camera
+        float cameraHeight = 25; // Luôn giữ y = 25
+
+        // Tính khoảng cách theo trục Z
+        float distance = Mathf.Max(levelHeight, targetHeight) * 0.5f / Mathf.Tan(fov * 0.5f);
+
+        // Điều chỉnh khoảng cách theo góc nghiêng của camera
+        float zOffset = distance / Mathf.Cos(cameraAngle);
+    
+        // Đặt vị trí camera
+        cam.transform.position = new Vector3(levelBounds.center.x, cameraHeight, levelBounds.center.z - zOffset / 1.7f);
+
+        // Xoay camera đúng góc mong muốn
+        cam.transform.rotation = Quaternion.Euler(50, 0, 0);
     }
 
     private void Update()

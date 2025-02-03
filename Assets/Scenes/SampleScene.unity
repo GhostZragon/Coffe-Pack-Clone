@@ -649,7 +649,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 25
+  field of view: 25.000002
   orthographic: 0
   orthographic size: 8.61
   m_Depth: -1
@@ -813,8 +813,8 @@ MonoBehaviour:
   cellDepth: 0.25
   cameraOffsetZ: -7.25
   gridManager: {fileID: 2082228493}
-  groupOfItems:
-    _entries: []
+  x: 0
+  y: 0
 --- !u!114 &2082228493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -833,6 +833,7 @@ MonoBehaviour:
   _cellWidth: 0.25
   _cellDepth: 0.25
   csvImport: {fileID: 2082228494}
+  cameraHandler: {fileID: 1697514698}
 --- !u!114 &2082228494
 MonoBehaviour:
   m_ObjectHideFlags: 0

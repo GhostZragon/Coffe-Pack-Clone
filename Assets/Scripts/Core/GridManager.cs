@@ -10,6 +10,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] private float _cellWidth = 0.25f;
     [SerializeField] private float _cellDepth = 0.25f;
     [SerializeField] private CSVImport csvImport;
+    [SerializeField] private CameraHandler cameraHandler;
     private Dictionary<Vector2Int, Cell> _cells = new();
 
     public IReadOnlyDictionary<Vector2Int, Cell> TableMap
@@ -19,11 +20,18 @@ public class GridManager : MonoBehaviour
 
     private float _startX, _startZ;
 
+    private void Awake()
+    {
+        cameraHandler = Camera.main.GetComponent<CameraHandler>();
+    }
+
+
     public void InitializeGrid()
     {
         csvImport.Init();
         CalculateGridOrigin();
         CreateCells();
+        cameraHandler.SetupCamera(SlotManager.Instance.transform);
     }
 
     public Cell GetCell(Vector2Int gridPos) => _cells.TryGetValue(gridPos, out var cell) ? cell : null;
