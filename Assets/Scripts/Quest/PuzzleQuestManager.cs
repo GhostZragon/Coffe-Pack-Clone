@@ -13,19 +13,22 @@ public class PuzzleQuestManager : MonoBehaviour
 {
     public static PuzzleQuestManager Instance;
     [SerializeField] private PuzzleQuestManagerUI PuzzleQuestManagerUI;
-    [SerializeField] private List<PuzzleQuest> puzzleQuests;
-
-    [SerializeField] private List<string> randomItemsList = new();
-    [SerializeField] private int stageCount = 3;
+   
     [SerializeField] private PuzzleQuestData puzzleQuestData;
-    private Dictionary<PuzzleStage, QuestData[]> questDataPerStage;
     [SerializeField] private PuzzleStage currentStage = PuzzleStage.First;
 
+    [SerializeField] private int stageCount = 3;
     [SerializeField] private bool completeOneTime;
+
+    [SerializeField] private List<string> randomItemsList = new();
+    [SerializeField] private List<PuzzleQuest> puzzleQuests;
+    private Dictionary<PuzzleStage, QuestData[]> questDataPerStage;
 
     private void Awake()
     {
         Instance = this;
+        currentStage = PuzzleStage.First;
+
     }
 
     private void Start()
@@ -36,8 +39,6 @@ public class PuzzleQuestManager : MonoBehaviour
             [PuzzleStage.Second] = puzzleQuestData.stage2,
             [PuzzleStage.Third] = puzzleQuestData.stage3
         };
-
-        CreateNewQuest();
     }
 
     [Button]
@@ -59,7 +60,17 @@ public class PuzzleQuestManager : MonoBehaviour
         }
     }
 
-    private void CreateNewQuest()
+    public void SetPuzzleQuestData(PuzzleQuestData puzzleQuestData)
+    {
+        this.puzzleQuestData = puzzleQuestData;
+    }
+
+    public void SetFirstState()
+    {
+        currentStage = PuzzleStage.First;
+    }
+    
+    public void CreateNewQuest()
     {
         puzzleQuests.Clear();
         if (CanGoNextStage(currentStage, out var arrayQuest))

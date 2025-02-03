@@ -554,15 +554,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PuzzleQuestManagerUI: {fileID: 1973761807}
-  puzzleQuests: []
+  puzzleQuestData: {fileID: 11400000, guid: cdf638b7fffa02e49ab80c537733fa53, type: 2}
+  currentStage: 0
+  stageCount: 3
+  completeOneTime: 0
   randomItemsList:
   - 1
   - 2
   - 3
-  stageCount: 3
-  puzzleQuestData: {fileID: 11400000, guid: cdf638b7fffa02e49ab80c537733fa53, type: 2}
-  currentStage: 0
-  completeOneTime: 0
+  puzzleQuests: []
 --- !u!4 &1237944088
 Transform:
   m_ObjectHideFlags: 0
@@ -570,6 +570,53 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1237944086}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1393408782
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1393408784}
+  - component: {fileID: 1393408783}
+  m_Layer: 0
+  m_Name: Level Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1393408783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1393408782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bf36915d2814ad4dba9c6b0cc4d3708, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelConfig: {fileID: 11400000, guid: 286546af32b0470408f69773a4ed4708, type: 2}
+  defaultLevelConfig: {fileID: 0}
+  startQuestByButton: 0
+--- !u!4 &1393408784
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1393408782}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -832,8 +879,8 @@ MonoBehaviour:
   _spacing: 1
   _cellWidth: 0.25
   _cellDepth: 0.25
-  csvImport: {fileID: 2082228494}
   cameraHandler: {fileID: 1697514698}
+  csvImport: {fileID: 2082228494}
 --- !u!114 &2082228494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -846,7 +893,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4db1a7e66de85c4982423e6ee126dad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapCSV: {fileID: 4900000, guid: 8c9502dd3aaf0224c8b227952d781050, type: 3}
+  mapCSV: {fileID: 0}
 --- !u!1001 &2590431244517764400
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1173,3 +1220,4 @@ SceneRoots:
   - {fileID: 4053559344774582822}
   - {fileID: 7075154157146819930}
   - {fileID: 290131922}
+  - {fileID: 1393408784}

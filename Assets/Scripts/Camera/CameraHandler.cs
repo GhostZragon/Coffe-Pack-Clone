@@ -50,7 +50,7 @@ public class CameraHandler : MonoBehaviour
         float zOffset = distance / Mathf.Cos(cameraAngle);
     
         // Đặt vị trí camera
-        cam.transform.position = new Vector3(levelBounds.center.x, cameraHeight, levelBounds.center.z - zOffset / 1.7f);
+        cam.transform.position = new Vector3(levelBounds.center.x, cameraHeight, levelBounds.center.z - zOffset * 0.55f);
 
         // Xoay camera đúng góc mong muốn
         cam.transform.rotation = Quaternion.Euler(50, 0, 0);
