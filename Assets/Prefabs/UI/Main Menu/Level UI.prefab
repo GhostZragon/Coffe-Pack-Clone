@@ -1791,8 +1791,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f6dcc4d037aff0419a0fd145d91e6b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lockedButton: {fileID: 0}
-  playButton: {fileID: 0}
+  lockedButton: {fileID: 6789809932168379611}
+  playButton: {fileID: 7628413833796495665}
   levelText: {fileID: 0}
 --- !u!1 &6265611959894528433
 GameObject:

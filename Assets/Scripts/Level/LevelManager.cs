@@ -4,24 +4,27 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour
 {
     [SerializeField] private LevelConfig levelConfig;
-    [SerializeField] private LevelConfig defaultLevelConfig;
+    [SerializeField] private LevelConfig[] levelConfigs;
 
+    private int levelIndex = 0;
+    
     private PuzzleQuestManager puzzleQuestManager;
     private GridManager gridManager;
 
     [SerializeField] private bool startQuestByButton = false;
     private void Awake()
     {
+        levelIndex = 0;
         gridManager = FindFirstObjectByType<GridManager>();
         puzzleQuestManager = FindFirstObjectByType<PuzzleQuestManager>();
-        defaultLevelConfig = Resources.Load<LevelConfig>("Level/cfg_level 1");
+        levelConfigs = Resources.LoadAll<LevelConfig>("Level");
     }
 
     private void Start()
     {
         if (levelConfig == null)
         {
-            levelConfig = defaultLevelConfig;
+            levelConfig = levelConfigs[levelIndex];
         }
 
         if (startQuestByButton == false)
@@ -38,9 +41,10 @@ public class LevelManager : MonoBehaviour
         puzzleQuestManager.SetPuzzleQuestData(levelConfig.PuzzleQuestData);
         puzzleQuestManager.SetFirstState();
     }
+    
 
-    public void SetLevel(LevelConfig levelConfig)
+    public void SetLevel(int levelIndex)
     {
-        this.levelConfig = levelConfig;
+        this.levelIndex = levelIndex;
     }
 }
