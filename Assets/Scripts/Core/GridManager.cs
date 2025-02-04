@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using LitMotion;
 using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,6 +13,8 @@ public class GridManager : MonoBehaviour
     [SerializeField] private float _cellDepth = 0.25f;
     [SerializeField] private CameraHandler cameraHandler;
     [SerializeField] private CSVImport csvImport;
+
+    [SerializeField] private AudioSource stoneDropSound;
     private Dictionary<Vector2Int, Cell> _cells = new();
 
     public IReadOnlyDictionary<Vector2Int, Cell> TableMap
@@ -77,6 +80,9 @@ public class GridManager : MonoBehaviour
     [Button]
     private void TestDropEffect()
     {
+        // stoneDropSound.Play();
+        // LMotion.Create(0, 1, 0.2f).Bind(x => stoneDropSound.volume = x);
+        
         float rowDelayFactor = AnimationManager.Instance.AnimationConfig.rowDelayFactor;
         float columnDelayFactor =  AnimationManager.Instance.AnimationConfig.columnDelayFactor;
         for (int i = 0; i < _rows; i++)
@@ -89,6 +95,13 @@ public class GridManager : MonoBehaviour
                 _cells[gridPos].Slot?.InitEffect(delay);
             }
         }
+
+        // Invoke(nameof(StopSoundWithDelay),rowDelayFactor * _rows);
+    }
+
+    private void StopSoundWithDelay()
+    {
+        LMotion.Create(1, 0, 1).Bind(x => stoneDropSound.volume = x);
     }
 
     private void PositionSlot(Transform slotTransform, Vector2Int gridPos)
