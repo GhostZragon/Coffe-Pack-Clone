@@ -6,7 +6,7 @@ using UnityEngine;
 public class AnimationManager : MonoBehaviour
 {
     public static AnimationManager Instance;
-    public AnimationConfig AnimationConfig;
+    public AnimationConfig config;
     private void Awake()
     {
         Instance = this;
@@ -14,12 +14,12 @@ public class AnimationManager : MonoBehaviour
 
     public void TransferItem(Transform MoveTransform, Vector3 position)
     {
-        MoveTo(MoveTransform, position, AnimationConfig.itemTransferDuration);
+        MoveTo(MoveTransform, position, config.itemcfg.itemTransferDuration);
     }
 
     public void MoveTrayToSlot(Transform MoveTransform, Vector3 position, Action callback)
     {
-        MoveTo(MoveTransform, position, AnimationConfig.releaseTrayDuration,callback);
+        MoveTo(MoveTransform, position, config.trayCfg.releaseTrayDuration,callback);
     }
     
     private void MoveTo(Transform MoveTransform, Vector3 position, float duration, Action callback)
@@ -39,8 +39,8 @@ public class AnimationManager : MonoBehaviour
     {
         if (tray == null) return;
         var trayModel = tray.Model;
-        LMotion.Create(trayModel.localScale, Vector3.zero, AnimationConfig.destroyTrayDuration)
-            .WithEase(AnimationConfig.destroyTrayEase)
+        LMotion.Create(trayModel.localScale, Vector3.zero, config.trayCfg.destroyTrayDuration)
+            .WithEase(config.trayCfg.destroyTrayEase)
             .WithOnComplete(callback)
             .BindToLocalScale(trayModel);
         

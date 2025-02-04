@@ -123,8 +123,8 @@ public class Tray : MonoBehaviour
             if (isUsingAnimation)
             {
                 LMotion.Create(items[i].transform.position, points[i].transform.position
-                        , AnimationManager.Instance.AnimationConfig.itemTransferDuration)
-                    .WithDelay( AnimationManager.Instance.AnimationConfig.itemTransferStartDelay)
+                        , AnimationManager.Instance.config.itemcfg.itemTransferDuration)
+                    .WithDelay( AnimationManager.Instance.config.itemcfg.itemTransferStartDelay)
                     .BindToPosition(items[i].transform);
                 // AnimationManager.Instance.TransferItem(items[i].transform, points[i].position);
             }
@@ -240,8 +240,8 @@ public class Tray : MonoBehaviour
     [Button]
     public void DestroyAnimation()
     {
-        LMotion.Create(Model.localScale, Vector3.zero, AnimationManager.Instance.AnimationConfig.destroyTrayDuration)
-            .WithEase(AnimationManager.Instance.AnimationConfig.destroyTrayEase)
+        LMotion.Create(Model.localScale, Vector3.zero, AnimationManager.Instance.config.trayCfg.destroyTrayDuration)
+            .WithEase(AnimationManager.Instance.config.trayCfg.destroyTrayEase)
             .WithOnComplete(Destroy)
             .BindToLocalScale(Model);
     }

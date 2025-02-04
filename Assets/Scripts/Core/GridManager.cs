@@ -83,8 +83,8 @@ public class GridManager : MonoBehaviour
         // stoneDropSound.Play();
         // LMotion.Create(0, 1, 0.2f).Bind(x => stoneDropSound.volume = x);
         
-        float rowDelayFactor = AnimationManager.Instance.AnimationConfig.rowDelayFactor;
-        float columnDelayFactor =  AnimationManager.Instance.AnimationConfig.columnDelayFactor;
+        float rowDelayFactor = AnimationManager.Instance.config.gridCfg.rowDelayFactor;
+        float columnDelayFactor =  AnimationManager.Instance.config.gridCfg.columnDelayFactor;
         for (int i = 0; i < _rows; i++)
         {
             for (int j = 0; j < _columns; j++)

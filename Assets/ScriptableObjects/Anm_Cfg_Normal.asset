@@ -12,6 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b461f1d063dad643b252da1b9f622e8, type: 3}
   m_Name: Anm_Cfg_Normal
   m_EditorClassIdentifier: 
+  itemcfg:
+    itemTransferDuration: 0.2
+    itemTransferStartDelay: 0.2
+    itemTransferEase: 0
+  trayCfg:
+    releaseTrayDuration: 0.1
+    releaseTrayEase: 0
+    destroyTrayDuration: 0.1
+    destroyTrayEase: 25
+    clearTrayDelay: 0.2
+  slotCfg:
+    normalSlotDropTime: 0.5
+  gridCfg:
+    rowDelayFactor: 0.1
+    columnDelayFactor: 0.05
   itemTransferDuration: 0.2
   itemTransferStartDelay: 0.2
   itemTransferEase: 0

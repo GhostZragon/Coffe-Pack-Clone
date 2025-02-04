@@ -543,7 +543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 377a29dd155a4206af515cdec0d5c5a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AnimationConfig: {fileID: 11400000, guid: 3dad81c57a6f16f4492d0d0fc98476f1, type: 2}
+  config: {fileID: 11400000, guid: 3dad81c57a6f16f4492d0d0fc98476f1, type: 2}
 --- !u!1 &1237944086
 GameObject:
   m_ObjectHideFlags: 0

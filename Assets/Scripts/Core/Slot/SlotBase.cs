@@ -16,7 +16,7 @@ public abstract class SlotBase : MonoBehaviour
         float height = model.localPosition.y + 40;
         newPosition.y = height;
 
-        LMotion.Create(newPosition, Vector3.zero, AnimationManager.Instance.AnimationConfig.normalSlotDropTime)
+        LMotion.Create(newPosition, Vector3.zero, AnimationManager.Instance.config.slotCfg.normalSlotDropTime)
             .WithEase(Ease.InCubic)
             .WithDelay(delay)
             .BindToLocalPosition(model);
