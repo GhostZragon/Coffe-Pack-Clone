@@ -14,4 +14,9 @@ public class AnimationConfig : ScriptableObject
     public Ease destroyTrayEase;
     
     public float clearTrayDelay = 0.2f;
+
+    public float normalSlotDropTime = 0.5f;
+    
+    public float rowDelayFactor = 0.1f; // Thời gian delay giữa các hàng
+    public float columnDelayFactor = 0.05f; // Thời gian delay giữa các cột
 }

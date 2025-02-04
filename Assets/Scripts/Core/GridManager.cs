@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -63,16 +64,31 @@ public class GridManager : MonoBehaviour
                 }
 
                 if (value == 0) continue;
-
                 var gridPos = new Vector2Int(i, j);
                 var slot = SlotManager.Instance.GetSlot(slotType);
                 slot.name += $"{i} : {j}";
                 PositionSlot(slot.transform, gridPos);
-
                 _cells[gridPos] = new Cell(slot);
             }
         }
         Debug.Log($"level create is {_rows}x{_columns}");
+    }
+    
+    [Button]
+    private void TestDropEffect()
+    {
+        float rowDelayFactor = AnimationManager.Instance.AnimationConfig.rowDelayFactor;
+        float columnDelayFactor =  AnimationManager.Instance.AnimationConfig.columnDelayFactor;
+        for (int i = 0; i < _rows; i++)
+        {
+            for (int j = 0; j < _columns; j++)
+            {
+                float delay = (i * rowDelayFactor) + (j * columnDelayFactor);
+
+                var gridPos = new Vector2Int(i, j);
+                _cells[gridPos].Slot?.InitEffect(delay);
+            }
+        }
     }
 
     private void PositionSlot(Transform slotTransform, Vector2Int gridPos)

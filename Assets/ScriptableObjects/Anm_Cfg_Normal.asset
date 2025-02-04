@@ -19,3 +19,7 @@ MonoBehaviour:
   releaseTrayEase: 0
   destroyTrayDuration: 0.1
   destroyTrayEase: 25
+  clearTrayDelay: 0.2
+  normalSlotDropTime: 0.5
+  rowDelayFactor: 0.2
+  columnDelayFactor: 0.05

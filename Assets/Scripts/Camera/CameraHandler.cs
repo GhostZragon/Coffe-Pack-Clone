@@ -14,8 +14,8 @@ public class CameraHandler : MonoBehaviour
 
     public void SetupCamera(Transform container)
     {
-        var bound = GetLevelBounds(container);
-        AdjustCamera(bound);
+        // var bound = GetLevelBounds(container);
+        // AdjustCamera(bound);
     }
     
     Bounds GetLevelBounds(Transform container)

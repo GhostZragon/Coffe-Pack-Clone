@@ -1,6 +1,12 @@
-﻿public class BlockingSlot : SlotBase
+﻿using LitMotion;
+using LitMotion.Extensions;
+using Sirenix.OdinInspector;
+using UnityEngine;
+
+public class BlockingSlot : SlotBase
 {
     private bool canDestroy = false;
+
     public override bool CanPlacedTray()
     {
         return false;
@@ -8,7 +14,22 @@
 
     public override void ActiveSpecialEffect()
     {
-        // create new slot at this position
+        TestEffect();
+    }
+
+    [Button]
+    public void TestEffect()
+    {
+        LMotion.Punch.Create(model.transform.position, new Vector3(-0.2f, 0.2f, 0), 0.4f)
+            .WithDampingRatio(1)
+            .WithEase(Ease.InCubic)
+            .WithFrequency(15)
+            .WithOnComplete(Effect)
+            .BindToPosition(model.transform);
+    }
+
+    private void Effect()
+    {
         Table.Instance.ReplaceSlot(this, SlotManager.Instance.GetSlot(SlotType.Normal));
         canDestroy = true;
         PlayClearAnimation();

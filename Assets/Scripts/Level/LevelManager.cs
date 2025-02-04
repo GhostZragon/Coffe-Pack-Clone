@@ -77,6 +77,7 @@ public class LevelManager : MonoBehaviour
     private void SetLevel(int levelIndex)
     {
         this.currentLevel = levelIndex;
+        levelConfig = levelConfigs[currentLevel];
     }
 
     private bool IsLevelUnlock(int i)
