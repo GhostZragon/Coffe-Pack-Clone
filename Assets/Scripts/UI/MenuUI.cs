@@ -19,6 +19,7 @@ public class MenuUI : MonoBehaviour
     private void StartGame()
     {
         Debug.Log("Start game");
+        EventManager.Current._Game.OnLoadLevel?.Invoke();
     }
 
     private void Update()

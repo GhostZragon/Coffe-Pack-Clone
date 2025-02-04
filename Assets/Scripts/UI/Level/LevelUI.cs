@@ -42,4 +42,5 @@ public class LevelUI : MonoBehaviour
         lockedButton.gameObject.SetActive(!isUnlock);
         selectButton.gameObject.SetActive(isUnlock);
     }
+    
 }

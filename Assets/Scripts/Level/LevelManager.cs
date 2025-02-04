@@ -24,11 +24,17 @@ public class LevelManager : MonoBehaviour
         levelConfigs = Resources.LoadAll<LevelConfig>("Level");
 
         levelPanelUI.levelUnlockChecking = IsLevelUnlock;
+        EventManager.Current._Game.OnLoadLevel += LoadLevel;
+        EventManager.Current._Game.OnSelectLevel += SetLevel;
+
     }
 
     private void OnDestroy()
     {
         levelPanelUI.levelUnlockChecking = null;
+        EventManager.Current._Game.OnLoadLevel -= LoadLevel;
+        EventManager.Current._Game.OnSelectLevel -= SetLevel;
+
     }
 
     private void Start()
@@ -52,6 +58,8 @@ public class LevelManager : MonoBehaviour
         currentLevel = Mathf.Clamp(currentLevel,0,levelConfigs.Length);
 
         levelPanelUI.Init(maxLevel);
+        
+        EventManager.Current._Game.OnSelectLevel?.Invoke(currentLevel);
     }
 
     private void LoadLevel()
@@ -61,10 +69,12 @@ public class LevelManager : MonoBehaviour
         
         puzzleQuestManager.SetPuzzleQuestData(levelConfig.PuzzleQuestData);
         puzzleQuestManager.SetFirstState();
+        
+        UIManager.Instance.ShowGameplayUI();
     }
-    
 
-    public void SetLevel(int levelIndex)
+
+    private void SetLevel(int levelIndex)
     {
         this.currentLevel = levelIndex;
     }
