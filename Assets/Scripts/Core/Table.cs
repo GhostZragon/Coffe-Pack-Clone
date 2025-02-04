@@ -13,7 +13,6 @@ public partial class Table : MonoBehaviour
 
     private bool isRefresh = false;
     public MergeSystem mergeSystem;
-    private CameraHandler cameraHandler;
 
     [SerializeField] private GridManager gridManager;
 
@@ -29,10 +28,7 @@ public partial class Table : MonoBehaviour
     {
         Instance = this;
         mainCamera = Camera.main;
-        cameraHandler = mainCamera.GetComponent<CameraHandler>();
         
-        cameraHandler.ClearBound();
-        gridManager.InitializeGrid();
         mergeSystem = new MergeSystem(this,gridManager);
     }
 

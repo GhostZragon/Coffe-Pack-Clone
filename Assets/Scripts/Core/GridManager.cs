@@ -9,8 +9,8 @@ public class GridManager : MonoBehaviour
     [SerializeField] private float _spacing = 1f;
     [SerializeField] private float _cellWidth = 0.25f;
     [SerializeField] private float _cellDepth = 0.25f;
-    [SerializeField] private CSVImport csvImport;
     [SerializeField] private CameraHandler cameraHandler;
+    [SerializeField] private CSVImport csvImport;
     private Dictionary<Vector2Int, Cell> _cells = new();
 
     public IReadOnlyDictionary<Vector2Int, Cell> TableMap
@@ -97,5 +97,10 @@ public class GridManager : MonoBehaviour
     {
         return gridPos.x >= 0 && gridPos.x < _rows &&
                gridPos.y >= 0 && gridPos.y < _columns;
+    }
+
+    public void SetLevelData(TextAsset LevelCsv)
+    {
+        csvImport.mapCSV = LevelCsv;
     }
 }

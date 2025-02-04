@@ -21,7 +21,7 @@ public class CSVImport : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogError($"Không thể chuyển đổi giá trị: {cols[j]} tại vị trí [{i},{j}]");
+                    Debug.LogWarning($"Không thể chuyển đổi giá trị: {cols[j]} tại vị trí [{i},{j}]");
                 }
             }
         }
