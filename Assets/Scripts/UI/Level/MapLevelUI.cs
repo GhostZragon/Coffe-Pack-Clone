@@ -1,33 +1,44 @@
+using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MapLevelUI : MonoBehaviour
 {
-    [SerializeField] private Image[] MapImages;
+    [SerializeField] private Image MapImage;
 
     [SerializeField] private int mapIndex;
-    
-    
-    
-    [Button]
-    private void ActiveMap(int startLevel)
+
+    private LevelUI[] buttons;
+
+    private void Awake()
     {
-        for (int i = 0; i < MapImages.Length; i++)
+        buttons = GetComponentsInChildren<LevelUI>();
+        TurnOffAllButton();
+    }
+
+    [Button]
+    public void RefreshMap(ref int startLevel,int endLevel, Predicate<int> isLevelUnlock)
+    {
+        for (int i = 0; i < buttons.Length; i++)
         {
-            MapImages[i].gameObject.SetActive(i == mapIndex);
-
-            if (i == mapIndex)
+            if (i > endLevel)
             {
-                // load all button
-
-                var buttons = MapImages[i].transform.GetComponentsInChildren<LevelUI>();
-
-                foreach (var button in buttons)
-                {
-                    button.Setup(startLevel++,false);
-                }
+                buttons[i].gameObject.SetActive(false);
             }
+            else
+            {
+                buttons[i].gameObject.SetActive(true);
+                buttons[i].Setup(startLevel++, isLevelUnlock(startLevel));
+            }
+        }
+    }
+
+    private void TurnOffAllButton()
+    {
+        foreach (var item in buttons)
+        {
+            item.gameObject.SetActive(false);
         }
     }
 }
