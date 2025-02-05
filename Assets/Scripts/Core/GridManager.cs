@@ -150,10 +150,7 @@ public class GridManager : MonoBehaviour
     {
         foreach (var item in _cells)
         {
-            if (item.Value.HasSlot)
-            {
-                Destroy(item.Value.Slot.gameObject);
-            }
+            item.Value.ClearTrayAndSlot();
         }
         _cells.Clear();
     }
