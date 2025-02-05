@@ -33,7 +33,7 @@ public partial class Table : MonoBehaviour
         
     }
 
-    public void OnCompleteItem(SlotBase slot)
+    public void DestroyBlockingSlotAround(SlotBase slot)
     {
         var cellPosition = gridManager.WorldToGridPosition(slot.transform.position);
         Vector2Int checkingPosition = Vector2Int.zero;

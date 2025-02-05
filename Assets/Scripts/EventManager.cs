@@ -29,13 +29,15 @@ public class EventManager
     {
         public Action<int> OnSelectLevel;
         public Action OnLoadLevel;
-
+        public Action OnUnloadLevel;
         public Action CheckWin;
         public Action CheckLoose;
+        public Action OnProcessComplete;
     }
 
     public class UI
     {
         public Action<LevelUI> OnSelectLevelUI;
+        public Action<InGameQuestData> OnBindingWithQuestUI;
     }
 }

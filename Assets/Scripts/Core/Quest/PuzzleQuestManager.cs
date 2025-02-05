@@ -13,14 +13,13 @@ public class PuzzleQuestManager : MonoBehaviour
 {
     public static PuzzleQuestManager Instance;
     [Header("UI")]
-    [SerializeField] private PuzzleQuestManagerUI PuzzleQuestManagerUI;
    
     [SerializeField] private PuzzleQuestData puzzleQuestData;
     [SerializeField] private PuzzleStage currentStage = PuzzleStage.First;
     [SerializeField] private bool completeOneTime;
     [Header("Questing")]
     [SerializeField] private List<string> randomItemsList = new();
-    [SerializeField] private List<PuzzleQuest> puzzleQuests;
+    [SerializeField] private List<InGameQuestData> InGameQuestDataList;
     
     
     private Dictionary<PuzzleStage, QuestData[]> questDataPerStage;
@@ -28,10 +27,8 @@ public class PuzzleQuestManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        currentStage = PuzzleStage.First;
-
     }
-
+    
     private void Start()
     {
         questDataPerStage = new()
@@ -41,6 +38,7 @@ public class PuzzleQuestManager : MonoBehaviour
             [PuzzleStage.Third] = puzzleQuestData.stage3
         };
     }
+
 
     [Button]
     private void CompleteAll()
@@ -71,41 +69,49 @@ public class PuzzleQuestManager : MonoBehaviour
         currentStage = PuzzleStage.First;
     }
     
-    public void CreateNewQuest()
+    public void CreateQuests()
     {
-        puzzleQuests.Clear();
-        if (CanGoNextStage(currentStage, out var arrayQuest))
-        {
-            foreach (var questData in arrayQuest)
-            {
-                var puzzleQuest = new PuzzleQuest();
-                if (questData.IsRandomly())
-                {
-                    CreateRandomProperty(puzzleQuest);
-                }
-                else
-                {
-                    puzzleQuest.InitByQuestData(questData);
-                }
+        CreateNewQuest();
+    }
+    
+    private void CreateNewQuest()
+    {
+        InGameQuestDataList.Clear();
 
-                if (PuzzleQuestManagerUI == null) return;
-                Debug.Log($"Create quest {puzzleQuest.ItemID} and {puzzleQuest.TargetQuantity}");
-                PuzzleQuestManagerUI.GetPuzzleQuestUI(puzzleQuest);
-
-                puzzleQuests.Add(puzzleQuest);
-            }
-        }
-        else
+        if (!IsContainQuestDataForCurrentState(currentStage, out var arrayQuest)) return;
+        
+        foreach (var questData in arrayQuest)
         {
-            Win();
+            var puzzleQuest = CreatePuzzleQuest(questData);
+            InGameQuestDataList.Add(puzzleQuest);
+
+            Debug.Log($"Create quest {puzzleQuest.ItemID} and {puzzleQuest.TargetQuantity}");
+            
+            EventManager.Current._UI.OnBindingWithQuestUI?.Invoke(puzzleQuest);
+          
         }
     }
 
-    private void CreateRandomProperty(PuzzleQuest puzzleQuest)
+    private InGameQuestData CreatePuzzleQuest(QuestData questData)
     {
-        puzzleQuest.ItemID = GetRandomItemID();
-        puzzleQuest.TargetQuantity = GetRandomItemCount();
-        puzzleQuest.isRandom = true;
+        var inGameQuestData = new InGameQuestData();
+        if (questData.IsRandomly())
+        {
+            CreateRandomProperty(inGameQuestData);
+        }
+        else
+        {
+            inGameQuestData.InitByQuestData(questData);
+        }
+
+        return inGameQuestData;
+    }
+    
+    private void CreateRandomProperty(InGameQuestData inGameQuestData)
+    {
+        inGameQuestData.ItemID = GetRandomItemID();
+        inGameQuestData.TargetQuantity = GetRandomItemCount();
+        inGameQuestData.isRandom = true;
     }
 
     private int GetRandomItemCount()
@@ -126,49 +132,43 @@ public class PuzzleQuestManager : MonoBehaviour
             return;
         }
 
-        foreach (var quest in puzzleQuests)
+        foreach (var inGameQuestData in InGameQuestDataList)
         {
-            if (quest.ItemID == itemID && quest.IsComplete == false)
-            {
-                Debug.Log("Check complete item: " + itemID);
-                int quantity = completeOneTime ? quest.TargetQuantity : 1;
-                quest.UpdateQuest(quantity);
-                break;
-            }
-
-            quest.RefreshUI();
+            if (!inGameQuestData.CanUpdateQuest(itemID)) continue;
+            inGameQuestData.UpdateQuest(1);
+            
+            Debug.Log("Check complete item: " + itemID);
+            break;
         }
 
-        CheckCompleteStage();
+        if(CheckWin())
+            return;
+        GoNextStage();
     }
-    
+
+
 
     [Button]
-    private void CheckCompleteStage()
-    {
-        bool isCompleteAllQuest = true;
-        foreach (var quest in puzzleQuests)
-        {
-            if (quest.IsComplete == false)
-            {
-                isCompleteAllQuest = false;
-                break;
-            }
-        }
-
-        if (isCompleteAllQuest == false) return;
-
-        CheckWin();
-    }
-
-    private void CheckWin()
+    private void GoNextStage()
     {
         currentStage = currentStage == PuzzleStage.First ? PuzzleStage.Second : PuzzleStage.Third;
 
         CreateNewQuest();
     }
 
-    private bool CanGoNextStage(PuzzleStage puzzleStage, out QuestData[] arrayQuest)
+    private bool CheckWin()
+    {
+        foreach (var quest in InGameQuestDataList)
+        {
+            if (quest.IsComplete == false)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private bool IsContainQuestDataForCurrentState(PuzzleStage puzzleStage, out QuestData[] arrayQuest)
     {
         return questDataPerStage.TryGetValue(puzzleStage, out arrayQuest);
     }
@@ -182,7 +182,7 @@ public class PuzzleQuestManager : MonoBehaviour
     {
         List<string> itemList = new();
 
-        foreach (var quest in puzzleQuests)
+        foreach (var quest in InGameQuestDataList)
         {
             if (itemList.Contains(quest.ItemID))
                 continue;
@@ -190,5 +190,15 @@ public class PuzzleQuestManager : MonoBehaviour
         }
         
         return itemList;
+    }
+
+
+    public void ClearQuest()
+    {
+        foreach (var quest in InGameQuestDataList)
+        {
+            quest.DestroyQuestUI();
+        }
+        InGameQuestDataList.Clear();
     }
 }

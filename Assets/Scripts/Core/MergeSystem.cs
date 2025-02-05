@@ -156,8 +156,8 @@ public partial class Table
             AnimateTrayClear();
             
             // Check win loose
-            
-            EventManager.Current._Game.CheckLoose?.Invoke();
+
+            EventManager.Current._Game.OnProcessComplete?.Invoke();
         }
 
         private void RecalculateAllGroupPriorities()

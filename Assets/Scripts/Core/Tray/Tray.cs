@@ -41,6 +41,7 @@ public class Tray : MonoBehaviour
     private void Awake()
     {
         collider = GetComponent<Collider>();
+        RequestItem();
     }
 
 
@@ -159,7 +160,7 @@ public class Tray : MonoBehaviour
     {
         index = -1;
         TrayManager.instance.Remove(this);
-        TrayManager.instance.TryCreateNextTrays();
+        // TrayManager.instance.TryCreateNextTrays();
     }
 
     public bool CanBeDragged()

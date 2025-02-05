@@ -14,26 +14,39 @@ public class LevelManager : MonoBehaviour
     
     private PuzzleQuestManager puzzleQuestManager;
     private GridManager gridManager;
-
+    private DragDropSystem dragDropSystem;
+    private TrayManager trayManager;
     
     private void Awake()
     {
         currentLevel = 0;
         gridManager = FindFirstObjectByType<GridManager>();
         puzzleQuestManager = FindFirstObjectByType<PuzzleQuestManager>();
+        dragDropSystem = FindFirstObjectByType<DragDropSystem>();
+        trayManager = FindFirstObjectByType<TrayManager>();
+
         levelConfigs = Resources.LoadAll<LevelConfig>("Level");
 
         levelPanelUI.levelUnlockChecking = IsLevelUnlock;
+        
         EventManager.Current._Game.OnLoadLevel += LoadLevel;
+        EventManager.Current._Game.OnUnloadLevel += UnLoadLevel;
         EventManager.Current._Game.OnSelectLevel += SetLevel;
+
+        EventManager.Current._Game.OnProcessComplete += OnProcessComplete;
 
     }
 
     private void OnDestroy()
     {
         levelPanelUI.levelUnlockChecking = null;
+        
         EventManager.Current._Game.OnLoadLevel -= LoadLevel;
+        EventManager.Current._Game.OnUnloadLevel -= UnLoadLevel;
         EventManager.Current._Game.OnSelectLevel -= SetLevel;
+        
+        EventManager.Current._Game.OnProcessComplete -= OnProcessComplete;
+
 
     }
 
@@ -69,15 +82,32 @@ public class LevelManager : MonoBehaviour
         
         puzzleQuestManager.SetPuzzleQuestData(levelConfig.PuzzleQuestData);
         puzzleQuestManager.SetFirstState();
-        
+        puzzleQuestManager.CreateQuests();
+
+        trayManager.Initialize();
         UIManager.Instance.ShowGameplayUI();
     }
 
+
+    private void UnLoadLevel()
+    {
+        gridManager.ClearGrid();
+        puzzleQuestManager.ClearQuest();
+        trayManager.ClearAllTray();
+        dragDropSystem.ClearDragItem();
+    }
 
     private void SetLevel(int levelIndex)
     {
         this.currentLevel = levelIndex;
         levelConfig = levelConfigs[currentLevel];
+    }
+
+    private void OnProcessComplete()
+    {
+        
+        // check win loose
+        trayManager.TryCreateNextTrays();
     }
 
     private bool IsLevelUnlock(int i)

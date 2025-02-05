@@ -145,4 +145,16 @@ public class GridManager : MonoBehaviour
         }
         return false;
     }
+
+    public void ClearGrid()
+    {
+        foreach (var item in _cells)
+        {
+            if (item.Value.HasSlot)
+            {
+                Destroy(item.Value.Slot.gameObject);
+            }
+        }
+        _cells.Clear();
+    }
 }

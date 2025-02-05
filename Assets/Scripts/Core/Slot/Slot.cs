@@ -94,7 +94,9 @@ public class Slot : SlotBase
         {
             canDestroy = true;
             isDelay = true;
-            Table.Instance.OnCompleteItem(this);
+            // 
+            Table.Instance.DestroyBlockingSlotAround(this);
+           
             PuzzleQuestManager.Instance?.OnCompleteItem(itemID);
         }
 
