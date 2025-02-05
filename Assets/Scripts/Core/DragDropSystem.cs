@@ -137,4 +137,14 @@ public class DragDropSystem : MonoBehaviour
         // Update object position, maintaining a fixed height
         moveObject.transform.position = new Vector3(worldPosition.x, .25f, worldPosition.z);
     }
+
+    public void ClearDragItem()
+    {
+        if (selectionObject != null)
+        {
+            Destroy(selectionObject.gameObject);
+            selectionObject = null;
+        }
+            
+    }
 }

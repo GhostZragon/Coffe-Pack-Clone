@@ -26,4 +26,13 @@ public class Cell
         Debug.Log("không tìm thấy slot");
         return null;
     }
+
+    public void ClearTrayAndSlot()
+    {
+        if (HasTray)
+        {
+            GameObject.Destroy(GetTray().gameObject);
+        }
+        GameObject.Destroy(Slot.gameObject);
+    }
 }

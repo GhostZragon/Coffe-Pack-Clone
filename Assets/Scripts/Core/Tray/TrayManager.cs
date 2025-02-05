@@ -13,34 +13,39 @@ public class TrayManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        CreateTrays();
     }
 
     private int totalCount = 0;
-    private void CreateTrays()
+    public void Initialize()
     {
         for (int i = 0; i < trayStandPositions.Count; i++)
         {
             var tray = Instantiate(trayPrefab, trayStandPositions[i].position, Quaternion.identity);
             tray.Index = i;
             tray.name = "Tray_" + totalCount;
-            tray.RequestItem();
-            Add(tray);
+            // tray.RequestItem();
+            CatchingTray(tray);
             totalCount++;
         }
     }
-
+    
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            foreach (var item in currentTrayList)
-            {
-                Destroy(item.gameObject);
-            }
-            currentTrayList.Clear();
+            ClearAllTray();
             TryCreateNextTrays();
         }
+    }
+
+    public void ClearAllTray()
+    {
+        foreach (var item in currentTrayList)
+        {
+            Destroy(item.gameObject);
+        }
+
+        currentTrayList.Clear();
     }
 
     public Transform GetStandPosition(int index)
@@ -52,11 +57,11 @@ public class TrayManager : MonoBehaviour
     {
         if (currentTrayList.Count == 0)
         {
-            CreateTrays();
+            Initialize();
         }
     }
 
-    public void Add(Tray tray)
+    public void CatchingTray(Tray tray)
     {
         currentTrayList.Add(tray);
     }
@@ -65,4 +70,11 @@ public class TrayManager : MonoBehaviour
     {
         currentTrayList.Remove(tray);
     }
+    
+}
+
+public interface IGameControl
+{
+    void Init();
+    void Clear();
 }

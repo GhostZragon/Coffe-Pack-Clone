@@ -14,12 +14,12 @@ public class LevelPanelUI : MonoBehaviour
 
     private void Awake()
     {
-        EventManager.Current._Game.OnSelectLevel += SelectLevelUI;
+        EventManager.Current._Core.OnSelectLevel += SelectLevelUI;
     }
 
     private void OnDestroy()
     {
-        EventManager.Current._Game.OnSelectLevel -= SelectLevelUI;
+        EventManager.Current._Core.OnSelectLevel -= SelectLevelUI;
     }
 
     private void SelectLevelUI(int level)

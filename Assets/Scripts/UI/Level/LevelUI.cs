@@ -31,7 +31,7 @@ public class LevelUI : MonoBehaviour
     {
         Debug.Log("Select Level");
         
-        EventManager.Current._Game.OnSelectLevel(level);
+        EventManager.Current._Core.OnSelectLevel(level);
     }
     
 

@@ -27,6 +27,7 @@ public class Slot : SlotBase
     private Vector3 currentScale;
     private CompositeMotionHandle handles;
 
+
     protected void Awake()
     {
         currentScale = transform.localScale;
@@ -35,7 +36,7 @@ public class Slot : SlotBase
 
     private void OnPlacedTray()
     {
-        Table.Instance.mergeSystem.TryMergeAtSlot(this);
+        EventManager.Current._Game.OnMergeTray?.Invoke(this);
     }
 
     public void Add(Tray tray)
@@ -93,8 +94,13 @@ public class Slot : SlotBase
         {
             canDestroy = true;
             isDelay = true;
-            Table.Instance.OnCompleteItem(this);
-            PuzzleQuestManager.Instance?.OnCompleteItem(itemID);
+            // 
+            
+            // Table.Instance.DestroyBlockingSlotAround(this);
+            EventManager.Current._Table.OnDestroyBlockingBlockAround?.Invoke(this);
+            
+            EventManager.Current._Game.OnCompleteItem?.Invoke(itemID);
+            // PuzzleQuestManager.Instance?.OnCompleteItem(itemID);
         }
 
         if (canDestroy)

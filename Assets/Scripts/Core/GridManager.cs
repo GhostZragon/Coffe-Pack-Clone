@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using LitMotion;
+using LitMotion.Extensions;
 using Sirenix.OdinInspector;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -52,7 +53,7 @@ public class GridManager : MonoBehaviour
         _cells.Clear();
         _rows = csvImport.maze.GetLength(0);
         _columns = csvImport.maze.GetLength(1);
-        
+
         for (int i = 0; i < _rows; i++)
         {
             for (int j = 0; j < _columns; j++)
@@ -74,17 +75,17 @@ public class GridManager : MonoBehaviour
                 _cells[gridPos] = new Cell(slot);
             }
         }
+
         Debug.Log($"level create is {_rows}x{_columns}");
     }
-    
+
     [Button]
     private void TestDropEffect()
     {
-        // stoneDropSound.Play();
-        // LMotion.Create(0, 1, 0.2f).Bind(x => stoneDropSound.volume = x);
-        
+
         float rowDelayFactor = AnimationManager.Instance.config.gridCfg.rowDelayFactor;
-        float columnDelayFactor =  AnimationManager.Instance.config.gridCfg.columnDelayFactor;
+        float columnDelayFactor = AnimationManager.Instance.config.gridCfg.columnDelayFactor;
+        
         for (int i = 0; i < _rows; i++)
         {
             for (int j = 0; j < _columns; j++)
@@ -95,15 +96,11 @@ public class GridManager : MonoBehaviour
                 _cells[gridPos].Slot?.InitEffect(delay);
             }
         }
-
-        // Invoke(nameof(StopSoundWithDelay),rowDelayFactor * _rows);
     }
 
-    private void StopSoundWithDelay()
-    {
-        LMotion.Create(1, 0, 1).Bind(x => stoneDropSound.volume = x);
-    }
+    
 
+   
     private void PositionSlot(Transform slotTransform, Vector2Int gridPos)
     {
         Vector3 worldPos = new(
@@ -131,5 +128,29 @@ public class GridManager : MonoBehaviour
     public void SetLevelData(TextAsset LevelCsv)
     {
         csvImport.mapCSV = LevelCsv;
+    }
+
+    public bool IsFullOfSpace()
+    {
+        foreach (var item in _cells)
+        {
+            // have slot to drop
+            if (item.Value.HasTray == false)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void ClearGrid()
+    {
+        foreach (var item in _cells)
+        {
+            item.Value.ClearTrayAndSlot();
+        }
+
+        _cells.Clear();
     }
 }

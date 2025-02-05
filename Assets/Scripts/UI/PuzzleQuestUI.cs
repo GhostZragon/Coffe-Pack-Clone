@@ -9,13 +9,14 @@ public class PuzzleQuestUI : MonoBehaviour
     [SerializeField] private Image icon;
     [SerializeField] private Image iconShadow;
 
-    public void BindingUI(PuzzleQuest puzzleQuest)
+    public void BindingUI(InGameQuestData inGameQuestData)
     {
-        itemNameText.text = $"ID: {puzzleQuest.ItemID}";
-        UpdateCount(puzzleQuest.TargetQuantity);
+        itemNameText.text = $"ID: {inGameQuestData.ItemID}";
+        UpdateCount(inGameQuestData.TargetQuantity);
 
-        puzzleQuest.OnUpdateItemCount = UpdateCount;
-        puzzleQuest.OnCompleteQuest = OnCompleteQuest;
+        inGameQuestData.OnUpdateItemCount = UpdateCount;
+        inGameQuestData.OnCompleteQuest = OnCompleteQuest;
+        inGameQuestData.OnDestroyQuest = OnDestroyQuest;
     }
 
     private void UpdateCount(int targetQuantity)
@@ -24,6 +25,11 @@ public class PuzzleQuestUI : MonoBehaviour
     }
 
     private void OnCompleteQuest()
+    {
+        Destroy(gameObject);
+    }
+
+    private void OnDestroyQuest()
     {
         Destroy(gameObject);
     }

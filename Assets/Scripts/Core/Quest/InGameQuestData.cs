@@ -6,7 +6,7 @@ using UnityEngine;
 
 
 [Serializable]
-public class PuzzleQuest
+public class InGameQuestData
 {
     [SerializeField,InfoBox("Game will fully random this quest if is random is true")]
     public bool isRandom = false;
@@ -18,6 +18,7 @@ public class PuzzleQuest
     
     public Action<int> OnUpdateItemCount;
     public Action OnCompleteQuest;
+    public Action OnDestroyQuest;
 
     public bool IsComplete => TargetQuantity == 0;
 
@@ -31,9 +32,16 @@ public class PuzzleQuest
         if(TargetQuantity <= 0)
             OnCompleteQuest?.Invoke();
     }
-    [Button]
-    public void UpdateQuest(int quantity)
+
+    public void DestroyQuestUI()
     {
+        OnDestroyQuest?.Invoke();
+    }
+    
+    [Button]
+    public void UpdateQuest(bool IsCompleteAll)
+    {
+        int quantity = IsCompleteAll ? TargetQuantity : 1;
         TargetQuantity -= quantity;
         
         RefreshUI();
@@ -45,5 +53,10 @@ public class PuzzleQuest
     {
         ItemID = questData.ItemID;
         TargetQuantity = questData.TargetQuantity;
+    }
+
+    public bool CanUpdateQuest(string itemID)
+    {
+        return itemID == ItemID && TargetQuantity > 0;
     }
 }
