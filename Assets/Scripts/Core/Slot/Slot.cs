@@ -36,7 +36,7 @@ public class Slot : SlotBase
 
     private void OnPlacedTray()
     {
-        Table.Instance.mergeSystem.TryMergeAtSlot(this);
+        EventManager.Current._Game.OnMergeTray?.Invoke(this);
     }
 
     public void Add(Tray tray)
@@ -95,9 +95,12 @@ public class Slot : SlotBase
             canDestroy = true;
             isDelay = true;
             // 
-            Table.Instance.DestroyBlockingSlotAround(this);
-           
-            PuzzleQuestManager.Instance?.OnCompleteItem(itemID);
+            
+            // Table.Instance.DestroyBlockingSlotAround(this);
+            EventManager.Current._Table.OnDestroyBlockingBlockAround?.Invoke(this);
+            
+            EventManager.Current._Game.OnCompleteItem?.Invoke(itemID);
+            // PuzzleQuestManager.Instance?.OnCompleteItem(itemID);
         }
 
         if (canDestroy)

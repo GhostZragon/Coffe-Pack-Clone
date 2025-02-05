@@ -7,8 +7,10 @@ public class EventManager
 
     private EventManager()
     {
+        _Core = new();
+        _UI = new();
         _Game = new();
-        _UI = new UI();
+        _Table = new();
     }
     public static EventManager Current
     {
@@ -23,9 +25,11 @@ public class EventManager
         }
     }
 
-    public Game _Game;
-    public UI _UI;
-    public class Game
+    public readonly Core _Core;
+    public readonly UI _UI;
+    public readonly Game _Game;
+    public readonly Table _Table;
+    public class Core
     {
         public Action<int> OnSelectLevel;
         public Action OnLoadLevel;
@@ -35,9 +39,21 @@ public class EventManager
         public Action OnProcessComplete;
     }
 
+    public class Game
+    {
+        public Action<Slot> OnMergeTray;
+        public Action<string> OnCompleteItem;
+    }
+
+    public class Table
+    {
+        public Action<SlotBase, SlotBase> OnReplaceSlot;
+        public Action<SlotBase> OnDestroyBlockingBlockAround;
+
+    }
+
     public class UI
     {
-        public Action<LevelUI> OnSelectLevelUI;
         public Action<InGameQuestData> OnBindingWithQuestUI;
     }
 }

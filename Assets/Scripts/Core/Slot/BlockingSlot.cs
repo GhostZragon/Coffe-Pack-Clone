@@ -30,7 +30,7 @@ public class BlockingSlot : SlotBase
 
     private void Effect()
     {
-        Table.Instance.ReplaceSlot(this, SlotManager.Instance.GetSlot(SlotType.Normal));
+        EventManager.Current._Table.OnReplaceSlot(this, SlotManager.Instance.GetSlot(SlotType.Normal));
         canDestroy = true;
         PlayClearAnimation();
     }

@@ -39,8 +39,9 @@ public class InGameQuestData
     }
     
     [Button]
-    public void UpdateQuest(int quantity)
+    public void UpdateQuest(bool IsCompleteAll)
     {
+        int quantity = IsCompleteAll ? TargetQuantity : 1;
         TargetQuantity -= quantity;
         
         RefreshUI();

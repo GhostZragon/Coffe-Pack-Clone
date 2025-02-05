@@ -575,12 +575,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   puzzleQuestData: {fileID: 11400000, guid: cdf638b7fffa02e49ab80c537733fa53, type: 2}
   currentStage: 0
-  completeOneTime: 0
+  completeOneTime: 1
   randomItemsList:
   - 1
   - 2
   - 3
-  InGameQuestDataList: []
+  inGameQuestDataList: []
 --- !u!4 &1237944088
 Transform:
   m_ObjectHideFlags: 0
@@ -1003,6 +1003,8 @@ MonoBehaviour:
   cameraHandler: {fileID: 1697514698}
   csvImport: {fileID: 2082228494}
   stoneDropSound: {fileID: 2082228495}
+  maxValue: 0
+  duration: 0.5
 --- !u!114 &2082228494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1030,7 +1032,7 @@ AudioSource:
   m_Resource: {fileID: 8300000, guid: 1d63d2c122f4a5e43ae9d12f79f4dbe6, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
-  m_Pitch: 1
+  m_Pitch: 1.3
   Loop: 1
   Mute: 0
   Spatialize: 0

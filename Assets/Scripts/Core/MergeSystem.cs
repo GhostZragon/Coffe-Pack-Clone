@@ -157,7 +157,7 @@ public partial class Table
             
             // Check win loose
 
-            EventManager.Current._Game.OnProcessComplete?.Invoke();
+            EventManager.Current._Core.OnProcessComplete?.Invoke();
         }
 
         private void RecalculateAllGroupPriorities()

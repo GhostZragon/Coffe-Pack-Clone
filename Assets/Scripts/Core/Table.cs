@@ -3,7 +3,6 @@ using UnityEngine;
 
 public partial class Table : MonoBehaviour
 {
-    public static Table Instance;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Slot slotPrefab;
     [SerializeField] private float spacing = 1f;
@@ -26,14 +25,24 @@ public partial class Table : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
         mainCamera = Camera.main;
-        
         mergeSystem = new MergeSystem(this,gridManager);
         
+        EventManager.Current._Table.OnDestroyBlockingBlockAround += DestroyBlockingSlotAround;
+        EventManager.Current._Table.OnReplaceSlot += ReplaceSlot;
+
+        EventManager.Current._Game.OnMergeTray += mergeSystem.TryMergeAtSlot;
     }
 
-    public void DestroyBlockingSlotAround(SlotBase slot)
+    private void OnDestroy()
+    {
+        EventManager.Current._Table.OnDestroyBlockingBlockAround -= DestroyBlockingSlotAround;
+        EventManager.Current._Table.OnReplaceSlot -= ReplaceSlot;
+
+        EventManager.Current._Game.OnMergeTray -= mergeSystem.TryMergeAtSlot;
+    }
+
+    private void DestroyBlockingSlotAround(SlotBase slot)
     {
         var cellPosition = gridManager.WorldToGridPosition(slot.transform.position);
         Vector2Int checkingPosition = Vector2Int.zero;

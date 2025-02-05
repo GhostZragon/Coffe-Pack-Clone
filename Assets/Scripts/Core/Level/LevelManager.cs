@@ -29,11 +29,11 @@ public class LevelManager : MonoBehaviour
 
         levelPanelUI.levelUnlockChecking = IsLevelUnlock;
         
-        EventManager.Current._Game.OnLoadLevel += LoadLevel;
-        EventManager.Current._Game.OnUnloadLevel += UnLoadLevel;
-        EventManager.Current._Game.OnSelectLevel += SetLevel;
+        EventManager.Current._Core.OnLoadLevel += LoadLevel;
+        EventManager.Current._Core.OnUnloadLevel += UnLoadLevel;
+        EventManager.Current._Core.OnSelectLevel += SetLevel;
 
-        EventManager.Current._Game.OnProcessComplete += OnProcessComplete;
+        EventManager.Current._Core.OnProcessComplete += OnProcessComplete;
 
     }
 
@@ -41,11 +41,11 @@ public class LevelManager : MonoBehaviour
     {
         levelPanelUI.levelUnlockChecking = null;
         
-        EventManager.Current._Game.OnLoadLevel -= LoadLevel;
-        EventManager.Current._Game.OnUnloadLevel -= UnLoadLevel;
-        EventManager.Current._Game.OnSelectLevel -= SetLevel;
+        EventManager.Current._Core.OnLoadLevel -= LoadLevel;
+        EventManager.Current._Core.OnUnloadLevel -= UnLoadLevel;
+        EventManager.Current._Core.OnSelectLevel -= SetLevel;
         
-        EventManager.Current._Game.OnProcessComplete -= OnProcessComplete;
+        EventManager.Current._Core.OnProcessComplete -= OnProcessComplete;
 
 
     }
@@ -72,7 +72,7 @@ public class LevelManager : MonoBehaviour
 
         levelPanelUI.Init(maxLevel);
         
-        EventManager.Current._Game.OnSelectLevel?.Invoke(currentLevel);
+        EventManager.Current._Core.OnSelectLevel?.Invoke(currentLevel);
     }
 
     private void LoadLevel()
@@ -105,10 +105,10 @@ public class LevelManager : MonoBehaviour
 
     private void OnProcessComplete()
     {
-        if (puzzleQuestManager.IsFinishAllQuest())
+        if (puzzleQuestManager.IsRunOutOfQuest())
         {
             // 
-            Debug.Log("Win");
+            Debug.Log("You Win");
             return;
         }
 

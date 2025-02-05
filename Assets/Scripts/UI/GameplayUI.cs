@@ -18,6 +18,6 @@ public class GameplayUI : MonoBehaviour
     private void BackToMenuUI()
     {
         UIManager.Instance.ShowMenuUI();
-        EventManager.Current._Game.OnUnloadLevel?.Invoke();
+        EventManager.Current._Core.OnUnloadLevel?.Invoke();
     }
 }

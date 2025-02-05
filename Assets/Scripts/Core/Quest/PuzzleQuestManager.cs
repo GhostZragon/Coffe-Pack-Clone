@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -11,39 +12,31 @@ public enum PuzzleStage
 
 public class PuzzleQuestManager : MonoBehaviour
 {
-    public static PuzzleQuestManager Instance;
-    [Header("UI")]
-   
+    [Header("UI")] 
     [SerializeField] private PuzzleQuestData puzzleQuestData;
-    [SerializeField] private PuzzleStage currentStage = PuzzleStage.First;
+    [SerializeField, ReadOnly] private int currentStage = 0;
     [SerializeField] private bool completeOneTime;
-    [Header("Questing")]
+    [Header("Questing")] 
     [SerializeField] private List<string> randomItemsList = new();
-    [SerializeField] private List<InGameQuestData> InGameQuestDataList;
-    
-    
-    private Dictionary<PuzzleStage, QuestData[]> questDataPerStage;
+    [SerializeField] private List<InGameQuestData> inGameQuestDataList;
+
+
+    private Dictionary<int, QuestData[]> questDataPerStage;
 
     private void Awake()
     {
-        Instance = this;
-    }
-    
-    private void Start()
-    {
-        questDataPerStage = new()
-        {
-            [PuzzleStage.First] = puzzleQuestData.stage1,
-            [PuzzleStage.Second] = puzzleQuestData.stage2,
-            [PuzzleStage.Third] = puzzleQuestData.stage3
-        };
+        EventManager.Current._Game.OnCompleteItem += OnCompleteItem;
     }
 
+    private void OnDestroy()
+    {
+        EventManager.Current._Game.OnCompleteItem -= OnCompleteItem;
+    }
 
     [Button]
     private void CompleteAll()
     {
-        PuzzleStage previousStage = currentStage;
+        var previousStage = currentStage;
         if (questDataPerStage.TryGetValue(currentStage, out var arrayQuest))
         {
             foreach (var item in arrayQuest)
@@ -62,33 +55,42 @@ public class PuzzleQuestManager : MonoBehaviour
     public void SetPuzzleQuestData(PuzzleQuestData puzzleQuestData)
     {
         this.puzzleQuestData = puzzleQuestData;
+        questDataPerStage = new Dictionary<int, QuestData[]>
+        {
+            [0] = puzzleQuestData.stage1,
+            [1] = puzzleQuestData.stage2,
+            [2] = puzzleQuestData.stage3
+        };
     }
 
     public void SetFirstState()
     {
-        currentStage = PuzzleStage.First;
+        currentStage = 0;
     }
-    
+
     public void CreateQuests()
     {
         CreateNewQuest();
     }
-    
+
     private void CreateNewQuest()
     {
-        InGameQuestDataList.Clear();
-
         if (!IsContainQuestDataForCurrentState(currentStage, out var arrayQuest)) return;
-        
-        foreach (var questData in arrayQuest)
-        {
-            var puzzleQuest = CreatePuzzleQuest(questData);
-            InGameQuestDataList.Add(puzzleQuest);
 
-            Debug.Log($"Create quest {puzzleQuest.ItemID} and {puzzleQuest.TargetQuantity}");
-            
-            EventManager.Current._UI.OnBindingWithQuestUI?.Invoke(puzzleQuest);
-          
+        for (int i = 0; i < arrayQuest.Length; i++)
+        {
+            if (i < inGameQuestDataList.Count)
+            {
+                // Cập nhật dữ liệu nhiệm vụ thay vì tạo mới
+                inGameQuestDataList[i].InitByQuestData(arrayQuest[i]);
+            }
+            else
+            {
+                var puzzleQuest = CreatePuzzleQuest(arrayQuest[i]);
+                inGameQuestDataList.Add(puzzleQuest);
+                Debug.Log($"Create quest {puzzleQuest.ItemID} and {puzzleQuest.TargetQuantity}");
+                EventManager.Current._UI.OnBindingWithQuestUI?.Invoke(puzzleQuest);
+            }
         }
     }
 
@@ -106,7 +108,7 @@ public class PuzzleQuestManager : MonoBehaviour
 
         return inGameQuestData;
     }
-    
+
     private void CreateRandomProperty(InGameQuestData inGameQuestData)
     {
         inGameQuestData.ItemID = GetRandomItemID();
@@ -124,82 +126,67 @@ public class PuzzleQuestManager : MonoBehaviour
         return randomItemsList[Random.Range(0, randomItemsList.Count)];
     }
 
-    public void OnCompleteItem(string itemID)
+    private void OnCompleteItem(string itemID)
     {
-        if (string.IsNullOrWhiteSpace(itemID))
+        var quest = inGameQuestDataList.FirstOrDefault(q => q.CanUpdateQuest(itemID));
+        if (quest != null)
         {
-            Debug.LogWarning("Item ID is null");
-            return;
-        }
-
-        foreach (var inGameQuestData in InGameQuestDataList)
-        {
-            if (!inGameQuestData.CanUpdateQuest(itemID)) continue;
-            inGameQuestData.UpdateQuest(1);
-            
+            quest.UpdateQuest(completeOneTime);
             Debug.Log("Check complete item: " + itemID);
-            break;
         }
 
-        if(IsFinishAllQuest())
-            return;
-        GoNextStage();
+        if (IsFinishAllQuestCurrentStage())
+        {
+            GoNextStage();
+        }
     }
-
 
 
     [Button]
     private void GoNextStage()
     {
-        currentStage = currentStage == PuzzleStage.First ? PuzzleStage.Second : PuzzleStage.Third;
+        currentStage +=1;
 
         CreateNewQuest();
     }
 
-    public bool IsFinishAllQuest()
+    private bool IsFinishAllQuestCurrentStage()
     {
-        foreach (var quest in InGameQuestDataList)
-        {
-            if (quest.IsComplete == false)
-            {
-                return false;
-            }
-        }
-        return true && currentStage == PuzzleStage.Third;
+        return inGameQuestDataList.All(quest => quest.IsComplete);
     }
 
-    private bool IsContainQuestDataForCurrentState(PuzzleStage puzzleStage, out QuestData[] arrayQuest)
+    public bool IsRunOutOfQuest()
+    {
+        return IsFinishAllQuestCurrentStage() && questDataPerStage.ContainsKey(currentStage + 1);
+    }
+
+    private bool IsContainQuestDataForCurrentState(int puzzleStage, out QuestData[] arrayQuest)
     {
         return questDataPerStage.TryGetValue(puzzleStage, out arrayQuest);
-    }
-
-    private void Win()
-    {
-        Debug.Log("Win Game");
     }
 
     public List<string> GetItemTypeInQuest()
     {
         List<string> itemList = new();
 
-        foreach (var quest in InGameQuestDataList)
+        foreach (var quest in inGameQuestDataList)
         {
             if (itemList.Contains(quest.ItemID))
                 continue;
             itemList.Add(quest.ItemID);
         }
-        
+
         return itemList;
     }
 
 
     public void ClearQuest()
     {
-        foreach (var quest in InGameQuestDataList)
+        foreach (var quest in inGameQuestDataList)
         {
             quest.DestroyQuestUI();
         }
-        InGameQuestDataList.Clear();
+
+        inGameQuestDataList.Clear();
     }
-    
 }
