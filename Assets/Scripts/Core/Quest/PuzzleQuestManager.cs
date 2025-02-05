@@ -12,16 +12,17 @@ public enum PuzzleStage
 public class PuzzleQuestManager : MonoBehaviour
 {
     public static PuzzleQuestManager Instance;
+    [Header("UI")]
     [SerializeField] private PuzzleQuestManagerUI PuzzleQuestManagerUI;
    
     [SerializeField] private PuzzleQuestData puzzleQuestData;
     [SerializeField] private PuzzleStage currentStage = PuzzleStage.First;
-
-    [SerializeField] private int stageCount = 3;
     [SerializeField] private bool completeOneTime;
-
+    [Header("Questing")]
     [SerializeField] private List<string> randomItemsList = new();
     [SerializeField] private List<PuzzleQuest> puzzleQuests;
+    
+    
     private Dictionary<PuzzleStage, QuestData[]> questDataPerStage;
 
     private void Awake()

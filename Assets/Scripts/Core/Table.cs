@@ -30,9 +30,9 @@ public partial class Table : MonoBehaviour
         mainCamera = Camera.main;
         
         mergeSystem = new MergeSystem(this,gridManager);
+        
     }
 
-   
     public void OnCompleteItem(SlotBase slot)
     {
         var cellPosition = gridManager.WorldToGridPosition(slot.transform.position);

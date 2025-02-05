@@ -29,6 +29,9 @@ public class EventManager
     {
         public Action<int> OnSelectLevel;
         public Action OnLoadLevel;
+
+        public Action CheckWin;
+        public Action CheckLoose;
     }
 
     public class UI

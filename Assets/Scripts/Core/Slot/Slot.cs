@@ -27,6 +27,7 @@ public class Slot : SlotBase
     private Vector3 currentScale;
     private CompositeMotionHandle handles;
 
+
     protected void Awake()
     {
         currentScale = transform.localScale;

@@ -4,7 +4,7 @@ using System.Linq;
 using Audune.Utils.Dictionary;
 using UnityEngine;
 
-public partial class Table 
+public partial class Table
 {
     public class MergeSystem
     {
@@ -12,6 +12,10 @@ public partial class Table
         private readonly GridManager _gridManager;
         private readonly Table _table;
         private readonly List<TrayMergeCandidate> _lastProcessedCandidates;
+
+        private readonly YieldInstruction waitForCalculator = new WaitForSeconds(0.1f);
+        private readonly YieldInstruction waitAfterMerge = new WaitForSeconds(0.5f);
+
 
         public MergeSystem(Table table, GridManager gridManager)
         {
@@ -64,7 +68,7 @@ public partial class Table
             foreach (var direction in directions)
             {
                 var neighborPosition = new Vector2Int(direction.x + centerPosition.x, direction.y + centerPosition.y);
-                if (IsValidNeighborCell(neighborPosition, out var neighborTray) && 
+                if (IsValidNeighborCell(neighborPosition, out var neighborTray) &&
                     neighborTray.GetCountOfItem(itemId) > 0)
                 {
                     AddTrayToMergeGroup(neighborTray, itemId);
@@ -76,12 +80,13 @@ public partial class Table
         {
             tray = null;
             if (_gridManager.IsValidGridPosition(position) &&
-                _gridManager.TryGetCell(position, out var cell) && 
+                _gridManager.TryGetCell(position, out var cell) &&
                 cell.HasTray)
             {
                 tray = cell.Tray;
                 return true;
             }
+
             return false;
         }
 
@@ -92,6 +97,7 @@ public partial class Table
                 candidate.isOriginTray = false;
                 candidate.RecalculatePriority();
             }
+
             _lastProcessedCandidates.Clear();
         }
 
@@ -124,6 +130,7 @@ public partial class Table
                 {
                     candidate.RecalculatePriority();
                 }
+
                 candidates.Sort();
             }
         }
@@ -133,18 +140,24 @@ public partial class Table
             _table.StartCoroutine(ExecuteMergeGroupsSequentially());
         }
 
+
         private IEnumerator ExecuteMergeGroupsSequentially()
         {
             foreach (var group in _mergeableItemGroups)
             {
                 Debug.Log($"Processing merge group: {group.Key}");
                 MergeTrays(group.Value);
-                yield return new WaitForSeconds(0.1f);
+                yield return waitForCalculator;
                 RecalculateAllGroupPriorities();
             }
 
-            yield return new WaitForSeconds(.5f);
+            yield return waitAfterMerge;
+            
             AnimateTrayClear();
+            
+            // Check win loose
+            
+            EventManager.Current._Game.CheckLoose?.Invoke();
         }
 
         private void RecalculateAllGroupPriorities()
