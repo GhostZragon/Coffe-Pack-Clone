@@ -6,7 +6,7 @@ using UnityEngine;
 
 
 [Serializable]
-public class PuzzleQuest
+public class InGameQuestData
 {
     [SerializeField,InfoBox("Game will fully random this quest if is random is true")]
     public bool isRandom = false;
