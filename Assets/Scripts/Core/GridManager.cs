@@ -133,17 +133,17 @@ public class GridManager : MonoBehaviour
         csvImport.mapCSV = LevelCsv;
     }
 
-    public bool IsHaveSlotToDrop()
+    public bool IsFullOfSpace()
     {
         foreach (var item in _cells)
         {
             // have slot to drop
             if (item.Value.HasTray == false)
             {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public void ClearGrid()

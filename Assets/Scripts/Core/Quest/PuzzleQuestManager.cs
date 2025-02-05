@@ -141,7 +141,7 @@ public class PuzzleQuestManager : MonoBehaviour
             break;
         }
 
-        if(CheckWin())
+        if(IsFinishAllQuest())
             return;
         GoNextStage();
     }
@@ -156,7 +156,7 @@ public class PuzzleQuestManager : MonoBehaviour
         CreateNewQuest();
     }
 
-    private bool CheckWin()
+    public bool IsFinishAllQuest()
     {
         foreach (var quest in InGameQuestDataList)
         {
@@ -165,7 +165,7 @@ public class PuzzleQuestManager : MonoBehaviour
                 return false;
             }
         }
-        return true;
+        return true && currentStage == PuzzleStage.Third;
     }
 
     private bool IsContainQuestDataForCurrentState(PuzzleStage puzzleStage, out QuestData[] arrayQuest)
@@ -201,4 +201,5 @@ public class PuzzleQuestManager : MonoBehaviour
         }
         InGameQuestDataList.Clear();
     }
+    
 }

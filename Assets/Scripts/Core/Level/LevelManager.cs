@@ -105,6 +105,18 @@ public class LevelManager : MonoBehaviour
 
     private void OnProcessComplete()
     {
+        if (puzzleQuestManager.IsFinishAllQuest())
+        {
+            // 
+            Debug.Log("Win");
+            return;
+        }
+
+        if (gridManager.IsFullOfSpace())
+        {
+            Debug.Log("You loose");
+            return;
+        }
         
         // check win loose
         trayManager.TryCreateNextTrays();
