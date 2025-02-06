@@ -1,11 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using LitMotion;
 using LitMotion.Extensions;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class GridManager : MonoBehaviour
+public partial class GridManager : MonoBehaviour
 {
     [SerializeField] private int _rows = 4;
     [SerializeField] private int _columns = 4;
@@ -15,9 +14,8 @@ public class GridManager : MonoBehaviour
     [SerializeField] private CameraHandler cameraHandler;
     [SerializeField] private CSVImport csvImport;
 
-    [SerializeField] private AudioSource stoneDropSound;
+    [SerializeField] private DropDownEffect dropDownEffect;
     private Dictionary<Vector2Int, Cell> _cells = new();
-
     public IReadOnlyDictionary<Vector2Int, Cell> TableMap
     {
         get => _cells;
@@ -35,6 +33,7 @@ public class GridManager : MonoBehaviour
     {
         csvImport.Init();
         CalculateGridOrigin();
+        SettingBeforeCreateCells();
         CreateCells();
         cameraHandler.SetupCamera(SlotManager.Instance.transform);
     }
@@ -48,28 +47,26 @@ public class GridManager : MonoBehaviour
         _startZ = -(_rows * (_cellDepth + _spacing) - _spacing) / 2;
     }
 
-    private void CreateCells()
+    private void SettingBeforeCreateCells()
     {
         _cells.Clear();
         _rows = csvImport.maze.GetLength(0);
         _columns = csvImport.maze.GetLength(1);
-
+        dropDownEffect.Setup(_cells, _rows, _columns);
+    }
+    
+    private void CreateCells()
+    {
         for (int i = 0; i < _rows; i++)
         {
             for (int j = 0; j < _columns; j++)
             {
                 int value = csvImport.maze[i, j];
-                SlotType slotType = SlotType.Normal;
-                switch (value)
-                {
-                    case 2:
-                        slotType = SlotType.Blocking;
-                        break;
-                }
 
                 if (value == 0) continue;
+               
                 var gridPos = new Vector2Int(i, j);
-                var slot = SlotManager.Instance.GetSlot(slotType);
+                var slot = SlotManager.Instance.GetSlot(GetSlotTypeByValue(value));
                 slot.name += $"{i} : {j}";
                 PositionSlot(slot.transform, gridPos);
                 _cells[gridPos] = new Cell(slot);
@@ -79,28 +76,25 @@ public class GridManager : MonoBehaviour
         Debug.Log($"level create is {_rows}x{_columns}");
     }
 
+    private SlotType GetSlotTypeByValue(int value)
+    {
+        switch (value)
+        {
+            case 2:
+                return SlotType.Blocking;
+                break;
+        }
+
+        return SlotType.Normal;
+    }
+
     [Button]
     private void TestDropEffect()
     {
-
-        float rowDelayFactor = AnimationManager.Instance.config.gridCfg.rowDelayFactor;
-        float columnDelayFactor = AnimationManager.Instance.config.gridCfg.columnDelayFactor;
-        
-        for (int i = 0; i < _rows; i++)
-        {
-            for (int j = 0; j < _columns; j++)
-            {
-                float delay = (i * rowDelayFactor) + (j * columnDelayFactor);
-
-                var gridPos = new Vector2Int(i, j);
-                _cells[gridPos].Slot?.InitEffect(delay);
-            }
-        }
+        dropDownEffect?.Play();
     }
 
-    
 
-   
     private void PositionSlot(Transform slotTransform, Vector2Int gridPos)
     {
         Vector3 worldPos = new(

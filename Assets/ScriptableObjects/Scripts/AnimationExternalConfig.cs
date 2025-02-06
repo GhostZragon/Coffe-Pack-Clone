@@ -25,6 +25,8 @@ public partial class AnimationConfig
     public class SlotConfig
     {
         public float normalSlotDropTime = 0.5f;
+        public Ease dropDownEaseZigzag = Ease.OutBounce;
+        public Ease dropDownEaseWave = Ease.OutQuart;
     }
     [Serializable]
     public class GridConfig
