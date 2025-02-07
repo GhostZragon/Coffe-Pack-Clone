@@ -9,8 +9,12 @@ public class LevelUI : MonoBehaviour
     [FormerlySerializedAs("playButton")] [SerializeField] private Button selectButton;
     [SerializeField] private TextMeshProUGUI levelText;
 
+    [Header("Sprite")]
     [SerializeField] private Sprite selectSprite;
     [SerializeField] private Sprite normalSprite;
+
+    [Header("Animated")] 
+    [SerializeField] private Image radialShine;
     private int level;
     private void Awake()
     {
@@ -42,5 +46,19 @@ public class LevelUI : MonoBehaviour
         lockedButton.gameObject.SetActive(!isUnlock);
         selectButton.gameObject.SetActive(isUnlock);
     }
-    
+
+    public void Select()
+    {
+        SetSelect(true);
+    }
+
+    public void UnSelect()
+    {
+        SetSelect(false);
+    }
+
+    private void SetSelect(bool isSelect)
+    {
+        radialShine.gameObject.SetActive(isSelect);
+    }
 }

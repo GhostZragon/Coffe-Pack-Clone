@@ -22,14 +22,18 @@ public class LevelPanelUI : MonoBehaviour
         EventManager.Current._Core.OnSelectLevel -= SelectLevelUI;
     }
 
+    private LevelUI previousLevelUI;
     private void SelectLevelUI(int level)
     {
         foreach (var levelMap in mapLevelUis)
         {
-            if (!levelMap.TryGetLevelUI(level, out var levelUI)) continue;
-          
+            previousLevelUI?.UnSelect();
+            
+            if (!levelMap.TryGetLevelUI(level, out previousLevelUI)) continue;
+            previousLevelUI.Select();
+            
             avatarAnchor.transform.SetParent(levelMap.transform);
-            avatarAnchor.transform.localPosition = levelUI.transform.localPosition;
+            avatarAnchor.transform.localPosition = previousLevelUI.transform.localPosition;
             
             Debug.Log($"Select UI, active effect, Parent{levelMap.transform.name}", levelMap.gameObject);
             
