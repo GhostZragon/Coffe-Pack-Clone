@@ -13,7 +13,7 @@ public abstract class SlotBase : MonoBehaviour
     
     private MotionHandle sequenceHandler;
 
-    public virtual void InitEffect(float delay, Ease ease)
+    public void InitEffect(float delay, Ease ease)
     {
         Vector3 newPosition = model.localPosition;
         float height = model.localPosition.y + 40;
@@ -41,8 +41,9 @@ public abstract class SlotBase : MonoBehaviour
     }
 
 
-    private void OnDestroy()
+    protected virtual void OnDestroy()
     {
         sequenceHandler.TryCancel();
     }
 }
+

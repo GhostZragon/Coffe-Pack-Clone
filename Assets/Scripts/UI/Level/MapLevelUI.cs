@@ -33,7 +33,7 @@ public class MapLevelUI : MonoBehaviour
             else
             {
                 levelUIs[i].gameObject.SetActive(true);
-                levelUIs[i].Setup(startLevel++, isLevelUnlock(startLevel));
+                levelUIs[i].Init(startLevel++, isLevelUnlock(startLevel));
             }
         }
 

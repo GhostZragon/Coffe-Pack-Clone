@@ -73,6 +73,7 @@ public class LevelPanelUI : MonoBehaviour
     }
 
 #if UNITY_EDITOR
+    [Header("Editor Only")]
     public GameObject map;
     public GameObject newParent;
 

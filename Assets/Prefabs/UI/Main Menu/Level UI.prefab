@@ -1750,6 +1750,7 @@ GameObject:
   m_Component:
   - component: {fileID: 671963213945514874}
   - component: {fileID: 363991688038235267}
+  - component: {fileID: 135571655758776996}
   m_Layer: 5
   m_Name: Level UI
   m_TagString: Untagged
@@ -1796,6 +1797,25 @@ MonoBehaviour:
   levelText: {fileID: 2508909605316847626}
   selectSprite: {fileID: 21300000, guid: 3fd4344b3afa147ee88da3654da8be4b, type: 3}
   normalSprite: {fileID: 21300000, guid: b9c3df709cdaf4e1f93e80ea5201d9c7, type: 3}
+  radialShine: {fileID: 339703612392027246}
+  fadeTime: 0.25
+--- !u!114 &135571655758776996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6236288296179528341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2435da2109134fa8bd18bfd6fccb01e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotateImage: {fileID: 0}
+  rotateZValue: 0
+  rotateSpeed: 5
+  lerpingValue: 5
+  isEnable: 0
 --- !u!1 &6265611959894528433
 GameObject:
   m_ObjectHideFlags: 0
