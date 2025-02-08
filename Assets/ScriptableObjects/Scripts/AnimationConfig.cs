@@ -7,4 +7,5 @@ public partial class AnimationConfig : ScriptableObject
     public TrayConfig trayCfg;
     public SlotConfig slotCfg;
     public GridConfig gridCfg;
+    public LevelUIConfig levelUIConfig;
 }

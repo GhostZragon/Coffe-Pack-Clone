@@ -24,6 +24,9 @@ public class RotatingImageUI : MonoBehaviour
         if (isEnable == false) return;
         if (rotateImage == null) return;
 
+        rotateSpeed = AnimationManager.Instance.config.levelUIConfig.rotateSpeed;
+        lerpingValue =  AnimationManager.Instance.config.levelUIConfig.lerpingValue;
+        
         rotateZValue += Time.deltaTime * rotateSpeed;
         
         if (rotateZValue > 360)

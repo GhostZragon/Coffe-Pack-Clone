@@ -82,10 +82,13 @@ public class LevelUI : MonoBehaviour
 
     private void FadeRadialShine(bool isFadeIn)
     {
-        var startValue = isFadeIn ? defaultColor : Color.clear;
-        var endValue = isFadeIn ? Color.clear : defaultColor;
+        var startValue = !isFadeIn ? defaultColor : Color.clear;
+        var endValue = !isFadeIn ? Color.clear : defaultColor;
 
-        LMotion.Create(startValue, endValue, fadeTime).BindToColor(radialShine);
+        LMotion.Create(startValue, endValue, fadeTime).WithOnComplete(() =>
+        {
+            radialShine.color = endValue;
+        }).BindToColor(radialShine);
     }
 
 }

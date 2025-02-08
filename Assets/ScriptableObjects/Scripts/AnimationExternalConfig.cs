@@ -34,4 +34,11 @@ public partial class AnimationConfig
         public float rowDelayFactor = 0.1f; // Thời gian delay giữa các hàng
         public float columnDelayFactor = 0.05f; // Thời gian delay giữa các cột
     }
+
+    [Serializable]
+    public class LevelUIConfig
+    {
+        public float rotateSpeed = 5;
+        public float lerpingValue = 5;
+    }
 }
