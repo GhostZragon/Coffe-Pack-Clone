@@ -15,6 +15,7 @@ public class WingRotateUI : MonoBehaviour
     private CompositeMotionHandle handle = new();
     private void Awake()
     {
+        TweenWing();
     }
     [Button]    
     private void TweenWing()
