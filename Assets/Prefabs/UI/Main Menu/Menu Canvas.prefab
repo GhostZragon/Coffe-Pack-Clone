@@ -90,7 +90,9 @@ MonoBehaviour:
   sprites:
   - {fileID: 2800000, guid: ede48200f13f63045b22a20ff7d51486, type: 3}
   - {fileID: 2800000, guid: 25073380a77bd184c951faca5edad50d, type: 3}
-  rawImage: {fileID: 5428353605938706812}
+  scrollerImage: {fileID: 0}
+  colorImage: {fileID: 0}
+  color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &707057962650380669
 GameObject:
   m_ObjectHideFlags: 0
@@ -450,7 +452,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scrollRect: {fileID: 5941602480523258948}
-  playButton: {fileID: 8492417212625632220}
   isTestingChangeScreen: 0
 --- !u!1 &1257094062701395497
 GameObject:
@@ -2624,6 +2625,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timePeriod: 2
   height: 10
+  startPosition: {x: 0, y: 0, z: 0}
 --- !u!224 &8655895946225367668 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8228686632975890650, guid: 809f3e8978614544eaafe01e0c2dbd03, type: 3}
@@ -2748,6 +2750,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timePeriod: 2
   height: 10
+  startPosition: {x: 0, y: 0, z: 0}
 --- !u!224 &9105808541907134769 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8228686632975890650, guid: 809f3e8978614544eaafe01e0c2dbd03, type: 3}
@@ -2969,17 +2972,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2227322265983001056, guid: 5b58b51bf19a6df479e39b34ef749c40, type: 3}
   m_PrefabInstance: {fileID: 2245114763335249447}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8492417212625632220 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7706538084898412027, guid: 5b58b51bf19a6df479e39b34ef749c40, type: 3}
-  m_PrefabInstance: {fileID: 2245114763335249447}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &2505337357599448419
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3099,6 +3091,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timePeriod: 2
   height: 10
+  startPosition: {x: 0, y: 0, z: 0}
 --- !u!224 &5834015193733227961 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8228686632975890650, guid: 809f3e8978614544eaafe01e0c2dbd03, type: 3}
@@ -3223,6 +3216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timePeriod: 2
   height: 10
+  startPosition: {x: 0, y: 0, z: 0}
 --- !u!224 &6620250382052885701 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8228686632975890650, guid: 809f3e8978614544eaafe01e0c2dbd03, type: 3}
@@ -3236,6 +3230,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1025461071252934004}
     m_Modifications:
+    - target: {fileID: 1357963221141069795, guid: 5b58b51bf19a6df479e39b34ef749c40, type: 3}
+      propertyPath: m_EffectDistance.x
+      value: -7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1357963221141069795, guid: 5b58b51bf19a6df479e39b34ef749c40, type: 3}
+      propertyPath: m_EffectDistance.y
+      value: -8
+      objectReference: {fileID: 0}
     - target: {fileID: 2227322265983001056, guid: 5b58b51bf19a6df479e39b34ef749c40, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -3457,6 +3459,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timePeriod: 2
   height: 10
+  startPosition: {x: 0, y: 0, z: 0}
 --- !u!224 &4512810725192590919 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8228686632975890650, guid: 809f3e8978614544eaafe01e0c2dbd03, type: 3}
@@ -3586,6 +3589,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timePeriod: 2
   height: 10
+  startPosition: {x: 0, y: 0, z: 0}
 --- !u!1001 &6913009760506229187
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3828,6 +3832,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timePeriod: 2
   height: 10
+  startPosition: {x: 0, y: 0, z: 0}
 --- !u!1001 &8559663603002126592
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3952,6 +3957,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timePeriod: 2
   height: 10
+  startPosition: {x: 0, y: 0, z: 0}
 --- !u!1001 &8595653142994922723
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4076,6 +4082,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timePeriod: 2
   height: 10
+  startPosition: {x: 0, y: 0, z: 0}
 --- !u!1001 &8979872143841702102
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4200,3 +4207,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timePeriod: 2
   height: 10
+  startPosition: {x: 0, y: 0, z: 0}

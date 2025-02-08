@@ -4,25 +4,7 @@ using UnityEngine.UI;
 public class MenuUI : MonoBehaviour
 {
     [SerializeField] private ScrollRect scrollRect;
-    [SerializeField] private Button playButton;
     [SerializeField] private bool isTestingChangeScreen = false;
-    private void OnEnable()
-    {
-        playButton.onClick.AddListener(StartGame);
-    }
-
-    private void OnDisable()
-    {
-        playButton.onClick.RemoveListener(StartGame);
-    }
-
-    private void StartGame()
-    {
-        if (isTestingChangeScreen == false)
-            return;
-        Debug.Log("Start game");
-        EventManager.Current._Core.OnLoadLevel?.Invoke();
-    }
 
     private void Update()
     {
