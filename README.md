@@ -1,6 +1,7 @@
 # Coffe-Pack_Clone_1_2025
  
-Game Clone: Coffe Pack
+This project is clonning core gameplay of Coffee Pack
+Coffee Pack: https://play.google.com/store/apps/details?id=com.PubtrainGames.CoffeePack&hl=en
 
 
 
