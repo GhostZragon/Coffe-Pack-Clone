@@ -5,7 +5,9 @@ using UnityEngine.UI;
 public class MenuBottomUI : MonoBehaviour
 {
     [SerializeField] private Texture[] sprites;
-    [SerializeField] private RawImage rawImage;
+    [SerializeField] private RawImage scrollerImage;
+    [SerializeField] private RawImage colorImage;
+    [SerializeField] private Color color;
     private int index = 0;
     
     [Button]
@@ -13,6 +15,6 @@ public class MenuBottomUI : MonoBehaviour
     {
         if (index >= sprites.Length)
             index = 0;
-        rawImage.texture = sprites[index++];
+        scrollerImage.texture = sprites[index++];
     }
 }

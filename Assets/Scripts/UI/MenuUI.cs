@@ -5,7 +5,7 @@ public class MenuUI : MonoBehaviour
 {
     [SerializeField] private ScrollRect scrollRect;
     [SerializeField] private Button playButton;
-
+    [SerializeField] private bool isTestingChangeScreen = false;
     private void OnEnable()
     {
         playButton.onClick.AddListener(StartGame);
@@ -18,6 +18,8 @@ public class MenuUI : MonoBehaviour
 
     private void StartGame()
     {
+        if (isTestingChangeScreen == false)
+            return;
         Debug.Log("Start game");
         EventManager.Current._Core.OnLoadLevel?.Invoke();
     }

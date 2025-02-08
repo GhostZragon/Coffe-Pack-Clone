@@ -55,5 +55,6 @@ public class EventManager
     public class UI
     {
         public Action<InGameQuestData> OnBindingWithQuestUI;
+        
     }
 }
