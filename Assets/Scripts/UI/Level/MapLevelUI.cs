@@ -20,7 +20,7 @@ public class MapLevelUI : MonoBehaviour
     }
    
     [Button]
-    public void InitMap(ref int startLevel,int endLevel, Predicate<int> isLevelUnlock)
+    public void ActiveLevelInMap(ref int startLevel,int endLevel, Predicate<int> isLevelUnlock)
     {
         this.startLevel = startLevel;
         
@@ -33,7 +33,8 @@ public class MapLevelUI : MonoBehaviour
             else
             {
                 levelUIs[i].gameObject.SetActive(true);
-                levelUIs[i].Init(startLevel++, isLevelUnlock(startLevel));
+                levelUIs[i].Init(startLevel, isLevelUnlock(startLevel));
+                startLevel++;
             }
         }
 
@@ -42,12 +43,14 @@ public class MapLevelUI : MonoBehaviour
 
     private bool IsLevelInRange(int level)
     {
+        // make sure level is in range of map, quickly exit the loop
         return level >= startLevel && level <= endLevel;
     }
     
     
     public bool TryGetLevelUI(int level,out LevelUI levelUI)
     {
+        // if this map contain that level, then get it out
         levelUI = null;
         var levelIndex = level - startLevel;
         
@@ -71,9 +74,15 @@ public class MapLevelUI : MonoBehaviour
     /// Assign references and turn off all UI
     /// </summary>
     /// <param name="_levelUis"></param>
-    public void InitLevelUIs(LevelUI[] _levelUis)
+    public void InitLevelUIs(LevelUI levelUIPrefab)
     {
-        levelUIs = _levelUis;
+        levelUIs = new LevelUI[spawnPoints.Length];
+
+        for (int i = 0; i < levelUIs.Length; i++)
+        {
+            levelUIs[i] = Instantiate(levelUIPrefab, spawnPoints[i].position, Quaternion.identity,transform);
+        }
+        
         TurnOffAllButton();
     }
 }

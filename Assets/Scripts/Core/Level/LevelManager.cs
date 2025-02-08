@@ -10,13 +10,13 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] private int currentLevel = 0;
     [SerializeField] private int maxLevel;
-    
-    
+
+
     private PuzzleQuestManager puzzleQuestManager;
     private GridManager gridManager;
     private DragDropSystem dragDropSystem;
     private TrayManager trayManager;
-    
+
     private void Awake()
     {
         currentLevel = 0;
@@ -28,26 +28,23 @@ public class LevelManager : MonoBehaviour
         levelConfigs = Resources.LoadAll<LevelConfig>("Level");
 
         levelPanelUI.levelUnlockChecking = IsLevelUnlock;
-        
+
         EventManager.Current._Core.OnLoadLevel += LoadLevel;
         EventManager.Current._Core.OnUnloadLevel += UnLoadLevel;
         EventManager.Current._Core.OnSelectLevel += SetLevel;
 
         EventManager.Current._Core.OnProcessComplete += OnProcessComplete;
-
     }
 
     private void OnDestroy()
     {
         levelPanelUI.levelUnlockChecking = null;
-        
+
         EventManager.Current._Core.OnLoadLevel -= LoadLevel;
         EventManager.Current._Core.OnUnloadLevel -= UnLoadLevel;
         EventManager.Current._Core.OnSelectLevel -= SetLevel;
-        
+
         EventManager.Current._Core.OnProcessComplete -= OnProcessComplete;
-
-
     }
 
     private void Start()
@@ -61,17 +58,17 @@ public class LevelManager : MonoBehaviour
         {
             LoadLevel();
         }
-        
+
         SettingsLevel();
     }
 
     private void SettingsLevel()
     {
         maxLevel = levelConfigs.Length - 1;
-        currentLevel = Mathf.Clamp(currentLevel,0,levelConfigs.Length);
+        currentLevel = Mathf.Clamp(currentLevel, 0, levelConfigs.Length);
 
         levelPanelUI.Init(maxLevel);
-        
+
         EventManager.Current._Core.OnSelectLevel?.Invoke(currentLevel);
     }
 
@@ -79,7 +76,7 @@ public class LevelManager : MonoBehaviour
     {
         gridManager.SetLevelData(levelConfig.LevelCSV);
         gridManager.InitializeGrid();
-        
+
         puzzleQuestManager.SetPuzzleQuestData(levelConfig.PuzzleQuestData);
         puzzleQuestManager.SetFirstState();
         puzzleQuestManager.CreateQuests();
@@ -117,14 +114,13 @@ public class LevelManager : MonoBehaviour
             Debug.Log("You loose");
             return;
         }
-        
+
         // check win loose
         trayManager.TryCreateNextTrays();
     }
 
     private bool IsLevelUnlock(int i)
     {
-        return i >= currentLevel;
+        return i <= currentLevel;
     }
 }
-

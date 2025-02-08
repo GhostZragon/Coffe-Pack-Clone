@@ -44,33 +44,16 @@ public class LevelPanelUI : MonoBehaviour
     public void Init(int maxLevel)
     {
         int startLevel = 0;
-
-
         foreach (var mapLevel in mapLevelUis)
         {
-            // Get spawn point            
-            var spawnPoints = mapLevel.GetAllSpawnPoints();
-            var levelUis = new LevelUI[spawnPoints.Length];
-            // create level array
-            for (int i = 0; i < spawnPoints.Length; i++)
-            {
-                levelUis[i] = Instantiate(levelUIPrefab, spawnPoints[i].position, Quaternion.identity,
-                    mapLevel.transform);
-            }
-
-            mapLevel.InitLevelUIs(levelUis);
-
             if (startLevel >= maxLevel)
                 break;
-
-            mapLevel.InitMap(ref startLevel, maxLevel, IsLevelUnlock);
+            mapLevel.InitLevelUIs(levelUIPrefab);
+            
+            mapLevel.ActiveLevelInMap(ref startLevel, maxLevel, levelUnlockChecking);
         }
     }
 
-    private bool IsLevelUnlock(int i)
-    {
-        return levelUnlockChecking(i);
-    }
 
 #if UNITY_EDITOR
     [Header("Editor Only")]
