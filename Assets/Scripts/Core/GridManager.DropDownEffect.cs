@@ -83,9 +83,9 @@ public partial class GridManager
             switch (dropType)
             {
                 case DropType.Wave:
-                    return AnimationManager.Instance.config.slotCfg.dropDownEaseWave;
+                    return AnimationManager.Cur.config.slotCfg.dropDownEaseWave;
                 case DropType.Zigzag:
-                    return AnimationManager.Instance.config.slotCfg.dropDownEaseZigzag;
+                    return AnimationManager.Cur.config.slotCfg.dropDownEaseZigzag;
             }
 
             return Ease.Linear;

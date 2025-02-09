@@ -125,8 +125,8 @@
                 if (isUsingAnimation)
                 {
                     LMotion.Create(items[i].transform.position, points[i].transform.position
-                            , AnimationManager.Instance.config.itemcfg.itemTransferDuration)
-                        .WithDelay( AnimationManager.Instance.config.itemcfg.itemTransferStartDelay)
+                            , AnimationManager.Cur.config.itemcfg.itemTransferDuration)
+                        .WithDelay( AnimationManager.Cur.config.itemcfg.itemTransferStartDelay)
                         .BindToPosition(items[i].transform);
                     // AnimationManager.Instance.TransferItem(items[i].transform, points[i].position);
                 }
@@ -238,8 +238,8 @@
         [Button]
         public void DestroyAnimation()
         {
-            LMotion.Create(Model.localScale, Vector3.zero, AnimationManager.Instance.config.trayCfg.destroyTrayDuration)
-                .WithEase(AnimationManager.Instance.config.trayCfg.destroyTrayEase)
+            LMotion.Create(Model.localScale, Vector3.zero, AnimationManager.Cur.config.trayCfg.destroyTrayDuration)
+                .WithEase(AnimationManager.Cur.config.trayCfg.destroyTrayEase)
                 .WithOnComplete(() =>
                 {
                     Destroy(gameObject);

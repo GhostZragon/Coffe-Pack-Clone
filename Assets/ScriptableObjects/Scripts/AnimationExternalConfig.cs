@@ -41,4 +41,11 @@ public partial class AnimationConfig
         public float rotateSpeed = 5;
         public float lerpingValue = 5;
     }
+    [Serializable]
+    public class UIConfig
+    {
+        public Ease heartDropEase = Ease.OutBack;
+        public float heartDropTime = 0.5f;
+        public float heartDropDelay = 0.1f;
+    }
 }

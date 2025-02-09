@@ -24,7 +24,7 @@ public abstract class SlotBase : MonoBehaviour
         // play animation
         
         sequenceHandler = LSequence.Create()
-            .Append(LMotion.Create(newPosition, Vector3.zero, AnimationManager.Instance.config.slotCfg.normalSlotDropTime)
+            .Append(LMotion.Create(newPosition, Vector3.zero, AnimationManager.Cur.config.slotCfg.normalSlotDropTime)
                 .WithEase(ease)
                 .WithDelay(delay)
                 .BindToLocalPosition(model)

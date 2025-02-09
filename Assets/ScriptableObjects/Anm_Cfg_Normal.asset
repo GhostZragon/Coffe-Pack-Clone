@@ -29,3 +29,9 @@ MonoBehaviour:
   gridCfg:
     rowDelayFactor: 0.1
     columnDelayFactor: 0.2
+  levelUIConfig:
+    rotateSpeed: 5
+    lerpingValue: 5
+  uiConfig:
+    heartDropEase: 26
+    heartDropTime: 0.5

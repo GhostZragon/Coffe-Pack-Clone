@@ -1,25 +1,31 @@
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class HeartManager : MonoBehaviour
+public class HeartManager : MonoBehaviour, IEnter
 {
     [SerializeField] private int maxCount;
     [SerializeField] private HeartUI HeartPrefab;
     [SerializeField] private GameObject container;
 
-    private List<HeartUI> hearts = new();
+    private HeartUI[] hearts;
 
     private void Awake()
     {
-        CreateHeart();
+        hearts = GetComponentsInChildren<HeartUI>();
     }
 
-    private void CreateHeart()
+    private void Start()
     {
-        for (int i = 0; i < maxCount; i++)
+        Enter();
+    }
+    
+    [Button]
+    public void Enter()
+    {
+        foreach (var item in hearts)
         {
-            var heart = Instantiate(HeartPrefab, container.transform);
-            hearts.Add(heart);
+            item.DropDown();
         }
     }
 }
