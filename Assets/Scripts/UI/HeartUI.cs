@@ -30,9 +30,10 @@ public class HeartUI : MonoBehaviour
         startDropPosition.y = startDropHeight;
         
         LMotion.Create(startDropPosition, defaultPosition,
-                AnimationManager.Cur.config.uiConfig.heartDropTime)
-            .WithEase(AnimationManager.Cur.config.uiConfig.heartDropEase)
-            .WithDelay(AnimationManager.Cur.config.uiConfig.heartDropDelay * transform.GetSiblingIndex())
+                AnimationManager.Cur.config.topUIConfig.heartDropTime)
+            .WithEase(AnimationManager.Cur.config.topUIConfig.heartDropEase)
+            .WithDelay(AnimationManager.Cur.config.topUIConfig.heartDropDelay * transform.GetSiblingIndex() + 0.8f)
             .BindToLocalPosition(imgContainer.transform);
     }
 }
+

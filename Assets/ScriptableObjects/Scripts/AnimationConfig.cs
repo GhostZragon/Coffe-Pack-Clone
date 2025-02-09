@@ -8,5 +8,5 @@ public partial class AnimationConfig : ScriptableObject
     public SlotConfig slotCfg;
     public GridConfig gridCfg;
     public LevelUIConfig levelUIConfig;
-    public UIConfig uiConfig;
+    public TopUIConfig topUIConfig;
 }

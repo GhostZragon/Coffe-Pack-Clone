@@ -14,6 +14,11 @@ public class SinusoidalMovementBase : MonoBehaviour
     [SerializeField] private MovingAxis moving = MovingAxis.Y;
     [SerializeField] protected Vector3 startPosition;
 
+    private void Awake()
+    {
+        startPosition = transform.localPosition;
+    }
+
     protected void UpdateSinPosition()
     {
         Vector3 nextPos = startPosition;

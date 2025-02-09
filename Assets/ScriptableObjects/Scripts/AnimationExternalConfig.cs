@@ -42,10 +42,16 @@ public partial class AnimationConfig
         public float lerpingValue = 5;
     }
     [Serializable]
-    public class UIConfig
+    public class TopUIConfig
     {
+        // Heart
         public Ease heartDropEase = Ease.OutBack;
         public float heartDropTime = 0.5f;
         public float heartDropDelay = 0.1f;
+        // avatar
+        public float avatarScaleTime = 0.35f;
+        public Ease scaleUpEase = Ease.OutQuad;
+        public Ease scaleDownEase = Ease.InQuart;
+
     }
 }

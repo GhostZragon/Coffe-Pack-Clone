@@ -15,10 +15,6 @@ public class HeartManager : MonoBehaviour, IEnter
         hearts = GetComponentsInChildren<HeartUI>();
     }
 
-    private void Start()
-    {
-        Enter();
-    }
     
     [Button]
     public void Enter()
