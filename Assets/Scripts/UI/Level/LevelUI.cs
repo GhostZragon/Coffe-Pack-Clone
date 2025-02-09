@@ -13,6 +13,7 @@ public class LevelUI : MonoBehaviour
     private Button selectButton;
 
     [SerializeField] private TextMeshProUGUI levelText;
+    [SerializeField] private LevelStarUI levelStarUI;
 
     [Header("Sprite")] 
     [SerializeField] private Sprite selectSprite;
@@ -24,11 +25,9 @@ public class LevelUI : MonoBehaviour
     
     private RotatingImageUI rotatingImageUI;
 
-
     private void Awake()
     {
         defaultColor = radialShine.color;
-        
         rotatingImageUI = GetComponent<RotatingImageUI>();
         rotatingImageUI.SetRotateImg(radialShine);
         Init(0, true);
@@ -56,8 +55,17 @@ public class LevelUI : MonoBehaviour
     {
         this.level = level;
         levelText.text = $"{level + 1}";
+        
         lockedButton.gameObject.SetActive(!isUnlock);
         selectButton.gameObject.SetActive(isUnlock);
+        levelStarUI.gameObject.SetActive(isUnlock);
+        
+        levelStarUI.ActiveStageUnlock(GetStageCompleteCount());
+    }
+
+    private int GetStageCompleteCount()
+    {
+        return 0;
     }
 
     public void Select()
