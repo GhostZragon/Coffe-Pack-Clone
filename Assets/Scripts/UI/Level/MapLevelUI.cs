@@ -14,6 +14,7 @@ public class MapLevelUI : MonoBehaviour
     [SerializeField] private int startLevel;
     [SerializeField] private int endLevel;
     
+    
     public Transform[] GetAllSpawnPoints()
     {
         return spawnPoints;
