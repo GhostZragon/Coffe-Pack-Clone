@@ -124,3 +124,4 @@ public class LevelManager : MonoBehaviour
         return i <= currentLevel;
     }
 }
+
