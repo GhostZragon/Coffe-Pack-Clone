@@ -24,17 +24,14 @@ MonoBehaviour:
     clearTrayDelay: 0.2
   slotCfg:
     normalSlotDropTime: 0.5
+    dropDownEaseZigzag: 8
+    dropDownEaseWave: 11
   gridCfg:
     rowDelayFactor: 0.1
-    columnDelayFactor: 0.05
-  itemTransferDuration: 0.2
-  itemTransferStartDelay: 0.2
-  itemTransferEase: 0
-  releaseTrayDuration: 0.1
-  releaseTrayEase: 0
-  destroyTrayDuration: 0.1
-  destroyTrayEase: 25
-  clearTrayDelay: 0.2
-  normalSlotDropTime: 0.5
-  rowDelayFactor: 0.2
-  columnDelayFactor: 0.05
+    columnDelayFactor: 0.2
+  levelUIConfig:
+    rotateSpeed: 5
+    lerpingValue: 5
+  uiConfig:
+    heartDropEase: 26
+    heartDropTime: 0.5

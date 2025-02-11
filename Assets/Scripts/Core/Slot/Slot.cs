@@ -46,7 +46,7 @@ public class Slot : SlotBase
         // currentTray.transform.position = transform.position;
         isEmpty = false;
         LMotion.Create(currentTray.transform.position, transform.position,
-                AnimationManager.Instance.config.trayCfg.releaseTrayDuration)
+                AnimationManager.Cur.config.trayCfg.releaseTrayDuration)
             .WithOnComplete(OnPlacedTray)
             .BindToPosition(currentTray.transform);
         // AnimationManager.Instance.MoveTrayToSlot(currentTray.transform, transform.position, placedCallback);
@@ -105,7 +105,7 @@ public class Slot : SlotBase
 
         if (canDestroy)
         {
-            yield return new WaitForSeconds(isDelay ? AnimationManager.Instance.config.trayCfg.clearTrayDelay : 0.1f);
+            yield return new WaitForSeconds(isDelay ? AnimationManager.Cur.config.trayCfg.clearTrayDelay : 0.1f);
             ClearTray();
         }
 

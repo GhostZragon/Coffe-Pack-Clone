@@ -44439,10 +44439,10 @@ Material:
     - _StencilWriteMask: 255
     - _TextureHeight: 512
     - _TextureWidth: 512
-    - _UnderlayDilate: 0
-    - _UnderlayOffsetX: 0.32
-    - _UnderlayOffsetY: -0.14
-    - _UnderlaySoftness: 0.041
+    - _UnderlayDilate: 0.01
+    - _UnderlayOffsetX: 0.19
+    - _UnderlayOffsetY: -0.37
+    - _UnderlaySoftness: 0.212
     - _VertexOffsetX: 0
     - _VertexOffsetY: 0
     - _WeightBold: 0.75

@@ -7,7 +7,6 @@ public class PuzzleQuestUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI itemNameText;
     [SerializeField] private TextMeshProUGUI itemCountText;
     [SerializeField] private Image icon;
-    [SerializeField] private Image iconShadow;
 
     public void BindingUI(InGameQuestData inGameQuestData)
     {
@@ -17,6 +16,11 @@ public class PuzzleQuestUI : MonoBehaviour
         inGameQuestData.OnUpdateItemCount = UpdateCount;
         inGameQuestData.OnCompleteQuest = OnCompleteQuest;
         inGameQuestData.OnDestroyQuest = OnDestroyQuest;
+
+        if (inGameQuestData.questIcon == null)
+        {
+            icon.gameObject.SetActive(false);
+        }
     }
 
     private void UpdateCount(int targetQuantity)

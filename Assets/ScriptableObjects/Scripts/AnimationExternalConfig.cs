@@ -25,11 +25,33 @@ public partial class AnimationConfig
     public class SlotConfig
     {
         public float normalSlotDropTime = 0.5f;
+        public Ease dropDownEaseZigzag = Ease.OutBounce;
+        public Ease dropDownEaseWave = Ease.OutQuart;
     }
     [Serializable]
     public class GridConfig
     {
         public float rowDelayFactor = 0.1f; // Thời gian delay giữa các hàng
         public float columnDelayFactor = 0.05f; // Thời gian delay giữa các cột
+    }
+
+    [Serializable]
+    public class LevelUIConfig
+    {
+        public float rotateSpeed = 5;
+        public float lerpingValue = 5;
+    }
+    [Serializable]
+    public class TopUIConfig
+    {
+        // Heart
+        public Ease heartDropEase = Ease.OutBack;
+        public float heartDropTime = 0.5f;
+        public float heartDropDelay = 0.1f;
+        // avatar
+        public float avatarScaleTime = 0.35f;
+        public Ease scaleUpEase = Ease.OutQuad;
+        public Ease scaleDownEase = Ease.InQuart;
+
     }
 }

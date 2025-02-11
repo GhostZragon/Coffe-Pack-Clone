@@ -25,6 +25,8 @@ public struct QuestData
     [HideIf(nameof(CanShow))]
     public int TargetQuantity;
 
+    public Sprite questIcon;
+
     private bool CanShow()
     {
         return Type == QuestType.Randomly;

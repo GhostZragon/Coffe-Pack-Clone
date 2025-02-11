@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class AnimationManager : MonoBehaviour
 {
-    public static AnimationManager Instance;
+    public static AnimationManager Cur;
     public AnimationConfig config;
     private void Awake()
     {
-        Instance = this;
+        Cur = this;
     }
 
     public void TransferItem(Transform MoveTransform, Vector3 position)

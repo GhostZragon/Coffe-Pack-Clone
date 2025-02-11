@@ -22,14 +22,18 @@ public class LevelPanelUI : MonoBehaviour
         EventManager.Current._Core.OnSelectLevel -= SelectLevelUI;
     }
 
+    private LevelUI previousLevelUI;
     private void SelectLevelUI(int level)
     {
         foreach (var levelMap in mapLevelUis)
         {
-            if (!levelMap.TryGetLevelUI(level, out var levelUI)) continue;
-          
+            previousLevelUI?.UnSelect();
+            
+            if (!levelMap.TryGetLevelUI(level, out previousLevelUI)) continue;
+            previousLevelUI.Select();
+            
             avatarAnchor.transform.SetParent(levelMap.transform);
-            avatarAnchor.transform.localPosition = levelUI.transform.localPosition;
+            avatarAnchor.transform.localPosition = previousLevelUI.transform.localPosition;
             
             Debug.Log($"Select UI, active effect, Parent{levelMap.transform.name}", levelMap.gameObject);
             
@@ -40,35 +44,19 @@ public class LevelPanelUI : MonoBehaviour
     public void Init(int maxLevel)
     {
         int startLevel = 0;
-
-
         foreach (var mapLevel in mapLevelUis)
         {
-            // Get spawn point            
-            var spawnPoints = mapLevel.GetAllSpawnPoints();
-            var levelUis = new LevelUI[spawnPoints.Length];
-            // create level array
-            for (int i = 0; i < spawnPoints.Length; i++)
-            {
-                levelUis[i] = Instantiate(levelUIPrefab, spawnPoints[i].position, Quaternion.identity,
-                    mapLevel.transform);
-            }
-
-            mapLevel.InitLevelUIs(levelUis);
-
             if (startLevel >= maxLevel)
                 break;
-
-            mapLevel.InitMap(ref startLevel, maxLevel, IsLevelUnlock);
+            mapLevel.InitLevelUIs(levelUIPrefab);
+            
+            mapLevel.ActiveLevelInMap(ref startLevel, maxLevel, levelUnlockChecking);
         }
     }
 
-    private bool IsLevelUnlock(int i)
-    {
-        return levelUnlockChecking(i);
-    }
 
 #if UNITY_EDITOR
+    [Header("Editor Only")]
     public GameObject map;
     public GameObject newParent;
 

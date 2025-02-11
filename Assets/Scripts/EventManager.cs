@@ -43,6 +43,8 @@ public class EventManager
     {
         public Action<Slot> OnMergeTray;
         public Action<string> OnCompleteItem;
+
+        public Action<int> OnCoinChanged;
     }
 
     public class Table
@@ -55,5 +57,6 @@ public class EventManager
     public class UI
     {
         public Action<InGameQuestData> OnBindingWithQuestUI;
+        
     }
 }

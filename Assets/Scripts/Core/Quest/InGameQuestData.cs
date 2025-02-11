@@ -14,7 +14,8 @@ public class InGameQuestData
     public string ItemID;
     [HideIf(nameof(isRandom))]
     public int TargetQuantity;
-   
+
+    public Sprite questIcon;
     
     public Action<int> OnUpdateItemCount;
     public Action OnCompleteQuest;
@@ -53,6 +54,12 @@ public class InGameQuestData
     {
         ItemID = questData.ItemID;
         TargetQuantity = questData.TargetQuantity;
+        questIcon = questData.questIcon;
+    }
+
+    public bool CanUpdateQuest(string itemID)
+    {
+        return itemID == ItemID && TargetQuantity > 0;
     }
 
     public bool CanUpdateQuest(string itemID)

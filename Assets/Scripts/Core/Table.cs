@@ -59,7 +59,7 @@ public partial class Table : MonoBehaviour
         }
     }
 
-    public void ReplaceSlot(SlotBase currentSlot,SlotBase newSlot)
+    private void ReplaceSlot(SlotBase currentSlot,SlotBase newSlot)
     {
         newSlot.transform.position = currentSlot.transform.position;
         
