@@ -61,4 +61,9 @@ public class InGameQuestData
     {
         return itemID == ItemID && TargetQuantity > 0;
     }
+
+    public bool CanUpdateQuest(string itemID)
+    {
+        return itemID == ItemID && TargetQuantity > 0;
+    }
 }
