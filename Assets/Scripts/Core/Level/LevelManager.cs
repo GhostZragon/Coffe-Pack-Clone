@@ -3,13 +3,17 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
+    [Header("Menu")]
     [SerializeField] private LevelConfig levelConfig;
     [SerializeField] private LevelConfig[] levelConfigs;
     [SerializeField] private LevelPanelUI levelPanelUI;
+    
     [SerializeField] private bool startQuestByButton = false;
-
     [SerializeField] private int currentLevel = 0;
     [SerializeField] private int maxLevel;
+    [Header("Gameplay")]
+    [SerializeField] private QuestStageUI questStageUI;
+
 
 
     private PuzzleQuestManager puzzleQuestManager;
@@ -20,15 +24,33 @@ public class LevelManager : MonoBehaviour
     private void Awake()
     {
         currentLevel = 0;
+        
+        CatchedRef();
+
+        Register();
+    }
+    
+    private void OnDestroy()
+    {
+        UnRegister();
+    }
+
+    private void CatchedRef()
+    {
         gridManager = FindFirstObjectByType<GridManager>();
         puzzleQuestManager = FindFirstObjectByType<PuzzleQuestManager>();
         dragDropSystem = FindFirstObjectByType<DragDropSystem>();
         trayManager = FindFirstObjectByType<TrayManager>();
 
         levelConfigs = Resources.LoadAll<LevelConfig>("Level");
+    }
 
+    private void Register()
+    {
         levelPanelUI.levelUnlockChecking = IsLevelUnlock;
-
+     
+        puzzleQuestManager.OnChangedStage += questStageUI.OnStageChanged;
+        
         EventManager.Current._Core.OnLoadLevel += LoadLevel;
         EventManager.Current._Core.OnUnloadLevel += UnLoadLevel;
         EventManager.Current._Core.OnSelectLevel += SetLevel;
@@ -36,9 +58,11 @@ public class LevelManager : MonoBehaviour
         EventManager.Current._Core.OnProcessComplete += OnProcessComplete;
     }
 
-    private void OnDestroy()
+    private void UnRegister()
     {
         levelPanelUI.levelUnlockChecking = null;
+      
+        puzzleQuestManager.OnChangedStage -= questStageUI.OnStageChanged;
 
         EventManager.Current._Core.OnLoadLevel -= LoadLevel;
         EventManager.Current._Core.OnUnloadLevel -= UnLoadLevel;
@@ -64,6 +88,7 @@ public class LevelManager : MonoBehaviour
 
     private void SettingsLevel()
     {
+        // TODO: Split level map UI logic creator to another class
         maxLevel = levelConfigs.Length - 1;
         currentLevel = Mathf.Clamp(currentLevel, 0, levelConfigs.Length);
 
@@ -81,7 +106,9 @@ public class LevelManager : MonoBehaviour
         puzzleQuestManager.SetFirstState();
         puzzleQuestManager.CreateQuests();
 
+        questStageUI.SetMaxStage(puzzleQuestManager.GetMaxStage());
         trayManager.Initialize();
+        
         UIManager.Instance.ShowGameplayUI();
     }
 
@@ -92,6 +119,7 @@ public class LevelManager : MonoBehaviour
         puzzleQuestManager.ClearQuest();
         trayManager.ClearAllTray();
         dragDropSystem.ClearDragItem();
+        questStageUI.ResetUI();
     }
 
     private void SetLevel(int levelIndex)

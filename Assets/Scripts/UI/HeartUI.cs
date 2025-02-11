@@ -26,14 +26,11 @@ public class HeartUI : MonoBehaviour
     [Button]
     public void DropDown()
     {
-        Vector3 startDropPosition = imgContainer.transform.localPosition;
-        startDropPosition.y = startDropHeight;
-        
-        LMotion.Create(startDropPosition, defaultPosition,
+        LMotion.Create(startDropHeight, defaultPosition.y,
                 AnimationManager.Cur.config.topUIConfig.heartDropTime)
             .WithEase(AnimationManager.Cur.config.topUIConfig.heartDropEase)
             .WithDelay(AnimationManager.Cur.config.topUIConfig.heartDropDelay * transform.GetSiblingIndex() + 0.8f)
-            .BindToLocalPosition(imgContainer.transform);
+            .BindToLocalPositionY(imgContainer.transform);
     }
 }
 

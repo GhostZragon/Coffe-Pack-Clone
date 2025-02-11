@@ -17,26 +17,27 @@ public class InGameQuestData
 
     public Sprite questIcon;
     
-    public Action<int> OnUpdateItemCount;
-    public Action OnCompleteQuest;
-    public Action OnDestroyQuest;
-
+    // public Action<int> OnUpdateItemCount;
+    // public Action OnCompleteQuest;
+    // public Action OnDestroyQuest;
+    private PuzzleQuestUI puzzleQuestUI;
+    
     public bool IsComplete => TargetQuantity == 0;
 
     public void RefreshUI()
     {
-        OnUpdateItemCount?.Invoke(TargetQuantity);
+        puzzleQuestUI.UpdateCount(TargetQuantity);
     }
 
     private void CompleteQuest()
     {
         if(TargetQuantity <= 0)
-            OnCompleteQuest?.Invoke();
+            puzzleQuestUI.OnCompleteQuest();
     }
 
     public void DestroyQuestUI()
     {
-        OnDestroyQuest?.Invoke();
+        puzzleQuestUI.OnDestroyQuest();
     }
     
     [Button]
@@ -54,16 +55,12 @@ public class InGameQuestData
     {
         ItemID = questData.ItemID;
         TargetQuantity = questData.TargetQuantity;
-        questIcon = questData.questIcon;
+        // questIcon = questData.questIcon;
     }
 
     public bool CanUpdateQuest(string itemID)
     {
         return itemID == ItemID && TargetQuantity > 0;
     }
-
-    public bool CanUpdateQuest(string itemID)
-    {
-        return itemID == ItemID && TargetQuantity > 0;
-    }
+    
 }

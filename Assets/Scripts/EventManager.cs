@@ -42,8 +42,9 @@ public class EventManager
     public class Game
     {
         public Action<Slot> OnMergeTray;
+        
         public Action<string> OnCompleteItem;
-
+        
         public Action<int> OnCoinChanged;
     }
 
@@ -59,4 +60,10 @@ public class EventManager
         public Action<InGameQuestData> OnBindingWithQuestUI;
         
     }
+}
+
+public class ItemInfo
+{
+    public string ItemId;
+    public Vector3 TrayWorldPosition;
 }

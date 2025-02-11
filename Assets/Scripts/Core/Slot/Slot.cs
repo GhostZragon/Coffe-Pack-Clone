@@ -100,6 +100,7 @@ public class Slot : SlotBase
             EventManager.Current._Table.OnDestroyBlockingBlockAround?.Invoke(this);
             
             EventManager.Current._Game.OnCompleteItem?.Invoke(itemID);
+            
             // PuzzleQuestManager.Instance?.OnCompleteItem(itemID);
         }
 

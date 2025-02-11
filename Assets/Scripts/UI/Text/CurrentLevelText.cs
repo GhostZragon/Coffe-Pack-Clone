@@ -14,6 +14,7 @@ public class CurrentLevelText : MonoBehaviour
     private Vector3 defaultPosition;
     private Vector3 upPosition;
     private Vector3 downPosition;
+    
     private void Awake()
     {
         EventManager.Current._Core.OnSelectLevel += OnSelectLevel;

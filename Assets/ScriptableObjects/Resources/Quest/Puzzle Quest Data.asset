@@ -22,5 +22,17 @@ MonoBehaviour:
   - Type: 0
     ItemID: 1
     TargetQuantity: 3
-  stage2: []
-  stage3: []
+  stage2:
+  - Type: 1
+    ItemID: 
+    TargetQuantity: 0
+  - Type: 1
+    ItemID: 
+    TargetQuantity: 0
+  stage3:
+  - Type: 1
+    ItemID: 
+    TargetQuantity: 0
+  - Type: 1
+    ItemID: 
+    TargetQuantity: 0
