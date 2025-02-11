@@ -16,4 +16,9 @@ public class LevelStarUI : MonoBehaviour
             images[i].sprite = i <= count - 1 ? levelStarSprites.unlockSprite : levelStarSprites.lockSprite;
         }
     }
+
+    public Vector3 GetStarByIndex(int starIndex)
+    {
+        return images[starIndex].transform.position;
+    }
 }

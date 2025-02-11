@@ -20,7 +20,7 @@ public class PuzzleQuestManager : MonoBehaviour
     [Header("Questing")] 
     [SerializeField] private List<string> randomItemsList = new();
     [SerializeField] private List<InGameQuestData> inGameQuestDataList;
-
+    [SerializeField] private PuzzleQuestEffectUI puzzleQuestEffectUI;
     private int maxStage = 0;
     
     private QuestFactory questFactory;
@@ -68,13 +68,14 @@ public class PuzzleQuestManager : MonoBehaviour
         CreateNewQuest();
     }
 
-    private void OnCompleteItem(string itemID)
+    private void OnCompleteItem(ItemInfo itemInfo)
     {
-        var quest = inGameQuestDataList.FirstOrDefault(q => q.CanUpdateQuest(itemID));
+        var quest = inGameQuestDataList.FirstOrDefault(q => q.CanUpdateQuest(itemInfo.ItemId));
         if (quest != null)
         {
             quest.UpdateQuest(completeOneTime);
-            Debug.Log("Check complete item: " + itemID);
+            puzzleQuestEffectUI.CreateEffect(itemInfo.WorldPosition);
+            Debug.Log("Check complete item: " + itemInfo.ItemId);
         }
 
         if (IsFinishAllQuestCurrentStage())

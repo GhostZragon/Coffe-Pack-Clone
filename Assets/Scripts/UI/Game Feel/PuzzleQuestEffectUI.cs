@@ -2,15 +2,27 @@ using LitMotion;
 using LitMotion.Extensions;
 using Sirenix.OdinInspector;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class PuzzleQuestEffectUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI popupTextPrefab;
+    [SerializeField] private GameObject trailPrefab;
+    [SerializeField] private Camera mainCam;
+    [SerializeField] private QuestStageUI questStageUI;
+    private Vector3 starPosition;
 
     private void Awake()
     {
+        mainCam = Camera.main;
         popupTextPrefab.gameObject.SetActive(false);
+        trailPrefab.gameObject.SetActive(false);
+    }
+
+    private void QuestStageUIOnOnStarChanged(Vector3 newPosition)
+    {
+        starPosition = newPosition;
     }
 
     private void Update()
@@ -24,14 +36,19 @@ public class PuzzleQuestEffectUI : MonoBehaviour
     [Button]
     private void Test()
     {
-        CreateText(Vector3.zero);
+        CreateEffect(Vector3.zero);
     }
 
-    public void CreateText(Vector3 worldPosition)
+    public void CreateEffect(Vector3 worldPosition)
     {
-        var screenPosition = Camera.main.WorldToScreenPoint(worldPosition);
+        var screenPosition = mainCam.WorldToScreenPoint(worldPosition);
+        Creates(screenPosition);
+        CreateTrailToStar(worldPosition);
+    }
 
-        var text = Instantiate(popupTextPrefab, screenPosition, Quaternion.identity, transform);
+    private void Creates(Vector3 screenPos)
+    {
+        var text = Instantiate(popupTextPrefab, screenPos, Quaternion.identity, transform);
         text.gameObject.SetActive(true);
 
         LSequence.Create()
@@ -42,5 +59,19 @@ public class PuzzleQuestEffectUI : MonoBehaviour
             .Join(LMotion.Create(1, 0, 0.31f).WithOnComplete(() => { Destroy(text.gameObject); })
                 .Bind((x) => { text.alpha = x; }))
             .Run();
+    }
+
+    public void CreateTrailToStar(Vector3 worldPos)
+    {
+        // create trail
+        
+        
+    }
+
+    public GameObject test;
+    [Button]
+    private void Tesrt()
+    {
+   
     }
 }

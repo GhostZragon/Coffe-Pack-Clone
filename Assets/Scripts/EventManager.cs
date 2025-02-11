@@ -43,7 +43,7 @@ public class EventManager
     {
         public Action<Slot> OnMergeTray;
         
-        public Action<string> OnCompleteItem;
+        public Action<ItemInfo> OnCompleteItem;
         
         public Action<int> OnCoinChanged;
     }
@@ -62,8 +62,13 @@ public class EventManager
     }
 }
 
-public class ItemInfo
+public struct ItemInfo
 {
+    public ItemInfo(string _itemId, Vector3 worldPositionPos)
+    {
+        ItemId = _itemId;
+        WorldPosition = worldPositionPos;
+    }
     public string ItemId;
-    public Vector3 TrayWorldPosition;
+    public Vector3 WorldPosition;
 }
