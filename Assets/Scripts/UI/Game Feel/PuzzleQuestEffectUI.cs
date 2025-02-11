@@ -68,10 +68,15 @@ public class PuzzleQuestEffectUI : MonoBehaviour
         
     }
 
-    public GameObject test;
+    public RectTransform test;
     [Button]
     private void Tesrt()
     {
-   
+        Vector3 startWorldPos = test.transform.TransformPoint(test.anchoredPosition);
+        Vector3 targetLocalPos = transform.InverseTransformPoint(startWorldPos);
+        Vector3 worldGameObject = Camera.main.ScreenToWorldPoint(startWorldPos);
+        Debug.Log(startWorldPos);
+        Debug.Log(targetLocalPos);
+        Debug.Log(worldGameObject);
     }
 }
