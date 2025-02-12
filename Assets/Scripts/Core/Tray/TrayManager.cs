@@ -5,7 +5,7 @@ using UnityEngine;
 public class TrayManager : MonoBehaviour
 {
     public static TrayManager instance;
-
+    [SerializeField] private GameObject trayContainer;
     [SerializeField] private List<Transform> trayStandPositions;
     [SerializeField] private bool isUsingTestCaseSO = false;
     [SerializeField] private List<Tray> currentTrayList = new();
@@ -20,7 +20,7 @@ public class TrayManager : MonoBehaviour
     {
         for (int i = 0; i < trayStandPositions.Count; i++)
         {
-            var tray = Instantiate(trayPrefab, trayStandPositions[i].position, Quaternion.identity);
+            var tray = Instantiate(trayPrefab, trayStandPositions[i].position, Quaternion.identity,trayContainer.transform);
             tray.Index = i;
             tray.name = "Tray_" + totalCount;
             // tray.RequestItem();
@@ -45,6 +45,10 @@ public class TrayManager : MonoBehaviour
             Destroy(item.gameObject);
         }
 
+        foreach (Transform item in trayContainer.transform)
+        {
+            Destroy(item.gameObject);
+        }
         currentTrayList.Clear();
     }
 

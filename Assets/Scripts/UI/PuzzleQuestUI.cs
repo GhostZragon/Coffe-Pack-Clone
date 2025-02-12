@@ -15,13 +15,12 @@ public class PuzzleQuestUI : MonoBehaviour
 
     public void BindingUI(InGameQuestData inGameQuestData)
     {
+        inGameQuestData.SetUIRef(this);
+      
         itemNameText.text = $"ID: {inGameQuestData.ItemID}";
-        UpdateCount(inGameQuestData.TargetQuantity);
+        icon.gameObject.SetActive(inGameQuestData.questIcon == null);
 
-        if (inGameQuestData.questIcon == null)
-        {
-            icon.gameObject.SetActive(false);
-        }
+        UpdateCount(inGameQuestData.TargetQuantity);
     }
 
     public void UpdateCount(int targetQuantity)

@@ -62,5 +62,9 @@ public class InGameQuestData
     {
         return itemID == ItemID && TargetQuantity > 0;
     }
-    
+
+    public void SetUIRef(PuzzleQuestUI puzzleQuestUI)
+    {
+        this.puzzleQuestUI = puzzleQuestUI;
+    }
 }
