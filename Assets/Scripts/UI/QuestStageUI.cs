@@ -9,7 +9,6 @@ public class QuestStageUI : MonoBehaviour
     [SerializeField] private Slider slider;
     public LevelStarProgressUI levelStarUI;
 
-
     private int maxStage = 0;
     private int currentStage = 0;
 
