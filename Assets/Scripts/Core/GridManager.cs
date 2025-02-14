@@ -11,7 +11,6 @@ public partial class GridManager : MonoBehaviour
     [SerializeField] private float _spacing = 1f;
     [SerializeField] private float _cellWidth = 0.25f;
     [SerializeField] private float _cellDepth = 0.25f;
-    [SerializeField] private CameraHandler cameraHandler;
     [SerializeField] private AlignCamera alignCamera;
     [SerializeField] private CSVImport csvImport;
 
@@ -26,7 +25,6 @@ public partial class GridManager : MonoBehaviour
 
     private void Awake()
     {
-        cameraHandler = Camera.main.GetComponent<CameraHandler>();
         alignCamera = GetComponent<AlignCamera>();
     }
 
@@ -37,8 +35,8 @@ public partial class GridManager : MonoBehaviour
         CalculateGridOrigin();
         SettingBeforeCreateCells();
         CreateCells();
-        cameraHandler.SetupCamera(SlotManager.Instance.transform);
         alignCamera.UpdateBound();
+        alignCamera.UpdateOffsetLength();
     }
 
     public Cell GetCell(Vector2Int gridPos) => _cells.TryGetValue(gridPos, out var cell) ? cell : null;

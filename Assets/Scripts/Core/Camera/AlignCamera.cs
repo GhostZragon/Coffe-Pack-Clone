@@ -73,8 +73,9 @@ public class AlignCamera : MonoBehaviour
     }
     
     [Button]
-    private void UpdateOffsetLength()
+    public void UpdateOffsetLength()
     {
         offsetLength = Mathf.Max(bounds.extents.x, bounds.extents.z) * 10;
+        offsetLength += offsetLength * 0.15f;
     }
 }
