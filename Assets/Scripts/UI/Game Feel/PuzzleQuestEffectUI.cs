@@ -32,7 +32,8 @@ public class PuzzleQuestEffectUI : MonoBehaviour
     public void CreateEffect(Vector3 worldPosition)
     {
         // Debug.Log("World Position: " + worldPosition);
-        var screenPosition = mainCam.WorldToScreenPoint(worldPosition);
+        // var screenPosition = mainCam.WorldToScreenPoint(worldPosition);
+        var screenPosition = worldPosition;
         screenPosition.z = 0;
         Debug.Log("Screen Position: " + screenPosition);
         Creates(screenPosition);
@@ -47,7 +48,7 @@ public class PuzzleQuestEffectUI : MonoBehaviour
         text.gameObject.SetActive(true);
 
         LSequence.Create()
-            .Append(LMotion.Create(text.transform.position.y, text.transform.position.y + 50, 0.35f)
+            .Append(LMotion.Create(text.transform.position.y, text.transform.position.y + 1.5f, 0.35f)
                 .BindToPositionY(text.transform))
             .AppendInterval(0.4f)
             .Append(LMotion.Create(text.transform.localScale, Vector3.zero, 0.3f).BindToLocalScale(text.transform))
