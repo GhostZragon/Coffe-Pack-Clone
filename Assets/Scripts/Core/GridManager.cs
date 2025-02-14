@@ -70,6 +70,7 @@ public partial class GridManager : MonoBehaviour
                 slot.name += $"{i} : {j}";
                 PositionSlot(slot.transform, gridPos);
                 _cells[gridPos] = new Cell(slot);
+                slot.SetSize(_cellWidth,_cellDepth);
             }
         }
 
@@ -147,4 +148,25 @@ public partial class GridManager : MonoBehaviour
 
         _cells.Clear();
     }
+
+    private void OnDrawGizmos()
+    {
+        if (_cells == null || _cells.Count == 0) return;
+
+        Gizmos.color = Color.green;
+
+        foreach (var cell in _cells)
+        {
+            Vector3 center = new Vector3(
+                _startX + cell.Key.y * (_cellWidth + _spacing),
+                0,
+                _startZ + cell.Key.x * (_cellDepth + _spacing)
+            );
+
+            Vector3 size = new Vector3(_cellWidth, 0.1f, _cellDepth); // Độ dày nhỏ để dễ nhìn
+
+            Gizmos.DrawWireCube(center, size);
+        }
+    }
+
 }

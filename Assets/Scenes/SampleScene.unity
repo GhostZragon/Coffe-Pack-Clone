@@ -712,7 +712,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 365283dce62a8e648a088ec6ac02efb5, type: 2}
   - {fileID: 11400000, guid: 286546af32b0470408f69773a4ed4708, type: 2}
   levelPanelUI: {fileID: 2531688973947803224}
-  startQuestByButton: 1
+  startQuestByButton: 0
   currentLevel: 2
   maxLevel: 0
   questStageUI: {fileID: 7075154157146819934}
@@ -1269,9 +1269,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rows: 4
   _columns: 4
-  _spacing: 1
-  _cellWidth: 0.25
-  _cellDepth: 0.25
+  _spacing: 0.25
+  _cellWidth: 1.25
+  _cellDepth: 1
   cameraHandler: {fileID: 1697514698}
   csvImport: {fileID: 2082228494}
   dropDownEffect:
@@ -2034,6 +2034,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5216952625177943192, guid: b1d40d85603865142a4f088ed2bc502c, type: 3}
+      propertyPath: maxCountPerTray
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7522028278692869077, guid: b1d40d85603865142a4f088ed2bc502c, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.503

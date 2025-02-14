@@ -117,7 +117,7 @@ public class LevelManager : MonoBehaviour
     {
         gridManager.ClearGrid();
         puzzleQuestManager.ClearQuest();
-        trayManager.ClearAllTray();
+        trayManager.ClearAllTrays();
         dragDropSystem.ClearDragItem();
         questStageUI.ResetUI();
     }

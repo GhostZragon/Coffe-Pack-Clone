@@ -7,8 +7,12 @@ public class TrayManager : MonoBehaviour
     public static TrayManager instance;
     [SerializeField] private GameObject trayContainer;
     [SerializeField] private List<Transform> trayStandPositions;
-    [SerializeField] private bool isUsingTestCaseSO = false;
     [SerializeField] private List<Tray> currentTrayList = new();
+    [SerializeField] private int maxCountPerTray = 6;
+    [SerializeField] private bool isUsingTestCaseSO = false;
+
+  
+    
     public Tray trayPrefab;
     private void Awake()
     {
@@ -23,8 +27,10 @@ public class TrayManager : MonoBehaviour
             var tray = Instantiate(trayPrefab, trayStandPositions[i].position, Quaternion.identity,trayContainer.transform);
             tray.Index = i;
             tray.name = "Tray_" + totalCount;
+            tray.SetMaxCount(maxCountPerTray);
+            tray.RequestItem();
             // tray.RequestItem();
-            CatchingTray(tray);
+            RegisterTray(tray);
             totalCount++;
         }
     }
@@ -33,12 +39,12 @@ public class TrayManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            ClearAllTray();
+            ClearAllTrays();
             TryCreateNextTrays();
         }
     }
 
-    public void ClearAllTray()
+    public void ClearAllTrays()
     {
         foreach (var item in currentTrayList)
         {
@@ -50,11 +56,17 @@ public class TrayManager : MonoBehaviour
             Destroy(item.gameObject);
         }
         currentTrayList.Clear();
+        totalCount = 0; 
+
     }
 
     public Transform GetStandPosition(int index)
     {
-        return trayStandPositions[index];
+        if (index >= 0 && index < trayStandPositions.Count)
+        {
+            return trayStandPositions[index];
+        }
+        throw new ArgumentOutOfRangeException(nameof(index), "Index is out of range.");
     }
 
     public void TryCreateNextTrays()
@@ -65,7 +77,7 @@ public class TrayManager : MonoBehaviour
         }
     }
 
-    public void CatchingTray(Tray tray)
+    public void RegisterTray(Tray tray)
     {
         currentTrayList.Add(tray);
     }
@@ -77,8 +89,3 @@ public class TrayManager : MonoBehaviour
     
 }
 
-public interface IGameControl
-{
-    void Init();
-    void Clear();
-}

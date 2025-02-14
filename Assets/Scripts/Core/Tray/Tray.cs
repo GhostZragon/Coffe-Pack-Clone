@@ -17,12 +17,12 @@
         [SerializeField] private Transform itemHolder;
         [SerializeField] private Collider collider;
         [Header("Settings")] [SerializeField] private int index;
-        [SerializeField] private int maxItem;
+        [SerializeField] private int maxItemCount;
         [Header("Gizmos")] [SerializeField] private Vector3 size;
         [Header("Item settings")] public int randomCount;
         public Transform Model;
         private const int OutsideSlotIndex = -1;
-
+        private AlignSlotInTray alignSlotInTray;
 
         // [SerializeField] SerializableMotionSettings<Vector3, NoOptions> destroyMotionSettings;
         
@@ -30,7 +30,7 @@
         
         public int MaxCount
         {
-            get => maxItem;
+            get => maxItemCount;
         }
 
         public int Index
@@ -41,14 +41,14 @@
 
         private void Awake()
         {
+            alignSlotInTray = GetComponent<AlignSlotInTray>();
             collider = GetComponent<Collider>();
-            RequestItem();
         }
 
 
         public void Add(Item item, bool isUsingAnimation = true)
         {
-            if (items.Count == maxItem)
+            if (items.Count == maxItemCount)
             {
                 Debug.LogWarning("Already have full of item in tray, dont add more",gameObject);
                 return;
@@ -74,7 +74,7 @@
 
         public bool CanAddMoreItem()
         {
-            return items.Count < maxItem;
+            return items.Count < maxItemCount;
         }
 
         public List<string> GetUniqueItemIDs()
@@ -180,7 +180,7 @@
                 return;
             }
             
-            int count = randomCount > maxItem ? maxItem : Random.Range(1, randomCount);
+            int count = randomCount > maxItemCount ? maxItemCount : Random.Range(1, randomCount);
             for (int i = 0; i < count; i++)
             {
                 var item = ItemMananger.Instance.GetNewItem();
@@ -205,9 +205,9 @@
                 }
             }
 
-            points = new Transform[maxItem];
+            points = new Transform[maxItemCount];
 
-            for (int i = 0; i < maxItem; i++)
+            for (int i = 0; i < maxItemCount; i++)
             {
                 var go = new GameObject();
                 go.transform.parent = pointHolder.transform;
@@ -257,6 +257,12 @@
 
             var _itemID = items[0].itemID;
             itemID = _itemID;
-            return items.All(item => item.itemID == _itemID) && items.Count == maxItem;
+            return items.All(item => item.itemID == _itemID) && items.Count == maxItemCount;
+        }
+
+        public void SetMaxCount(int maxCountPerTray)
+        {
+            maxItemCount = maxCountPerTray;
+            alignSlotInTray.Alin(maxCountPerTray);
         }
     }

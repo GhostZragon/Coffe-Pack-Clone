@@ -11,6 +11,7 @@ public class EventManager
         _UI = new();
         _Game = new();
         _Table = new();
+        // _Tray = new();
     }
     public static EventManager Current
     {
@@ -29,6 +30,7 @@ public class EventManager
     public readonly UI _UI;
     public readonly Game _Game;
     public readonly Table _Table;
+    public readonly Tray _Tray;
     public class Core
     {
         public Action<int> OnSelectLevel;
@@ -55,6 +57,13 @@ public class EventManager
 
     }
 
+    // public class Tray
+    // {
+    //     public Action OnTrayBack;
+    //     public Action OnTrayUp;
+    //     public Action OnTrayInit;
+    // }
+    
     public class UI
     {
         public Action<InGameQuestData> OnBindingWithQuestUI;
