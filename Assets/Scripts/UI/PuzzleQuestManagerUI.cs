@@ -23,6 +23,7 @@ public class PuzzleQuestManagerUI : MonoBehaviour
    
         questUI.BindingUI(inGameQuestData);
         questUI.gameObject.SetActive(true);
+        questUI.OnInitEffect();
     
         Debug.Log("Create item quest UI", questUI.gameObject);
     }

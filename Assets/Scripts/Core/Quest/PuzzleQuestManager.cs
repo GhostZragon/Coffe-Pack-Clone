@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -12,44 +13,30 @@ public enum PuzzleStage
 
 public class PuzzleQuestManager : MonoBehaviour
 {
-    [Header("UI")] 
-    [SerializeField] private PuzzleQuestData puzzleQuestData;
-    [SerializeField, ReadOnly] private int currentStage = 0;
+    [Header("UI")] [SerializeField] private PuzzleQuestData puzzleQuestData;
+    [SerializeField] private int currentStage = 0;
     [SerializeField] private bool completeOneTime;
-    [Header("Questing")] 
-    [SerializeField] private List<string> randomItemsList = new();
+    [Header("Questing")] [SerializeField] private List<string> randomItemsList = new();
     [SerializeField] private List<InGameQuestData> inGameQuestDataList;
+    [SerializeField] private PuzzleQuestEffectUI puzzleQuestEffectUI;
+    private int maxStage = 0;
 
+    private QuestFactory questFactory;
 
     private Dictionary<int, QuestData[]> questDataPerStage;
 
+    public Action<int> OnChangedStage;
+
     private void Awake()
     {
+        questFactory = new(randomItemsList);
+
         EventManager.Current._Game.OnCompleteItem += OnCompleteItem;
     }
 
     private void OnDestroy()
     {
         EventManager.Current._Game.OnCompleteItem -= OnCompleteItem;
-    }
-
-    [Button]
-    private void CompleteAll()
-    {
-        var previousStage = currentStage;
-        if (questDataPerStage.TryGetValue(currentStage, out var arrayQuest))
-        {
-            foreach (var item in arrayQuest)
-            {
-                for (int i = 0; i < item.TargetQuantity; i++)
-                {
-                    OnCompleteItem(item.ItemID);
-
-                    if (previousStage != currentStage)
-                        break;
-                }
-            }
-        }
     }
 
     public void SetPuzzleQuestData(PuzzleQuestData puzzleQuestData)
@@ -61,6 +48,13 @@ public class PuzzleQuestManager : MonoBehaviour
             [1] = puzzleQuestData.stage2,
             [2] = puzzleQuestData.stage3
         };
+
+        foreach (var item in questDataPerStage)
+        {
+            if (item.Value == null)
+                continue;
+            maxStage++;
+        }
     }
 
     public void SetFirstState()
@@ -73,66 +67,14 @@ public class PuzzleQuestManager : MonoBehaviour
         CreateNewQuest();
     }
 
-    private void CreateNewQuest()
+    private void OnCompleteItem(ItemInfo itemInfo)
     {
-        if (!IsContainQuestDataForCurrentState(currentStage, out var arrayQuest)) return;
-
-        for (int i = 0; i < arrayQuest.Length; i++)
-        {
-            if (i < inGameQuestDataList.Count)
-            {
-                // Cập nhật dữ liệu nhiệm vụ thay vì tạo mới
-                inGameQuestDataList[i].InitByQuestData(arrayQuest[i]);
-            }
-            else
-            {
-                var puzzleQuest = CreatePuzzleQuest(arrayQuest[i]);
-                inGameQuestDataList.Add(puzzleQuest);
-                Debug.Log($"Create quest {puzzleQuest.ItemID} and {puzzleQuest.TargetQuantity}");
-                EventManager.Current._UI.OnBindingWithQuestUI?.Invoke(puzzleQuest);
-            }
-        }
-    }
-
-    private InGameQuestData CreatePuzzleQuest(QuestData questData)
-    {
-        var inGameQuestData = new InGameQuestData();
-        if (questData.IsRandomly())
-        {
-            CreateRandomProperty(inGameQuestData);
-        }
-        else
-        {
-            inGameQuestData.InitByQuestData(questData);
-        }
-
-        return inGameQuestData;
-    }
-
-    private void CreateRandomProperty(InGameQuestData inGameQuestData)
-    {
-        inGameQuestData.ItemID = GetRandomItemID();
-        inGameQuestData.TargetQuantity = GetRandomItemCount();
-        inGameQuestData.isRandom = true;
-    }
-
-    private int GetRandomItemCount()
-    {
-        return Random.Range(1, 3);
-    }
-
-    private string GetRandomItemID()
-    {
-        return randomItemsList[Random.Range(0, randomItemsList.Count)];
-    }
-
-    private void OnCompleteItem(string itemID)
-    {
-        var quest = inGameQuestDataList.FirstOrDefault(q => q.CanUpdateQuest(itemID));
+        var quest = inGameQuestDataList.FirstOrDefault(q => q.CanUpdateQuest(itemInfo.ItemId));
         if (quest != null)
         {
             quest.UpdateQuest(completeOneTime);
-            Debug.Log("Check complete item: " + itemID);
+            puzzleQuestEffectUI.CreateEffect(itemInfo.WorldPosition);
+            Debug.Log("Check complete item: " + itemInfo.ItemId);
         }
 
         if (IsFinishAllQuestCurrentStage())
@@ -145,7 +87,9 @@ public class PuzzleQuestManager : MonoBehaviour
     [Button]
     private void GoNextStage()
     {
-        currentStage +=1;
+        currentStage += 1;
+
+        OnChangedStage?.Invoke(currentStage);
 
         CreateNewQuest();
     }
@@ -165,21 +109,6 @@ public class PuzzleQuestManager : MonoBehaviour
         return questDataPerStage.TryGetValue(puzzleStage, out arrayQuest);
     }
 
-    public List<string> GetItemTypeInQuest()
-    {
-        List<string> itemList = new();
-
-        foreach (var quest in inGameQuestDataList)
-        {
-            if (itemList.Contains(quest.ItemID))
-                continue;
-            itemList.Add(quest.ItemID);
-        }
-
-        return itemList;
-    }
-
-
     public void ClearQuest()
     {
         foreach (var quest in inGameQuestDataList)
@@ -188,5 +117,30 @@ public class PuzzleQuestManager : MonoBehaviour
         }
 
         inGameQuestDataList.Clear();
+    }
+
+    private void CreateNewQuest()
+    {
+        if (!IsContainQuestDataForCurrentState(currentStage, out var arrayQuest)) return;
+
+        foreach (var item in inGameQuestDataList)
+        {
+            item.DestroyQuestUI();
+        }
+        inGameQuestDataList.Clear();
+        // split init and update logic 
+        for (int i = 0; i < arrayQuest.Length; i++)
+        {
+            var inGameQuestData = questFactory.CreateQuest(arrayQuest[i]);
+            inGameQuestDataList.Add(inGameQuestData);
+            
+            EventManager.Current._UI.OnBindingWithQuestUI?.Invoke(inGameQuestData);
+            Debug.Log($"Create quest {inGameQuestData.ItemID} and {inGameQuestData.TargetQuantity}");
+        }
+    }
+
+    public int GetMaxStage()
+    {
+        return maxStage;
     }
 }

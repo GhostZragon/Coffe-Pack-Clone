@@ -3,9 +3,9 @@ using UnityEngine.UI;
 
 public class LevelStarUI : MonoBehaviour
 {
-    [SerializeField] private Image[] images;
+    [SerializeField] protected Image[] images;
 
-    [SerializeField] private LevelStarSprites levelStarSprites;
+    [SerializeField] protected LevelStarSprites levelStarSprites;
 
     public void ActiveStageUnlock(int count)
     {
@@ -16,4 +16,10 @@ public class LevelStarUI : MonoBehaviour
             images[i].sprite = i <= count - 1 ? levelStarSprites.unlockSprite : levelStarSprites.lockSprite;
         }
     }
+
+    public Vector3 GetStarPositionByIndex(int starIndex)
+    {
+        return images[starIndex].transform.position;
+    }
+    
 }
