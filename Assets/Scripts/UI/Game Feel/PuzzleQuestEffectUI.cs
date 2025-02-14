@@ -10,7 +10,8 @@ public class PuzzleQuestEffectUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI popupTextPrefab;
 
     [SerializeField] private bool debugView = false;
-    [SerializeField] private QuestCollectEffect questCollectEffect;
+    [SerializeField] private QuestCollectEffectBase collectEffectStarProgress;
+    [SerializeField] private QuestCollectEffectBase collectEffectCoinCollector;
 
     [SerializeField] private Camera mainCam;
 
@@ -22,14 +23,10 @@ public class PuzzleQuestEffectUI : MonoBehaviour
     [Button]
     private void Test()
     {
-        CreateEffect(Vector3.zero);
+        CreateEffectToStar(Vector3.zero);
     }
-    [Button]
-    public void Test(Transform transform)
-    {
-        CreateEffect(transform.position);
-    }
-    public void CreateEffect(Vector3 worldPosition)
+    
+    public void CreateEffectToStar(Vector3 worldPosition)
     {
         // Debug.Log("World Position: " + worldPosition);
         // var screenPosition = mainCam.WorldToScreenPoint(worldPosition);
@@ -38,7 +35,20 @@ public class PuzzleQuestEffectUI : MonoBehaviour
         Debug.Log("Screen Position: " + screenPosition);
         Creates(screenPosition);
         
-        questCollectEffect.CreateTrailToStar(screenPosition);
+        collectEffectStarProgress.CreateTrail(screenPosition);
+    }
+    
+    public void CreateEffectToCollector(Vector3 worldPosition)
+    {
+        // Debug.Log("World Position: " + worldPosition);
+        // var screenPosition = mainCam.WorldToScreenPoint(worldPosition);
+        var screenPosition = worldPosition;
+        screenPosition.z = 0;
+        Debug.Log("Screen Position: " + screenPosition);
+       
+        Creates(screenPosition);
+        
+        collectEffectCoinCollector.CreateTrail(screenPosition);
     }
 
     private void Creates(Vector3 screenPos)

@@ -2,17 +2,17 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class QuestCollectEffect : MonoBehaviour
+public class CollectEffect_StarProgress : QuestCollectEffectBase
 {
-    [SerializeField] private GameObject trailPrefab;
     [SerializeField] private QuestStageUI questStageUI;
 
     private void Awake()
     {
         trailPrefab.gameObject.SetActive(false);
     }
+
     [Button]
-    public void CreateTrailToStar(Vector3 worldPos)
+    public override void CreateTrail(Vector3 worldPos)
     {
         // create trail
 
@@ -22,8 +22,7 @@ public class QuestCollectEffect : MonoBehaviour
         var effect = Instantiate(trailPrefab, worldPos, Quaternion.identity, transform);
         effect.gameObject.SetActive(true);
 
-        var custom = new BezierCustom();
-        custom.Setup(effect.transform.position, startWorldPos);
+        var custom = BezierCustom.Create(effect.transform.position, startWorldPos);
 
         LMotion.Create(0f, 1f, 1)
             .WithOnComplete(() =>

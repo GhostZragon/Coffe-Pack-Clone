@@ -149,7 +149,7 @@ public class LevelManager : MonoBehaviour
 
     private bool IsLevelUnlock(int i)
     {
-        return i <= currentLevel;
+        return true;
     }
 }
 

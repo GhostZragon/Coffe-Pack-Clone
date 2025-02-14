@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class CoinUI : MonoBehaviour
+public class CoinMenuUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI coinText;
 

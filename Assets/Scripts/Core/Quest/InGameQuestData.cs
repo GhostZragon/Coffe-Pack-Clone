@@ -33,6 +33,7 @@ public class InGameQuestData
     {
         if(TargetQuantity <= 0)
             puzzleQuestUI.OnCompleteQuest();
+        puzzleQuestUI = null;
     }
 
     public void DestroyQuestUI()
