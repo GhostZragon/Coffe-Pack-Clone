@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: cfg_level 3
   m_EditorClassIdentifier: 
   LevelCSV: {fileID: 4900000, guid: d2ea5dec2528aed43a0f6ad503155140, type: 3}
-  PuzzleQuestData: {fileID: 11400000, guid: cdf638b7fffa02e49ab80c537733fa53, type: 2}
+  PuzzleQuestData: {fileID: 11400000, guid: 29929bd6d8e30944f9bf6df5069be54c, type: 2}

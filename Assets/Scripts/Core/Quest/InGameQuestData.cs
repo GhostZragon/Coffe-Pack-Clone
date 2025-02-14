@@ -37,7 +37,8 @@ public class InGameQuestData
 
     public void DestroyQuestUI()
     {
-        puzzleQuestUI.OnDestroyQuest();
+        puzzleQuestUI?.OnDestroyQuest();
+        puzzleQuestUI = null;
     }
     
     [Button]
@@ -51,6 +52,8 @@ public class InGameQuestData
         CompleteQuest();
     }
 
+    
+    // not using for randomly quest
     public void InitByQuestData(QuestData questData)
     {
         ItemID = questData.ItemID;

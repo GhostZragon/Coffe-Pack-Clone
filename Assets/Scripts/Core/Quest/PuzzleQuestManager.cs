@@ -13,25 +13,24 @@ public enum PuzzleStage
 
 public class PuzzleQuestManager : MonoBehaviour
 {
-    [Header("UI")] 
-    [SerializeField] private PuzzleQuestData puzzleQuestData;
-    [SerializeField, ReadOnly] private int currentStage = 0;
+    [Header("UI")] [SerializeField] private PuzzleQuestData puzzleQuestData;
+    [SerializeField] private int currentStage = 0;
     [SerializeField] private bool completeOneTime;
-    [Header("Questing")] 
-    [SerializeField] private List<string> randomItemsList = new();
+    [Header("Questing")] [SerializeField] private List<string> randomItemsList = new();
     [SerializeField] private List<InGameQuestData> inGameQuestDataList;
     [SerializeField] private PuzzleQuestEffectUI puzzleQuestEffectUI;
     private int maxStage = 0;
-    
+
     private QuestFactory questFactory;
 
     private Dictionary<int, QuestData[]> questDataPerStage;
 
     public Action<int> OnChangedStage;
+
     private void Awake()
     {
         questFactory = new(randomItemsList);
-        
+
         EventManager.Current._Game.OnCompleteItem += OnCompleteItem;
     }
 
@@ -52,7 +51,7 @@ public class PuzzleQuestManager : MonoBehaviour
 
         foreach (var item in questDataPerStage)
         {
-            if(item.Value == null)
+            if (item.Value == null)
                 continue;
             maxStage++;
         }
@@ -88,8 +87,8 @@ public class PuzzleQuestManager : MonoBehaviour
     [Button]
     private void GoNextStage()
     {
-        currentStage +=1;
-        
+        currentStage += 1;
+
         OnChangedStage?.Invoke(currentStage);
 
         CreateNewQuest();
@@ -119,28 +118,24 @@ public class PuzzleQuestManager : MonoBehaviour
 
         inGameQuestDataList.Clear();
     }
-    
+
     private void CreateNewQuest()
     {
         if (!IsContainQuestDataForCurrentState(currentStage, out var arrayQuest)) return;
 
+        foreach (var item in inGameQuestDataList)
+        {
+            item.DestroyQuestUI();
+        }
+        inGameQuestDataList.Clear();
+        // split init and update logic 
         for (int i = 0; i < arrayQuest.Length; i++)
         {
-            if (i < inGameQuestDataList.Count)
-            {
-                // Update existing quest data
-                inGameQuestDataList[i].InitByQuestData(arrayQuest[i]);
-            }
-            else
-            {
-                // Use the QuestFactory to create a new quest
-                var puzzleQuest = questFactory.CreateQuest(arrayQuest[i]);
-           
-                inGameQuestDataList.Add(puzzleQuest);
-
-                Debug.Log($"Create quest {puzzleQuest.ItemID} and {puzzleQuest.TargetQuantity}");
-                EventManager.Current._UI.OnBindingWithQuestUI?.Invoke(puzzleQuest);
-            }
+            var inGameQuestData = questFactory.CreateQuest(arrayQuest[i]);
+            inGameQuestDataList.Add(inGameQuestData);
+            
+            EventManager.Current._UI.OnBindingWithQuestUI?.Invoke(inGameQuestData);
+            Debug.Log($"Create quest {inGameQuestData.ItemID} and {inGameQuestData.TargetQuantity}");
         }
     }
 

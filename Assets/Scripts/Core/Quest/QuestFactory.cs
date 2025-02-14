@@ -12,8 +12,13 @@ public class QuestFactory
 
     public InGameQuestData CreateQuest(QuestData questData)
     {
-        var inGameQuestData = new InGameQuestData();
+        return UpdateOrCreateInGameQuestData(questData);
+    }
 
+    private InGameQuestData UpdateOrCreateInGameQuestData(QuestData questData)
+    {
+        InGameQuestData inGameQuestData = new();
+       
         if (questData.IsRandomly())
         {
             AssignRandomProperties(inGameQuestData);
@@ -25,7 +30,7 @@ public class QuestFactory
 
         return inGameQuestData;
     }
-
+    
     private void AssignRandomProperties(InGameQuestData quest)
     {
         quest.ItemID = GetRandomItemID();
