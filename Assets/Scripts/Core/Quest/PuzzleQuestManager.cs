@@ -73,8 +73,12 @@ public class PuzzleQuestManager : MonoBehaviour
         if (quest != null)
         {
             quest.UpdateQuest(completeOneTime);
-            puzzleQuestEffectUI.CreateEffect(itemInfo.WorldPosition);
+            puzzleQuestEffectUI.CreateEffectToStar(itemInfo.WorldPosition);
             Debug.Log("Check complete item: " + itemInfo.ItemId);
+        }
+        else
+        {
+            puzzleQuestEffectUI.CreateEffectToCollector(itemInfo.WorldPosition);
         }
 
         if (IsFinishAllQuestCurrentStage())

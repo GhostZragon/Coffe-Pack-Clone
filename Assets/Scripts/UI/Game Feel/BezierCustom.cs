@@ -12,7 +12,7 @@ public class BezierCustom
 
     public Vector3 moveObjectPosition;
 
-    public void Setup(Vector3 startPosition, Vector3 endPosition)
+    private void Setup(Vector3 startPosition, Vector3 endPosition)
     {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
@@ -31,6 +31,16 @@ public class BezierCustom
         point3 = Vector2.Lerp(startPosition, endPosition, 0.6f) + new Vector2(-offsetX, 0);
     }
 
+    public static BezierCustom Create(Vector3 startPosition, Vector3 endPosition)
+    {
+        BezierCustom bezierCustom = new();
+        
+        bezierCustom.Setup(startPosition,endPosition);
+
+        return bezierCustom;
+    }
+    
+    
     public void Play1(float t)
     {
         // Công thức Bézier bậc 1: B(t) = (1-t) * P₀ + t * P₁
