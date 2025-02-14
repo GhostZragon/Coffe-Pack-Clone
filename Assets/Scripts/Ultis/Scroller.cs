@@ -4,8 +4,8 @@ using UnityEngine.UI;
 public class Scroller : MonoBehaviour
 {
     public RawImage img; // RawImage cần di chuyển
-    private float speed = 0.2f; // Tốc độ di chuyển
-    private Vector2 direction; // Hướng di chuyển
+    [SerializeField] private float speed = 0.2f; // Tốc độ di chuyển
+    [SerializeField] private Vector2 direction; // Hướng di chuyển
     private float timer; // Bộ đếm thời gian
 
     void Start()
