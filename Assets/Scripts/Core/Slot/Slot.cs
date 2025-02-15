@@ -132,4 +132,10 @@ public class Slot : SlotBase
     public override void ActiveSpecialEffect()
     {
     }
+
+    public override void SetSize(float widthSize, float heighSize)
+    {
+        base.SetSize(widthSize, heighSize);
+        currentScale = transform.localScale;
+    }
 }

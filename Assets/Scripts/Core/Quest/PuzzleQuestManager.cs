@@ -13,10 +13,13 @@ public enum PuzzleStage
 
 public class PuzzleQuestManager : MonoBehaviour
 {
-    [Header("UI")] [SerializeField] private PuzzleQuestData puzzleQuestData;
+    [Header("UI")]
+    [SerializeField] private PuzzleQuestData puzzleQuestData;
     [SerializeField] private int currentStage = 0;
     [SerializeField] private bool completeOneTime;
-    [Header("Questing")] [SerializeField] private List<string> randomItemsList = new();
+  
+    [Header("Questing")] 
+    [SerializeField] private List<string> randomItemsList = new();
     [SerializeField] private List<InGameQuestData> inGameQuestDataList;
     [SerializeField] private PuzzleQuestEffectUI puzzleQuestEffectUI;
     private int maxStage = 0;
@@ -26,6 +29,8 @@ public class PuzzleQuestManager : MonoBehaviour
     private Dictionary<int, QuestData[]> questDataPerStage;
 
     public Action<int> OnChangedStage;
+    public event Action<int> OnSetMaxStage;
+
 
     private void Awake()
     {
@@ -53,8 +58,9 @@ public class PuzzleQuestManager : MonoBehaviour
         {
             if (item.Value == null)
                 continue;
-            maxStage++;
+            maxStage += 1;
         }
+        OnSetMaxStage?.Invoke(maxStage);
     }
 
     public void SetFirstState()
@@ -105,9 +111,14 @@ public class PuzzleQuestManager : MonoBehaviour
 
     public bool IsRunOutOfQuest()
     {
-        return IsFinishAllQuestCurrentStage() && questDataPerStage.ContainsKey(currentStage + 1);
+        return IsFinishAllQuestCurrentStage();
     }
 
+    public bool IsFinalStage()
+    {
+        return questDataPerStage.ContainsKey(currentStage + 1);
+    }
+    
     private bool IsContainQuestDataForCurrentState(int puzzleStage, out QuestData[] arrayQuest)
     {
         return questDataPerStage.TryGetValue(puzzleStage, out arrayQuest);
@@ -143,8 +154,4 @@ public class PuzzleQuestManager : MonoBehaviour
         }
     }
 
-    public int GetMaxStage()
-    {
-        return maxStage;
-    }
 }

@@ -24,13 +24,6 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="\Assets\Resources\Map\map_level 4.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
       </map>
     </option>
   </component>

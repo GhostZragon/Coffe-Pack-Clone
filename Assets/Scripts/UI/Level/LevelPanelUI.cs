@@ -41,18 +41,21 @@ public class LevelPanelUI : MonoBehaviour
         }
     }
 
-    public void Init(int maxLevel)
+    public void Initialize(int maxLevel)
     {
         int startLevel = 0;
         foreach (var mapLevel in mapLevelUis)
         {
             if (startLevel >= maxLevel)
                 break;
-            mapLevel.InitLevelUIs(levelUIPrefab);
+            if(mapLevel.CanInit())
+                mapLevel.InitLevelUIs(levelUIPrefab);
             
             mapLevel.ActiveLevelInMap(ref startLevel, maxLevel, levelUnlockChecking);
         }
     }
+
+ 
 
 
 #if UNITY_EDITOR

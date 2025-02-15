@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class QuestStageUI : MonoBehaviour
 {
     [SerializeField] private Slider slider;
-    [SerializeField ]private int currentStage = 0;
+    [SerializeField] private int currentStage = 0;
 
     private int maxStage = 0;
 
@@ -29,20 +29,35 @@ public class QuestStageUI : MonoBehaviour
     {
         slider.value = 0;
         values = new();
-        values.Add(0,0);
-        values.Add(1,1.5f);
-        values.Add(2,3f);
+        
     }
-
+    
+    [Button]
     public void SetMaxStage(int maxStage)
     {
+        values.Clear();
+        
         this.maxStage = maxStage;
+        
         slider.maxValue = this.maxStage;
-       
+        
+        levelStarUI.SetMaxStar(maxStage);
+     
+        InitTweenValue(maxStage);
+    }
+
+    private void InitTweenValue(int maxStage)
+    {
+        values[0] = 0;
+        for (int i = 1; i <= maxStage; i++)
+        {
+            values[i] = (float)i / this.maxStage ;
+        }
     }
 
     public void OnStageChanged(int stageChanged)
     {
+        if (stageChanged > maxStage) return;
         currentStage = stageChanged;
         TweenSliderByCurrentLevel();
     }
@@ -50,7 +65,9 @@ public class QuestStageUI : MonoBehaviour
     private void TweenSliderByCurrentLevel()
     {
         var sliderValue = values[currentStage];
+        
         levelStarUI.ActiveStageUnlock(currentStage);
+      
         LMotion.Create(slider.value, sliderValue, 1)
             .Bind((x) => { slider.value = x; });
     }

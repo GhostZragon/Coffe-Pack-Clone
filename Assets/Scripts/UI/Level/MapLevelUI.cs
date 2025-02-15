@@ -13,7 +13,8 @@ public class MapLevelUI : MonoBehaviour
   
     [SerializeField] private int startLevel;
     [SerializeField] private int endLevel;
-    
+
+    private bool isInit = false;
     
     public Transform[] GetAllSpawnPoints()
     {
@@ -85,5 +86,8 @@ public class MapLevelUI : MonoBehaviour
         }
         
         TurnOffAllButton();
+        isInit = true;
     }
+
+    public bool CanInit() => isInit == false;
 }
