@@ -10,11 +10,11 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private int maxLevel;
     [Header("Gameplay")]
     [SerializeField] private QuestStageUI questStageUI;
-
     private static LevelManager instance;
     public static bool CanMerge => instance.allowMerge;
     [SerializeField] private bool allowMerge = true;
-
+    [SerializeField] private bool isLoose = false;
+    [SerializeField] private bool isWin = false; 
     private PuzzleQuestManager puzzleQuestManager;
     private GridManager gridManager;
     private DragDropSystem dragDropSystem;
@@ -116,13 +116,13 @@ public class LevelManager : MonoBehaviour
     
     private void OnProcessComplete()
     {
-        if (puzzleQuestManager.IsRunOutOfQuest() && puzzleQuestManager.IsFinalStage())
+        if (puzzleQuestManager.IsRunOutOfQuest() && puzzleQuestManager.IsFinalStage() || isWin)
         {
             Debug.Log("You Win");
             return;
         }
 
-        if (gridManager.IsFullOfSpace())
+        if (gridManager.IsFullOfSpace() && isLoose)
         {
             Debug.Log("You loose");
             return;

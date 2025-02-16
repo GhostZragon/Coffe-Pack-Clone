@@ -51,7 +51,7 @@ public class LevelPanelUI : MonoBehaviour
             if(mapLevel.CanInit())
                 mapLevel.InitLevelUIs(levelUIPrefab);
             
-            mapLevel.ActiveLevelInMap(ref startLevel, maxLevel, levelUnlockChecking);
+            mapLevel.SetRangeOfLevel(ref startLevel, maxLevel, levelUnlockChecking);
         }
     }
 

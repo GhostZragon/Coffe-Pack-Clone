@@ -22,7 +22,7 @@ public class MapLevelUI : MonoBehaviour
     }
    
     [Button]
-    public void ActiveLevelInMap(ref int startLevel,int endLevel, Predicate<int> isLevelUnlock)
+    public void SetRangeOfLevel(ref int startLevel,int endLevel, Predicate<int> isLevelUnlock)
     {
         this.startLevel = startLevel;
         
@@ -35,7 +35,7 @@ public class MapLevelUI : MonoBehaviour
             else
             {
                 levelUIs[i].gameObject.SetActive(true);
-                levelUIs[i].Init(startLevel, isLevelUnlock(startLevel));
+                levelUIs[i].SetInformation(startLevel, isLevelUnlock(startLevel));
                 startLevel++;
             }
         }
@@ -43,11 +43,6 @@ public class MapLevelUI : MonoBehaviour
         this.endLevel = startLevel;
     }
 
-    private bool IsLevelInRange(int level)
-    {
-        // make sure level is in range of map, quickly exit the loop
-        return level >= startLevel && level <= endLevel;
-    }
     
     
     public bool TryGetLevelUI(int level,out LevelUI levelUI)
@@ -55,13 +50,13 @@ public class MapLevelUI : MonoBehaviour
         // if this map contain that level, then get it out
         levelUI = null;
         var levelIndex = level - startLevel;
-        
-        if (IsLevelInRange(level) && levelIndex >= 0 && levelIndex < levelUIs.Length)
+
+        if (levelIndex >= 0 && levelIndex < levelUIs.Length)
         {
             levelUI = levelUIs[levelIndex];
+            return true;
         }
-
-        return levelUI != null;
+        return false;
     }
     
     private void TurnOffAllButton()

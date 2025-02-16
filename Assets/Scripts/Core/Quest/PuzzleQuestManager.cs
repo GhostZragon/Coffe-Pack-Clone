@@ -138,11 +138,8 @@ public class PuzzleQuestManager : MonoBehaviour
     {
         if (!IsContainQuestDataForCurrentState(currentStage, out var arrayQuest)) return;
 
-        foreach (var item in inGameQuestDataList)
-        {
-            item.DestroyQuestUI();
-        }
-        inGameQuestDataList.Clear();
+        ClearQuest();
+        
         // split init and update logic 
         for (int i = 0; i < arrayQuest.Length; i++)
         {

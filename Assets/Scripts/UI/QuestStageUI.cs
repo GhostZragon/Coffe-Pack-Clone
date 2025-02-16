@@ -35,6 +35,8 @@ public class QuestStageUI : MonoBehaviour
     [Button]
     public void SetMaxStage(int maxStage)
     {
+        Debug.Log("Set max stage: "+maxStage,gameObject);
+        
         values.Clear();
         
         this.maxStage = maxStage;
@@ -58,6 +60,8 @@ public class QuestStageUI : MonoBehaviour
     public void OnStageChanged(int stageChanged)
     {
         if (stageChanged > maxStage) return;
+        Debug.Log("Changed stage: "+stageChanged,gameObject);
+
         currentStage = stageChanged;
         TweenSliderByCurrentLevel();
     }
