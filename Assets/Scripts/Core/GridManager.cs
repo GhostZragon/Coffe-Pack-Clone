@@ -75,7 +75,7 @@ public partial class GridManager : MonoBehaviour
             }
         }
 
-        TestDropEffect();
+        // TestDropEffect();
         Debug.Log($"level create is {_rows}x{_columns}");
     }
 

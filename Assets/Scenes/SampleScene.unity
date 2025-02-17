@@ -835,11 +835,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bf36915d2814ad4dba9c6b0cc4d3708, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startQuestByButton: 1
+  startQuestByButton: 0
   currentLevel: 2
   maxLevel: 0
   questStageUI: {fileID: 7075154157146819934}
-  allowMerge: 0
+  allowMerge: 1
+  isLoose: 0
+  isWin: 0
 --- !u!4 &1393408784
 Transform:
   m_ObjectHideFlags: 0

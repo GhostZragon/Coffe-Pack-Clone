@@ -104,19 +104,14 @@ public class PuzzleQuestManager : MonoBehaviour
         CreateNewQuest();
     }
 
-    private bool IsFinishAllQuestCurrentStage()
+    public bool IsFinishAllQuestCurrentStage()
     {
         return inGameQuestDataList.All(quest => quest.IsComplete);
     }
 
-    public bool IsRunOutOfQuest()
-    {
-        return IsFinishAllQuestCurrentStage();
-    }
-
     public bool IsFinalStage()
     {
-        return questDataPerStage.ContainsKey(currentStage + 1);
+        return questDataPerStage.ContainsKey(currentStage + 1) == false;
     }
     
     private bool IsContainQuestDataForCurrentState(int puzzleStage, out QuestData[] arrayQuest)

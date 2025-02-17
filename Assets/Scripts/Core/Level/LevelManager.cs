@@ -116,13 +116,13 @@ public class LevelManager : MonoBehaviour
     
     private void OnProcessComplete()
     {
-        if (puzzleQuestManager.IsRunOutOfQuest() && puzzleQuestManager.IsFinalStage() || isWin)
+        if (puzzleQuestManager.IsFinishAllQuestCurrentStage() && puzzleQuestManager.IsFinalStage() || isWin)
         {
             Debug.Log("You Win");
             return;
         }
 
-        if (gridManager.IsFullOfSpace() && isLoose)
+        if (gridManager.IsFullOfSpace() || isLoose)
         {
             Debug.Log("You loose");
             return;
@@ -132,5 +132,4 @@ public class LevelManager : MonoBehaviour
         trayManager.TryCreateNextTrays();
     }
 
-  
 }
