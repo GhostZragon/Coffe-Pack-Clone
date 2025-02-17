@@ -8,16 +8,17 @@ using UnityEngine.UI;
 public class QuestStageUI : MonoBehaviour
 {
     [SerializeField] private Slider slider;
-    [SerializeField] private int currentStage = 0;
+    [SerializeField] private int currentStageUI = 0;
 
     private int maxStage = 0;
 
     private Dictionary<int, float> values;
 
     public LevelStarProgressUI levelStarUI;
-    public int CurrentStage
+
+    public int GetCurrentStageUI()
     {
-        get => currentStage;
+        return currentStageUI;
     }
 
     private void Awake()
@@ -29,9 +30,15 @@ public class QuestStageUI : MonoBehaviour
     {
         slider.value = 0;
         values = new();
-        
+
+        PuzzleQuestManager.OnSetMaxStage += SetMaxStage;
     }
-    
+
+    private void OnDestroy()
+    {
+        PuzzleQuestManager.OnSetMaxStage -= SetMaxStage;
+    }
+
     [Button]
     public void SetMaxStage(int maxStage)
     {
@@ -43,7 +50,7 @@ public class QuestStageUI : MonoBehaviour
         
         slider.maxValue = this.maxStage;
         
-        levelStarUI.SetMaxStar(maxStage);
+        levelStarUI.SetMaxStar(this.maxStage);
      
         InitTweenValue(maxStage);
     }
@@ -62,15 +69,15 @@ public class QuestStageUI : MonoBehaviour
         if (stageChanged > maxStage) return;
         Debug.Log("Changed stage: "+stageChanged,gameObject);
 
-        currentStage = stageChanged;
+        currentStageUI = stageChanged;
         TweenSliderByCurrentLevel();
     }
     [Button]
     private void TweenSliderByCurrentLevel()
     {
-        var sliderValue = values[currentStage];
+        var sliderValue = values[currentStageUI];
         
-        levelStarUI.ActiveStageUnlock(currentStage);
+        levelStarUI.ActiveStageUnlock(currentStageUI);
       
         LMotion.Create(slider.value, sliderValue, 1)
             .Bind((x) => { slider.value = x; });

@@ -53,10 +53,10 @@ public class LevelManager : MonoBehaviour
     {
      
         puzzleQuestManager.OnChangedStage += questStageUI.OnStageChanged;
-        puzzleQuestManager.OnSetMaxStage += questStageUI.SetMaxStage;
 
         EventManager.Current._Core.OnLoadLevel += LoadLevel;
         EventManager.Current._Core.OnUnloadLevel += UnLoadLevel;
+        EventManager.Current._Core.OnReloadGame += ReloadLevel;
 
         EventManager.Current._Core.OnProcessComplete += OnProcessComplete;
     }
@@ -65,10 +65,10 @@ public class LevelManager : MonoBehaviour
     {
       
         puzzleQuestManager.OnChangedStage -= questStageUI.OnStageChanged;
-        puzzleQuestManager.OnSetMaxStage -= questStageUI.SetMaxStage;
 
         EventManager.Current._Core.OnLoadLevel -= LoadLevel;
         EventManager.Current._Core.OnUnloadLevel -= UnLoadLevel;
+        EventManager.Current._Core.OnReloadGame -= ReloadLevel;
 
         EventManager.Current._Core.OnProcessComplete -= OnProcessComplete;
     }
@@ -87,6 +87,7 @@ public class LevelManager : MonoBehaviour
     private void LoadLevel()
     {
         var levelConfig = levelSelection.GetCurrentLevelConfig();
+
         
         gridManager.SetLevelData(levelConfig.LevelCSV);
         gridManager.InitializeGrid();
@@ -114,13 +115,18 @@ public class LevelManager : MonoBehaviour
         dragDropSystem.ClearDragItem();
         // khoi dong lai UI
         questStageUI.ResetProgressUI();
-    }
-
-    private void PlayAgain()
-    {
         
+
     }
 
+    private void ReloadLevel()
+    {
+        UnLoadLevel();
+        LoadLevel();
+    }
+
+    
+   
     [Button]
     private void CheckingWinLosseCondition()
     {
@@ -132,12 +138,14 @@ public class LevelManager : MonoBehaviour
         if (puzzleQuestManager.IsFinishAllQuestCurrentStage() && puzzleQuestManager.IsFinalStage() || isWin)
         {
             Debug.Log("You Win");
+            ShowResult();
             return;
         }
 
         if (gridManager.IsFullOfSpace() || isLoose)
         {
             Debug.Log("You loose");
+            ShowResult();
             return;
         }
 
@@ -145,4 +153,9 @@ public class LevelManager : MonoBehaviour
         trayManager.TryCreateNextTrays();
     }
 
+    private void ShowResult()
+    {
+        EventManager.Current._UI.OnShowResultUI?.Invoke(new ResultData(puzzleQuestManager.GetCurrentStage(),0));
+        UnLoadLevel();
+    }
 }

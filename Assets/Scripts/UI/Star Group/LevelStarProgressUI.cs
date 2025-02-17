@@ -11,6 +11,8 @@ public class LevelStarProgressUI : LevelStarUI
     [SerializeField] private int Damping_Ratio  = 10;
     [SerializeField] private int maxStage;
     [SerializeField] private List<Image> lists = new();
+  
+
     [Button]
     public override void ActiveStageUnlock(int count)
     {
@@ -40,14 +42,14 @@ public class LevelStarProgressUI : LevelStarUI
             .BindToLocalScale(starTransform);
     }
     [Button]
-    public void SetMaxStar(int maxStage)
+    public override void SetMaxStar(int count)
     {
-        this.maxStage = maxStage;
+        this.maxStage = count;
         lists.Clear();
         for (int i = images.Length - 1; i >= 0; i--)
         {
             // Tính toán chỉ số bắt đầu từ phần tử cuối mảng
-            bool isActive = i >= (images.Length - maxStage);
+            bool isActive = i >= (images.Length - count);
             images[i].gameObject.SetActive(isActive);
             
             if(isActive)

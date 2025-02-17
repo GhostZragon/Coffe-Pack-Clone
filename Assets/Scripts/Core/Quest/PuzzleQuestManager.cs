@@ -29,8 +29,7 @@ public class PuzzleQuestManager : MonoBehaviour
     private Dictionary<int, QuestData[]> questDataPerStage;
 
     public Action<int> OnChangedStage;
-    public event Action<int> OnSetMaxStage;
-
+    public static event Action<int> OnSetMaxStage;
 
     private void Awake()
     {
@@ -87,16 +86,19 @@ public class PuzzleQuestManager : MonoBehaviour
             puzzleQuestEffectUI.CreateEffectToCollector(itemInfo.WorldPosition);
         }
 
-        if (IsFinishAllQuestCurrentStage())
-        {
-            GoNextStage();
-        }
+        GoNextStage();
+
     }
 
 
     [Button]
     private void GoNextStage()
     {
+        if (IsFinishAllQuestCurrentStage())
+        {
+            Debug.Log("Is final stage of quest, you can win");
+            return;
+        }
         currentStage += 1;
 
         OnChangedStage?.Invoke(currentStage);
@@ -146,4 +148,9 @@ public class PuzzleQuestManager : MonoBehaviour
         }
     }
 
+    public int GetCurrentStage()
+    {
+        return currentStage;
+    }
+    
 }

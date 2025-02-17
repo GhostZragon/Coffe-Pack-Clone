@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MenuUI : MonoBehaviour
+public class MenuUI : BaseView
 {
     [SerializeField] private ScrollRect scrollRect;
     [SerializeField] private bool isTestingChangeScreen = false;

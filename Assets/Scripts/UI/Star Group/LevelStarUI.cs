@@ -6,7 +6,9 @@ public class LevelStarUI : MonoBehaviour
     [SerializeField] protected Image[] images;
 
     [SerializeField] protected LevelStarSprites levelStarSprites;
-
+    
+    
+    
     public virtual void ActiveStageUnlock(int count)
     {
         count = Mathf.Clamp(count, 0, 3);
@@ -17,7 +19,7 @@ public class LevelStarUI : MonoBehaviour
         }
     }
 
-    protected void ActiveStar(int index, bool isUnlock)
+    protected virtual void ActiveStar(int index, bool isUnlock)
     {
         images[index].sprite =  isUnlock ? levelStarSprites.unlockSprite : levelStarSprites.lockSprite;
     }
@@ -25,6 +27,11 @@ public class LevelStarUI : MonoBehaviour
     public Vector3 GetStarPositionByIndex(int starIndex)
     {
         return images[starIndex].transform.position;
+    }
+
+    public virtual void SetMaxStar(int count)
+    {
+        
     }
     
 }

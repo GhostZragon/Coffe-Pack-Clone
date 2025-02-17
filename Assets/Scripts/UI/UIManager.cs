@@ -9,19 +9,19 @@ public class UIManager : MonoBehaviour
         Instance = this;
     }
 
-    [SerializeField] private GameObject gameplayUI;
-    [SerializeField] private GameObject menuUI;
+    [SerializeField] private GameplayUI gameplayUI;
+    [SerializeField] private MenuUI menuUI;
 
     public void ShowGameplayUI()
     {
-        gameplayUI.gameObject.SetActive(true);
-        menuUI.gameObject.SetActive(false);
+        gameplayUI.Show();
+        menuUI.Hide();
     }
 
     public void ShowMenuUI()
     {
-        gameplayUI.gameObject.SetActive(false);
-        menuUI.gameObject.SetActive(true);
+        gameplayUI.Hide();
+        menuUI.Show();
     }
     
 }
