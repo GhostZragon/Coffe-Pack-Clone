@@ -4,22 +4,25 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
+    private static LevelManager instance;
+    public static bool CanMerge => instance.allowMerge;
 
     [SerializeField] private bool startQuestByButton = false;
     [SerializeField] private int currentLevel = 0;
     [SerializeField] private int maxLevel;
     [Header("Gameplay")]
     [SerializeField] private QuestStageUI questStageUI;
-    private static LevelManager instance;
-    public static bool CanMerge => instance.allowMerge;
+   
     [SerializeField] private bool allowMerge = true;
     [SerializeField] private bool isLoose = false;
     [SerializeField] private bool isWin = false; 
+   
     private PuzzleQuestManager puzzleQuestManager;
     private GridManager gridManager;
     private DragDropSystem dragDropSystem;
     private TrayManager trayManager;
     private LevelSelection levelSelection;
+    private CollectorManager collectorManager;
 
     private void Awake()
     {
@@ -101,11 +104,21 @@ public class LevelManager : MonoBehaviour
 
     private void UnLoadLevel()
     {
+        // don slot tren scene
         gridManager.ClearGrid();
+        // don ui tren scene
         puzzleQuestManager.ClearQuest();
+        // don tray dang co
         trayManager.ClearAllTrays();
+        // don item drag neu co
         dragDropSystem.ClearDragItem();
-        questStageUI.ResetUI();
+        // khoi dong lai UI
+        questStageUI.ResetProgressUI();
+    }
+
+    private void PlayAgain()
+    {
+        
     }
 
     [Button]

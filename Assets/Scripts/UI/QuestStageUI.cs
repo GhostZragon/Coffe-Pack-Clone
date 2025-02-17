@@ -77,7 +77,7 @@ public class QuestStageUI : MonoBehaviour
     }
     
     [Button]
-    public void ResetUI()
+    public void ResetProgressUI()
     {
         slider.value = 0;
         levelStarUI.ActiveStageUnlock(0);

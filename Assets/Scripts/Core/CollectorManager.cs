@@ -22,4 +22,5 @@ public class CollectorManager : MonoBehaviour
         currentPercent += Random.Range(1, 3);
         collectorUI.FillAmount(currentPercent / maxPercent);
     }
+    
 }
