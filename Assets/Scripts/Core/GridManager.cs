@@ -16,6 +16,9 @@ public partial class GridManager : MonoBehaviour
 
     [SerializeField] private DropDownEffect dropDownEffect;
     private Dictionary<Vector2Int, Cell> _cells = new();
+    
+    
+    
     public IReadOnlyDictionary<Vector2Int, Cell> TableMap
     {
         get => _cells;
@@ -171,4 +174,18 @@ public partial class GridManager : MonoBehaviour
         }
     }
 
+    public int GetEmptySlotCount()
+    {
+        int count = 0;
+        foreach (var cell in _cells)
+        {
+            if (cell.Value.HasSlot && cell.Value.Slot is Slot slot)
+            {
+                if (slot.CanPlacedTray())
+                    count++;
+            }
+        }
+
+        return count;
+    }
 }

@@ -8,8 +8,8 @@ public class TrayManager : MonoBehaviour
     [SerializeField] private GameObject trayContainer;
     [SerializeField] private List<Transform> trayStandPositions;
     [SerializeField] private List<Tray> currentTrayList = new();
-    [SerializeField] private int maxCountPerTray = 6;
     [SerializeField] private bool isUsingTestCaseSO = false;
+    public int maxCountPerTray = 6;
 
   
     

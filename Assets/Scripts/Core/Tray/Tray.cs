@@ -179,8 +179,8 @@
                 Debug.LogWarning("Item Manager is null",gameObject);
                 return;
             }
-            
-            int count = randomCount > maxItemCount ? maxItemCount : Random.Range(1, randomCount);
+
+            int count = Random.Range(1, maxItemCount - 1 );
             for (int i = 0; i < count; i++)
             {
                 var item = ItemMananger.Instance.GetNewItem();

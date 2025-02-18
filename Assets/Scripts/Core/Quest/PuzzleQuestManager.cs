@@ -13,22 +13,19 @@ public enum PuzzleStage
 
 public class PuzzleQuestManager : MonoBehaviour
 {
-    [Header("UI")]
-    [SerializeField] private PuzzleQuestData puzzleQuestData;
+    [Header("UI")] [SerializeField] private PuzzleQuestData puzzleQuestData;
     [SerializeField] private int currentStage = 0;
     [SerializeField] private bool completeOneTime;
-  
-    [Header("Questing")] 
-    [SerializeField] private List<string> randomItemsList = new();
+
+    [Header("Questing")] [SerializeField] private List<string> randomItemsList = new();
     [SerializeField] private List<InGameQuestData> inGameQuestDataList;
     [SerializeField] private PuzzleQuestEffectUI puzzleQuestEffectUI;
+
     private int maxStage = 0;
-
     private QuestFactory questFactory;
-
     private Dictionary<int, QuestData[]> questDataPerStage;
-
     public Action<int> OnChangedStage;
+    
     public static event Action<int> OnSetMaxStage;
 
     private void Awake()
@@ -59,6 +56,7 @@ public class PuzzleQuestManager : MonoBehaviour
                 continue;
             maxStage += 1;
         }
+
         OnSetMaxStage?.Invoke(maxStage);
     }
 
@@ -86,24 +84,20 @@ public class PuzzleQuestManager : MonoBehaviour
             puzzleQuestEffectUI.CreateEffectToCollector(itemInfo.WorldPosition);
         }
 
-        GoNextStage();
-
+        if (IsFinishAllQuestCurrentStage())
+        {
+            GoNextStage();
+        }
     }
 
 
     [Button]
     private void GoNextStage()
     {
-        if (IsFinishAllQuestCurrentStage())
-        {
-            Debug.Log("Is final stage of quest, you can win");
-            return;
-        }
+        Debug.Log("Is final stage of quest, you can win");
         currentStage += 1;
-
-        OnChangedStage?.Invoke(currentStage);
-
         CreateNewQuest();
+        OnChangedStage?.Invoke(currentStage);
     }
 
     public bool IsFinishAllQuestCurrentStage()
@@ -115,7 +109,7 @@ public class PuzzleQuestManager : MonoBehaviour
     {
         return questDataPerStage.ContainsKey(currentStage + 1) == false;
     }
-    
+
     private bool IsContainQuestDataForCurrentState(int puzzleStage, out QuestData[] arrayQuest)
     {
         return questDataPerStage.TryGetValue(puzzleStage, out arrayQuest);
@@ -136,13 +130,13 @@ public class PuzzleQuestManager : MonoBehaviour
         if (!IsContainQuestDataForCurrentState(currentStage, out var arrayQuest)) return;
 
         ClearQuest();
-        
+
         // split init and update logic 
         for (int i = 0; i < arrayQuest.Length; i++)
         {
             var inGameQuestData = questFactory.CreateQuest(arrayQuest[i]);
             inGameQuestDataList.Add(inGameQuestData);
-            
+
             EventManager.Current._UI.OnBindingWithQuestUI?.Invoke(inGameQuestData);
             Debug.Log($"Create quest {inGameQuestData.ItemID} and {inGameQuestData.TargetQuantity}");
         }
@@ -152,5 +146,17 @@ public class PuzzleQuestManager : MonoBehaviour
     {
         return currentStage;
     }
-    
+
+    public bool IsItemOnQuesting(string itemID)
+    {
+        if (!IsContainQuestDataForCurrentState(currentStage, out var arrayQuest)) return false;
+
+        foreach (var quest in arrayQuest)
+        {
+            if (quest.ItemID == itemID)
+                return true;
+        }
+
+        return false;
+    }
 }

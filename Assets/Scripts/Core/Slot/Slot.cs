@@ -101,6 +101,7 @@ public class Slot : SlotBase
             
             EventManager.Current._Game.OnCompleteItem?.Invoke(new ItemInfo(itemID,transform.position));
             
+            ItemMananger.Instance.ItemMerged(itemID);
             // PuzzleQuestManager.Instance?.OnCompleteItem(itemID);
         }
 
