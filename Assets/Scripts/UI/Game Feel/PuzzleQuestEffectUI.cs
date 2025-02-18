@@ -18,6 +18,7 @@ public class PuzzleQuestEffectUI : MonoBehaviour
     private void Awake()
     {
         popupTextPrefab.gameObject.SetActive(false);
+        mainCam = Camera.main;
     }
 
     [Button]

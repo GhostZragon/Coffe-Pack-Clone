@@ -16,16 +16,17 @@ public class PuzzleQuestManager : MonoBehaviour
     [Header("UI")] [SerializeField] private PuzzleQuestData puzzleQuestData;
     [SerializeField] private int currentStage = 0;
     [SerializeField] private bool completeOneTime;
+
     [Header("Questing")] [SerializeField] private List<string> randomItemsList = new();
     [SerializeField] private List<InGameQuestData> inGameQuestDataList;
     [SerializeField] private PuzzleQuestEffectUI puzzleQuestEffectUI;
+
     private int maxStage = 0;
-
     private QuestFactory questFactory;
-
     private Dictionary<int, QuestData[]> questDataPerStage;
-
     public Action<int> OnChangedStage;
+    
+    public static event Action<int> OnSetMaxStage;
 
     private void Awake()
     {
@@ -53,8 +54,10 @@ public class PuzzleQuestManager : MonoBehaviour
         {
             if (item.Value == null)
                 continue;
-            maxStage++;
+            maxStage += 1;
         }
+
+        OnSetMaxStage?.Invoke(maxStage);
     }
 
     public void SetFirstState()
@@ -91,21 +94,20 @@ public class PuzzleQuestManager : MonoBehaviour
     [Button]
     private void GoNextStage()
     {
+        Debug.Log("Is final stage of quest, you can win");
         currentStage += 1;
-
-        OnChangedStage?.Invoke(currentStage);
-
         CreateNewQuest();
+        OnChangedStage?.Invoke(currentStage);
     }
 
-    private bool IsFinishAllQuestCurrentStage()
+    public bool IsFinishAllQuestCurrentStage()
     {
         return inGameQuestDataList.All(quest => quest.IsComplete);
     }
 
-    public bool IsRunOutOfQuest()
+    public bool IsFinalStage()
     {
-        return IsFinishAllQuestCurrentStage() && questDataPerStage.ContainsKey(currentStage + 1);
+        return questDataPerStage.ContainsKey(currentStage + 1) == false;
     }
 
     private bool IsContainQuestDataForCurrentState(int puzzleStage, out QuestData[] arrayQuest)
@@ -127,24 +129,34 @@ public class PuzzleQuestManager : MonoBehaviour
     {
         if (!IsContainQuestDataForCurrentState(currentStage, out var arrayQuest)) return;
 
-        foreach (var item in inGameQuestDataList)
-        {
-            item.DestroyQuestUI();
-        }
-        inGameQuestDataList.Clear();
+        ClearQuest();
+
         // split init and update logic 
         for (int i = 0; i < arrayQuest.Length; i++)
         {
             var inGameQuestData = questFactory.CreateQuest(arrayQuest[i]);
             inGameQuestDataList.Add(inGameQuestData);
-            
+
             EventManager.Current._UI.OnBindingWithQuestUI?.Invoke(inGameQuestData);
             Debug.Log($"Create quest {inGameQuestData.ItemID} and {inGameQuestData.TargetQuantity}");
         }
     }
 
-    public int GetMaxStage()
+    public int GetCurrentStage()
     {
-        return maxStage;
+        return currentStage;
+    }
+
+    public bool IsItemOnQuesting(string itemID)
+    {
+        if (!IsContainQuestDataForCurrentState(currentStage, out var arrayQuest)) return false;
+
+        foreach (var quest in arrayQuest)
+        {
+            if (quest.ItemID == itemID)
+                return true;
+        }
+
+        return false;
     }
 }

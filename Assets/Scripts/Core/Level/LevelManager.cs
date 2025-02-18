@@ -1,28 +1,35 @@
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    [Header("Menu")]
-    [SerializeField] private LevelConfig levelConfig;
-    [SerializeField] private LevelConfig[] levelConfigs;
-    [SerializeField] private LevelPanelUI levelPanelUI;
-    
+    private static LevelManager instance;
+    public static bool CanMerge => instance.allowMerge;
+
     [SerializeField] private bool startQuestByButton = false;
     [SerializeField] private int currentLevel = 0;
     [SerializeField] private int maxLevel;
     [Header("Gameplay")]
     [SerializeField] private QuestStageUI questStageUI;
-
-
-
+   
+    [SerializeField] private bool allowMerge = true;
+    [SerializeField] private bool isLoose = false;
+    [SerializeField] private bool isWin = false; 
+   
     private PuzzleQuestManager puzzleQuestManager;
     private GridManager gridManager;
     private DragDropSystem dragDropSystem;
     private TrayManager trayManager;
+    private LevelSelection levelSelection;
+    private CollectorManager collectorManager;
+
+    private ItemMananger itemMananger;
 
     private void Awake()
     {
+        instance = this;
+        
         currentLevel = 0;
         
         CatchedRef();
@@ -41,105 +48,121 @@ public class LevelManager : MonoBehaviour
         puzzleQuestManager = FindFirstObjectByType<PuzzleQuestManager>();
         dragDropSystem = FindFirstObjectByType<DragDropSystem>();
         trayManager = FindFirstObjectByType<TrayManager>();
-
-        levelConfigs = Resources.LoadAll<LevelConfig>("Level");
+        levelSelection = FindFirstObjectByType<LevelSelection>();
+        collectorManager = FindFirstObjectByType<CollectorManager>();
+        itemMananger = FindFirstObjectByType<ItemMananger>();
     }
 
     private void Register()
     {
-        levelPanelUI.levelUnlockChecking = IsLevelUnlock;
      
         puzzleQuestManager.OnChangedStage += questStageUI.OnStageChanged;
-        
+
         EventManager.Current._Core.OnLoadLevel += LoadLevel;
         EventManager.Current._Core.OnUnloadLevel += UnLoadLevel;
-        EventManager.Current._Core.OnSelectLevel += SetLevel;
+        EventManager.Current._Core.OnReloadGame += ReloadLevel;
 
         EventManager.Current._Core.OnProcessComplete += OnProcessComplete;
     }
 
     private void UnRegister()
     {
-        levelPanelUI.levelUnlockChecking = null;
       
         puzzleQuestManager.OnChangedStage -= questStageUI.OnStageChanged;
 
         EventManager.Current._Core.OnLoadLevel -= LoadLevel;
         EventManager.Current._Core.OnUnloadLevel -= UnLoadLevel;
-        EventManager.Current._Core.OnSelectLevel -= SetLevel;
+        EventManager.Current._Core.OnReloadGame -= ReloadLevel;
 
         EventManager.Current._Core.OnProcessComplete -= OnProcessComplete;
     }
 
     private void Start()
     {
-        if (levelConfig == null)
-        {
-            levelConfig = levelConfigs[currentLevel];
-        }
-
+       
         if (startQuestByButton == false)
         {
             LoadLevel();
         }
-
-        SettingsLevel();
     }
 
-    private void SettingsLevel()
-    {
-        // TODO: Split level map UI logic creator to another class
-        maxLevel = levelConfigs.Length - 1;
-        currentLevel = Mathf.Clamp(currentLevel, 0, levelConfigs.Length);
-
-        levelPanelUI.Init(maxLevel);
-
-        EventManager.Current._Core.OnSelectLevel?.Invoke(currentLevel);
-    }
+    
 
     private void LoadLevel()
     {
+        var levelConfig = levelSelection.GetCurrentLevelConfig();
+
+        
         gridManager.SetLevelData(levelConfig.LevelCSV);
         gridManager.InitializeGrid();
 
+        itemMananger.SetMaxItemPerTray(trayManager.maxCountPerTray);
+        itemMananger.SetFindEmptySlotCallback(GetEmptySlotCount);
+        itemMananger.SetCheckingItemOnQuestingCallback(IsItemOnQuesting);
+        
         puzzleQuestManager.SetPuzzleQuestData(levelConfig.PuzzleQuestData);
         puzzleQuestManager.SetFirstState();
         puzzleQuestManager.CreateQuests();
-
-        questStageUI.SetMaxStage(puzzleQuestManager.GetMaxStage());
+        
+        // questStageUI.SetMaxStage();
         trayManager.Initialize();
         
         UIManager.Instance.ShowGameplayUI();
     }
 
+    private int GetEmptySlotCount()
+    {
+        return gridManager.GetEmptySlotCount();
+    }
+
+    private bool IsItemOnQuesting(string itemID)
+    {
+        return puzzleQuestManager.IsItemOnQuesting(itemID);
+    }
 
     private void UnLoadLevel()
     {
+        // don slot tren scene
         gridManager.ClearGrid();
+        // don ui tren scene
         puzzleQuestManager.ClearQuest();
+        // don tray dang co
         trayManager.ClearAllTrays();
+        // don item drag neu co
         dragDropSystem.ClearDragItem();
-        questStageUI.ResetUI();
+        // khoi dong lai UI
+        questStageUI.ResetProgressUI();
+        
+
     }
 
-    private void SetLevel(int levelIndex)
+    private void ReloadLevel()
     {
-        this.currentLevel = levelIndex;
-        levelConfig = levelConfigs[currentLevel];
+        UnLoadLevel();
+        LoadLevel();
     }
 
+    
+   
+    [Button]
+    private void CheckingWinLosseCondition()
+    {
+        OnProcessComplete();
+    }
+    
     private void OnProcessComplete()
     {
-        if (puzzleQuestManager.IsRunOutOfQuest())
+        if (puzzleQuestManager.IsFinishAllQuestCurrentStage() && puzzleQuestManager.IsFinalStage() || isWin)
         {
-            // 
             Debug.Log("You Win");
+            ShowResult(true);
             return;
         }
 
-        if (gridManager.IsFullOfSpace())
+        if (gridManager.IsFullOfSpace() || isLoose)
         {
             Debug.Log("You loose");
+            ShowResult(false);
             return;
         }
 
@@ -147,9 +170,10 @@ public class LevelManager : MonoBehaviour
         trayManager.TryCreateNextTrays();
     }
 
-    private bool IsLevelUnlock(int i)
+    private void ShowResult(bool isWin)
     {
-        return true;
+        var resultData = new ResultData(puzzleQuestManager.GetCurrentStage(), 0, isWin);
+        EventManager.Current._UI.OnShowResultUI?.Invoke(resultData);
+        UnLoadLevel();
     }
 }
-

@@ -40,7 +40,7 @@ public abstract class SlotBase : MonoBehaviour
         sequenceHandler.AddTo(model);
     }
 
-    public void SetSize(float widthSize,float heighSize)
+    public virtual void SetSize(float widthSize,float heighSize)
     {
         transform.localScale = new Vector3(widthSize, transform.localScale.y, heighSize);
     }

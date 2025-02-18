@@ -10,7 +10,8 @@ public class Cell
     public bool HasTray => Tray != null;
     public bool HasSlot => Slot != null;
     public Cell(SlotBase slot) => Slot = slot;
-
+    
+    
     public void SetSlot(Slot slot)
     {
         Slot = slot;
@@ -18,13 +19,7 @@ public class Cell
 
     private Tray GetTray()
     {
-        if (Slot is Slot slot)
-        {
-            Debug.Log("Đã tìm thấy slot");
-            return slot.GetTray();
-        }
-        Debug.Log("không tìm thấy slot");
-        return null;
+        return (Slot as Slot)?.GetTray();
     }
 
     public void ClearTrayAndSlot()

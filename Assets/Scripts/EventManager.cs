@@ -39,6 +39,7 @@ public class EventManager
         public Action CheckWin;
         public Action CheckLoose;
         public Action OnProcessComplete;
+        public Action OnReloadGame;
     }
 
     public class Game
@@ -67,7 +68,8 @@ public class EventManager
     public class UI
     {
         public Action<InGameQuestData> OnBindingWithQuestUI;
-        
+
+        public Action<ResultData> OnShowResultUI;
     }
 }
 

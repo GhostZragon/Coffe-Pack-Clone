@@ -24,7 +24,7 @@ public struct QuestData
     public string ItemID;
     [HideIf(nameof(CanShow))]
     public int TargetQuantity;
-
+    
     private bool CanShow()
     {
         return Type == QuestType.Randomly;

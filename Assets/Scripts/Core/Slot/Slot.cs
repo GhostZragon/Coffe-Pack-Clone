@@ -101,6 +101,7 @@ public class Slot : SlotBase
             
             EventManager.Current._Game.OnCompleteItem?.Invoke(new ItemInfo(itemID,transform.position));
             
+            ItemMananger.Instance.ItemMerged(itemID);
             // PuzzleQuestManager.Instance?.OnCompleteItem(itemID);
         }
 
@@ -131,5 +132,11 @@ public class Slot : SlotBase
 
     public override void ActiveSpecialEffect()
     {
+    }
+
+    public override void SetSize(float widthSize, float heighSize)
+    {
+        base.SetSize(widthSize, heighSize);
+        currentScale = transform.localScale;
     }
 }

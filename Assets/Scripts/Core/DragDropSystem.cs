@@ -10,11 +10,9 @@ public class DragDropSystem : MonoBehaviour
     [SerializeField]  private Tray selectionObject;
     [SerializeField]  private Slot currentSlot;
 
-    private enum DragState { Idle, Dragging }
-    private DragState currentState = DragState.Idle;
-    
+
     private Camera cachedCamera;
-    
+    [SerializeField ]private bool CanDragging = true;
     private void Awake()
     {
         cachedCamera = Camera.main;
@@ -22,6 +20,8 @@ public class DragDropSystem : MonoBehaviour
 
     private void Update()
     {
+        if (CanDragging == false) return;
+        
         isDragging = InputManager.Instance.IsTrigger();
         draggingPosition = InputManager.Instance.GetTouchPosition();
     
@@ -29,7 +29,7 @@ public class DragDropSystem : MonoBehaviour
         Dragging();
         
     }
-
+    
     
     private void SlotIsOverCursor()
     {
@@ -146,5 +146,10 @@ public class DragDropSystem : MonoBehaviour
             selectionObject = null;
         }
             
+    }
+
+    public void SetDragging(bool canDragging)
+    {
+        CanDragging = canDragging;
     }
 }

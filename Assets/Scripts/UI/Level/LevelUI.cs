@@ -30,7 +30,7 @@ public class LevelUI : MonoBehaviour
         defaultColor = radialShine.color;
         rotatingImageUI = GetComponent<RotatingImageUI>();
         rotatingImageUI.SetRotateImg(radialShine);
-        Init(0, true);
+        SetInformation(0, true);
     }
 
     private void OnEnable()
@@ -51,7 +51,7 @@ public class LevelUI : MonoBehaviour
     }
 
 
-    public void Init(int level, bool isUnlock)
+    public void SetInformation(int level, bool isUnlock)
     {
         this.level = level;
         levelText.text = $"{level + 1}";

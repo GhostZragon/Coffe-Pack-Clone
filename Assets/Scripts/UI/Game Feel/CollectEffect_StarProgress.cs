@@ -16,7 +16,7 @@ public class CollectEffect_StarProgress : QuestCollectEffectBase
     {
         // create trail
 
-        var currentStage = questStageUI.CurrentStage;
+        var currentStage = questStageUI.GetCurrentStageUI();
         var startWorldPos = questStageUI.levelStarUI.GetStarPositionByIndex(currentStage);
 
         var effect = Instantiate(trailPrefab, worldPos, Quaternion.identity, transform);

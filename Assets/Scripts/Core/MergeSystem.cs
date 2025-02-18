@@ -13,8 +13,8 @@ public partial class Table
         private readonly Table _table;
         private readonly List<TrayMergeCandidate> _lastProcessedCandidates;
 
-        private readonly YieldInstruction waitForCalculator = new WaitForSeconds(0.1f);
-        private readonly YieldInstruction waitAfterMerge = new WaitForSeconds(0.5f);
+        private readonly YieldInstruction waitForCalculator = new WaitForSeconds(0.2f);
+        private readonly YieldInstruction waitAfterMerge = new WaitForSeconds(0.3f);
 
 
         public MergeSystem(Table table, GridManager gridManager)
@@ -40,7 +40,8 @@ public partial class Table
             }
 
             ResetPreviousMergePriorities();
-            ScanNeighborsForMerge(currentCell, gridPosition);
+            if(LevelManager.CanMerge)
+                ScanNeighborsForMerge(currentCell, gridPosition);
 
             Debug.Log("Merge scan completed");
             _table.StartCoroutine(ProcessMergeGroups());
@@ -54,6 +55,8 @@ public partial class Table
 
         private void ScanNeighborsForMerge(Cell originCell, Vector2Int position)
         {
+            
+            
             foreach (var itemId in originCell.Tray.GetUniqueItemIDs())
             {
                 InitializeMergeGroupIfNeeded(itemId);

@@ -15,6 +15,8 @@ public class CurrentLevelText : MonoBehaviour
     private Vector3 upPosition;
     private Vector3 downPosition;
     
+    private int previousLevel = 0;
+    
     private void Awake()
     {
         EventManager.Current._Core.OnSelectLevel += OnSelectLevel;
@@ -48,7 +50,10 @@ public class CurrentLevelText : MonoBehaviour
 
     private void OnSelectLevel(int level)
     {
+        if (previousLevel == level)
+            return;
         UseEffect2(level);
+        previousLevel = level;  
     }
     
     [Button]
@@ -59,7 +64,7 @@ public class CurrentLevelText : MonoBehaviour
             .WithEase(Ease.InQuad)
             .WithOnComplete(() =>
             {
-                tmPro.text = $"{level}";
+                tmPro.text = $"{level + 1}";
                 tmPro.transform.localPosition = downPosition;
                 LMotion.Create(downPosition, defaultPosition, .3f)
                     .WithEase(Ease.OutQuad).BindToLocalPosition(tmPro.transform);
