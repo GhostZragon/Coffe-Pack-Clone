@@ -26,14 +26,15 @@ public class LevelResultStarUI : LevelStarUI
 
     protected override void ActiveStar(int index, bool isUnlock)
     {
-        if (isUnlock)
-        {
-            PlayActiveStarEffect(index);
-        }
-        else
-        {
-            images[index].sprite = levelStarSprites.lockSprite;
-        }
+        base.ActiveStar(index,isUnlock);
+        // if (isUnlock)
+        // {
+        //     PlayActiveStarEffect(index);
+        // }
+        // else
+        // {
+        //     images[index].sprite = levelStarSprites.lockSprite;
+        // }
     }
     
     [Button]

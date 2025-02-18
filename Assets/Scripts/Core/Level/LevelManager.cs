@@ -138,14 +138,14 @@ public class LevelManager : MonoBehaviour
         if (puzzleQuestManager.IsFinishAllQuestCurrentStage() && puzzleQuestManager.IsFinalStage() || isWin)
         {
             Debug.Log("You Win");
-            ShowResult();
+            ShowResult(true);
             return;
         }
 
         if (gridManager.IsFullOfSpace() || isLoose)
         {
             Debug.Log("You loose");
-            ShowResult();
+            ShowResult(false);
             return;
         }
 
@@ -153,9 +153,10 @@ public class LevelManager : MonoBehaviour
         trayManager.TryCreateNextTrays();
     }
 
-    private void ShowResult()
+    private void ShowResult(bool isWin)
     {
-        EventManager.Current._UI.OnShowResultUI?.Invoke(new ResultData(puzzleQuestManager.GetCurrentStage(),0));
+        var resultData = new ResultData(puzzleQuestManager.GetCurrentStage(), 0, isWin);
+        EventManager.Current._UI.OnShowResultUI?.Invoke(resultData);
         UnLoadLevel();
     }
 }

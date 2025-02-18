@@ -3,37 +3,33 @@ using UnityEngine.UI;
 
 public class ResultData
 {
-    public ResultData(int star,int coin)
+    public ResultData(int star,int coin, bool isWin)
     {
         starUnlocked = star;
         coinReward = coin;
+        IsWin = isWin;
     }
     
     public int starUnlocked;
     public int coinReward;
+    public bool IsWin;
 }
 public class GameplayUI : BaseView
 {
     [SerializeField] private Button backButton;
-    [SerializeField] private ResultUI resultUI;
-  
-
+    [SerializeField] private GameObject losseResultPopupPrefab;
+    [SerializeField] private GameObject winResultPopupPrefab;
+    [SerializeField] private GameObject panel;
     protected override void Register()
     {
         backButton.onClick.AddListener(BackToMenuUI);
-        
-        resultUI.backMenuButton.onClick.AddListener(BackToMenuUI);
-        resultUI.replayButton.onClick.AddListener(ReplayGame);
-        
+        panel.gameObject.SetActive(false);
         EventManager.Current._UI.OnShowResultUI += ShowResultMenu;
     }
 
     protected override void UnRegister()
     {
         backButton.onClick.RemoveListener(BackToMenuUI);
-      
-        resultUI.backMenuButton.onClick.RemoveListener(BackToMenuUI);
-        resultUI.replayButton.onClick.RemoveListener(ReplayGame);
 
         EventManager.Current._UI.OnShowResultUI -= ShowResultMenu;
     }
@@ -42,24 +38,34 @@ public class GameplayUI : BaseView
     {
         UIManager.Instance.ShowMenuUI();
         EventManager.Current._Core.OnUnloadLevel?.Invoke();
-        resultUI.Hide();
     }
 
-    private void ShowResultMenu(ResultData ResultData)
+    private void ShowResultMenu(ResultData resultData)
     {
-        resultUI.Show(ResultData);
+        panel.gameObject.SetActive(true);
+        var popup = CreatePopup(resultData.IsWin);
+        popup.Show(resultData);
+    }
+
+    private ResultUI CreatePopup(bool isWin)
+    {
+        GameObject prefab = null;
+        prefab = isWin ? winResultPopupPrefab : losseResultPopupPrefab;
+        return Instantiate(prefab, transform).GetComponent<ResultUI>();
     }
 
     public override void Show()
     {
         base.Show();
-        resultUI.Hide();
+        panel.gameObject.SetActive(false);
+
     }
 
     public override void Hide()
     {
         base.Hide(); 
-        resultUI.Hide();
+        panel.gameObject.SetActive(false);
+
     }
 
 
