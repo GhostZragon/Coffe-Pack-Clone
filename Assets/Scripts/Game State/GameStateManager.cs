@@ -4,7 +4,7 @@ public class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance;
     
-    [SerializeField ]private BaseState currentState;
+    private IState currentState;
     
     private void Start()
     {
@@ -19,7 +19,7 @@ public class GameStateManager : MonoBehaviour
         currentState.PrepareState();
     }
     
-    public void ChangeState(BaseState newState)
+    public void ChangeState(IState newState)
     {
         currentState.DestroyState();
 

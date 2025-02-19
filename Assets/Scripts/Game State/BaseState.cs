@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 [Serializable]
-public abstract class BaseState
+public abstract class BaseState : IState
 {
     private readonly GameStateManager stateManager = GameStateManager.Instance;
     
@@ -15,6 +15,11 @@ public abstract class BaseState
     public virtual void DestroyState()
     {
         UnRegister();
+    }
+
+    public void Update()
+    {
+        
     }
 
     protected virtual void Register()
@@ -37,4 +42,11 @@ public abstract class BaseState
     {
         stateManager.ChangeState(newState);
     }
+}
+
+public interface IState
+{
+    void PrepareState();
+    void DestroyState();
+    void Update();
 }
