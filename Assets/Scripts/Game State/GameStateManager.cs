@@ -9,11 +9,16 @@ public class GameStateManager : MonoBehaviour
     private void Start()
     {
         Instance = this;
-        
+
+        StartFlow();
+    }
+
+    private void StartFlow()
+    {
         currentState = new MainMenuState();
         currentState.PrepareState();
     }
-
+    
     public void ChangeState(BaseState newState)
     {
         currentState.DestroyState();

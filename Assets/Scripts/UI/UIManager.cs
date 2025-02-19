@@ -7,11 +7,17 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
+        foreach (var view in GetComponentsInChildren<BaseView>())
+        {
+            view.Initialize();
+        }
+        pauseUI.Hide();
     }
 
     public GameplayUI gameplayUI;
     public MenuUI menuUI;
-
+    public PauseUI pauseUI;
     public void ShowGameplayUI()
     {
         gameplayUI.Show();

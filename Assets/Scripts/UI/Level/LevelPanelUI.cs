@@ -34,6 +34,7 @@ public class LevelPanelUI : MonoBehaviour
 
     public void Initialize(int maxLevel)
     {
+        Debug.Log("Max Level: "+maxLevel);
         int startLevel = 0;
         foreach (var mapLevel in mapLevelUis)
         {

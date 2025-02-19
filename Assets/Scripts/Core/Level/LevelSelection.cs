@@ -9,21 +9,6 @@ public class LevelSelection : MonoBehaviour
     public int CurrentLevel { get; private set; }
     public int MaxLevel { get; private set; }
 
-    private void Awake()
-    {
-        levelConfigs = Resources.LoadAll<LevelConfig>("Level");
-    }
-
- 
-    private void Start()
-    {
-        if (levelConfig == null)
-        {
-            levelConfig = levelConfigs[CurrentLevel];
-        }
-
-        SettingsLevel();
-    }
 
     
     public void SetLevel(int levelIndex)
@@ -34,6 +19,8 @@ public class LevelSelection : MonoBehaviour
     
     public void SettingsLevel()
     {
+        levelConfigs = Resources.LoadAll<LevelConfig>("Level");
+
         // TODO: Split level map UI logic creator to another class
         MaxLevel = levelConfigs.Length - 1;
         CurrentLevel = Mathf.Clamp(CurrentLevel, 0, levelConfigs.Length);

@@ -19,13 +19,14 @@ public class LevelManager : MonoBehaviour
 
     public Action OnWinGame;
     public Action OnLooseGame;
-    
-    private PuzzleQuestManager puzzleQuestManager;
-    private GridManager gridManager;
-    private DragDropSystem dragDropSystem;
-    private TrayManager trayManager;
-    private LevelSelection levelSelection;
-    private CollectorManager collectorManager;
+   
+    public Table table;
+    public PuzzleQuestManager puzzleQuestManager;
+    public GridManager gridManager;
+    public DragDropSystem dragDropSystem;
+    public TrayManager trayManager;
+    public LevelSelection levelSelection;
+    public CollectorManager collectorManager;
 
     private ItemMananger itemMananger;
 
@@ -43,6 +44,7 @@ public class LevelManager : MonoBehaviour
 
     private void CatchedRef()
     {
+        table = FindFirstObjectByType<Table>();
         gridManager = FindFirstObjectByType<GridManager>();
         puzzleQuestManager = FindFirstObjectByType<PuzzleQuestManager>();
         dragDropSystem = FindFirstObjectByType<DragDropSystem>();

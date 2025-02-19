@@ -23,23 +23,23 @@ public class GameplayUI : BaseView
     [SerializeField] private GameObject panel;
     public QuestStageUI QuestStageUI;
     public PuzzleQuestManagerUI PuzzleQuestManagerUI;
-    public Action BackMenuButtonClicked;
+    public Action OpenPauseMenuClicked;
   
     protected override void Register()
     {
-        backButton.onClick.AddListener(BackToMenuUI);
+        backButton.onClick.AddListener(OpenMouseMenu);
         panel.gameObject.SetActive(false);
     }
 
     protected override void UnRegister()
     {
-        backButton.onClick.RemoveListener(BackToMenuUI);
+        backButton.onClick.RemoveListener(OpenMouseMenu);
 
     }
   
-    private void BackToMenuUI()
+    private void OpenMouseMenu()
     {
-        BackMenuButtonClicked?.Invoke();
+        OpenPauseMenuClicked?.Invoke();
     }
 
     public ResultUI ShowResultMenu(ResultData resultData)
