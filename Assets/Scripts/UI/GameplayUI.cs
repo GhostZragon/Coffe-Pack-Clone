@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,31 +21,33 @@ public class GameplayUI : BaseView
     [SerializeField] private GameObject losseResultPopupPrefab;
     [SerializeField] private GameObject winResultPopupPrefab;
     [SerializeField] private GameObject panel;
+    public QuestStageUI QuestStageUI;
+    public PuzzleQuestManagerUI PuzzleQuestManagerUI;
+    public Action BackMenuButtonClicked;
+  
     protected override void Register()
     {
         backButton.onClick.AddListener(BackToMenuUI);
         panel.gameObject.SetActive(false);
-        EventManager.Current._UI.OnShowResultUI += ShowResultMenu;
     }
 
     protected override void UnRegister()
     {
         backButton.onClick.RemoveListener(BackToMenuUI);
 
-        EventManager.Current._UI.OnShowResultUI -= ShowResultMenu;
     }
   
     private void BackToMenuUI()
     {
-        UIManager.Instance.ShowMenuUI();
-        EventManager.Current._Core.OnUnloadLevel?.Invoke();
+        BackMenuButtonClicked?.Invoke();
     }
 
-    private void ShowResultMenu(ResultData resultData)
+    public ResultUI ShowResultMenu(ResultData resultData)
     {
         panel.gameObject.SetActive(true);
         var popup = CreatePopup(resultData.IsWin);
         popup.Show(resultData);
+        return popup;
     }
 
     private ResultUI CreatePopup(bool isWin)
@@ -68,10 +71,4 @@ public class GameplayUI : BaseView
 
     }
 
-
-
-    private void ReplayGame()
-    {
-        EventManager.Current._Core.OnReloadGame?.Invoke();
-    }
 }

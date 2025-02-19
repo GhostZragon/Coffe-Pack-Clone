@@ -27,7 +27,9 @@ public class Slot : SlotBase
     private Vector3 currentScale;
     private CompositeMotionHandle handles;
 
-
+    public static Action<Slot> OnMergeSlotAction;
+    public static Action<SlotBase> OnDestroyBlockingBlockAroundAction;
+    public static Action<ItemInfo> OnCompleteItemAction;
     protected void Awake()
     {
         currentScale = transform.localScale;
@@ -36,7 +38,8 @@ public class Slot : SlotBase
 
     private void OnPlacedTray()
     {
-        EventManager.Current._Game.OnMergeTray?.Invoke(this);
+        OnMergeSlotAction?.Invoke(this);
+        // EventManager.Current._Game.OnMergeTray?.Invoke(this);
     }
 
     public void Add(Tray tray)
@@ -97,9 +100,8 @@ public class Slot : SlotBase
             // 
             
             // Table.Instance.DestroyBlockingSlotAround(this);
-            EventManager.Current._Table.OnDestroyBlockingBlockAround?.Invoke(this);
-            
-            EventManager.Current._Game.OnCompleteItem?.Invoke(new ItemInfo(itemID,transform.position));
+            OnDestroyBlockingBlockAroundAction(this);
+            OnCompleteItemAction(new ItemInfo(itemID, transform.position));
             
             ItemMananger.Instance.ItemMerged(itemID);
             // PuzzleQuestManager.Instance?.OnCompleteItem(itemID);

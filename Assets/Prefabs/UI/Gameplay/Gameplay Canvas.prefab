@@ -122,8 +122,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   view: {fileID: 0}
   backButton: {fileID: 2491015021559403203}
-  resultPopupPrefab: {fileID: 0}
-  panel: {fileID: 0}
+  losseResultPopupPrefab: {fileID: 8362755567330286787, guid: f4bec5f9ea228d5458f36994959fd3f8, type: 3}
+  winResultPopupPrefab: {fileID: 1207838984312408167, guid: 89ce74b72ed40954c99841de83b5faab, type: 3}
+  panel: {fileID: 5641354706639155086}
+  PuzzleQuestManagerUI: {fileID: 3693123007790941190}
 --- !u!1 &740261920540311557
 GameObject:
   m_ObjectHideFlags: 0
@@ -1917,7 +1919,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7190395833008984481
 RectTransform:
   m_ObjectHideFlags: 0

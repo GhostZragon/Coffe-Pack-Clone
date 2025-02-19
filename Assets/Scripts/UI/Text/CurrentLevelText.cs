@@ -19,7 +19,6 @@ public class CurrentLevelText : MonoBehaviour
     
     private void Awake()
     {
-        EventManager.Current._Core.OnSelectLevel += OnSelectLevel;
         defaultColor = tmPro.color;
      
         defaultPosition = tmPro.transform.localPosition;
@@ -43,12 +42,8 @@ public class CurrentLevelText : MonoBehaviour
             .BindToLocalPosition(transform);
     }
     
-    private void OnDestroy()
-    {
-        EventManager.Current._Core.OnSelectLevel -= OnSelectLevel;
-    }
 
-    private void OnSelectLevel(int level)
+    public void OnSelectLevel(int level)
     {
         if (previousLevel == level)
             return;

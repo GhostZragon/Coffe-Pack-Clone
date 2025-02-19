@@ -1,4 +1,5 @@
-﻿using LitMotion;
+﻿using System;
+using LitMotion;
 using LitMotion.Extensions;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -6,6 +7,7 @@ using UnityEngine;
 public class BlockingSlot : SlotBase
 {
     private bool canDestroy = false;
+    public static Action<SlotBase, SlotBase> OnReplaceSlotAction;
 
     public override bool CanPlacedTray()
     {
@@ -30,7 +32,7 @@ public class BlockingSlot : SlotBase
 
     private void Effect()
     {
-        EventManager.Current._Table.OnReplaceSlot(this, SlotManager.Instance.GetSlot(SlotType.Normal));
+        OnReplaceSlotAction(this, SlotManager.Instance.GetSlot(SlotType.Normal));
         canDestroy = true;
         PlayClearAnimation();
     }

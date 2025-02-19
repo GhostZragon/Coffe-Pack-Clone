@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,20 +10,21 @@ public class ResultUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI emojiText;
     [SerializeField] private TextMeshProUGUI coinText;
     
-    public LevelResultStarUI LevelResultStarUI;
+    [SerializeField] private LevelResultStarUI LevelResultStarUI;
 
-
+    public Action OnBackMenuClicked;
+    public Action OnReplayClicked;
 
     public void BackToMenu()
     {
-        EventManager.Current._Core.OnUnloadLevel?.Invoke();
-        UIManager.Instance.ShowMenuUI();
+        OnBackMenuClicked();
         Destroy(gameObject);
+
     }
 
     public void ReplayGame()
     {
-        EventManager.Current._Core.OnReloadGame?.Invoke();
+        OnReplayClicked();
         Destroy(gameObject);
     }
     

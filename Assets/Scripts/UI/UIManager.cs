@@ -9,8 +9,8 @@ public class UIManager : MonoBehaviour
         Instance = this;
     }
 
-    [SerializeField] private GameplayUI gameplayUI;
-    [SerializeField] private MenuUI menuUI;
+    public GameplayUI gameplayUI;
+    public MenuUI menuUI;
 
     public void ShowGameplayUI()
     {
