@@ -7,17 +7,4 @@ public abstract class UIBase : MonoBehaviour
     public abstract void Exit(); // Khi UI bien mat
 }
 
-public interface IEnter
-{
-    void Enter();
-}
 
-public interface IInteract
-{
-    void Interact();
-}
-
-public interface IExit
-{
-    void Exit();
-}

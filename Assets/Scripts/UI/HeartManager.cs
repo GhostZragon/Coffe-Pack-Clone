@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class HeartManager : MonoBehaviour, IEnter
+public class HeartManager : MonoBehaviour
 {
     [SerializeField] private int maxCount;
     [SerializeField] private HeartUI HeartPrefab;

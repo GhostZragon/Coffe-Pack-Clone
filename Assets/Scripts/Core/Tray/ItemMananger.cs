@@ -25,7 +25,7 @@ public class ItemMananger : MonoBehaviour
 
 
     private int totalSlots;
-    private int maxSlotPerKhay = 4;
+    private int maxSlotPerTray = 4;
   
     private Func<int> GetEmptySlotCountCallback;
     private Predicate<string> IsItemOnQuestingCallback;
@@ -90,7 +90,7 @@ public class ItemMananger : MonoBehaviour
             float weight = 1.0f;
 
             // Tăng trọng số nếu item đã có trên bàn nhưng chưa đạt giới hạn merge
-            if (itemCounts[item.itemID] > 0 && itemCounts[item.itemID] < maxSlotPerKhay)
+            if (itemCounts[item.itemID] > 0 && itemCounts[item.itemID] < maxSlotPerTray)
                 weight *= existingItemWeightMultiplier;
 
             // Giảm trọng số spawn item mới nếu bàn gần đầy
@@ -115,21 +115,20 @@ public class ItemMananger : MonoBehaviour
     public void ItemMerged(string itemType)
     {
         if (itemCounts.ContainsKey(itemType))
-            itemCounts[itemType] -= maxSlotPerKhay;
+            itemCounts[itemType] -= maxSlotPerTray;
     }
     
     public void AddItem(string itemType)
     {
         if (!itemCounts.TryAdd(itemType, 1))
         {
-            
             itemCounts[itemType]++;
         }
     }
 
     public void SetMaxItemPerTray(int MaxCountPerTray)
     {
-        maxSlotPerKhay = MaxCountPerTray;
+        maxSlotPerTray = MaxCountPerTray;
     }
     
     public void SetFindEmptySlotCallback(Func<int> callback)

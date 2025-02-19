@@ -2,7 +2,7 @@ using LitMotion;
 using LitMotion.Extensions;
 using UnityEngine;
 
-public class AvatarUI : MonoBehaviour, IEnter
+public class AvatarUI : MonoBehaviour
 {
     private Vector3 defautlScale;
 
