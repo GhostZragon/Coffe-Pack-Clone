@@ -193,10 +193,3 @@ public class GameplayState : StateWithSubStates
 }
 // tutorial state
 // pause game state
-
-public interface ISubState
-{
-    
-    void Enter();
-    void Exit();
-}

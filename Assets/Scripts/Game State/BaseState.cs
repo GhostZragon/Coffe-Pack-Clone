@@ -43,10 +43,3 @@ public abstract class BaseState : IState
         stateManager.ChangeState(newState);
     }
 }
-
-public interface IState
-{
-    void PrepareState();
-    void DestroyState();
-    void Update();
-}
