@@ -1,24 +1,9 @@
 fileFormatVersion: 2
-guid: b13d66b517499654fb292a3d93597801
+guid: 253a80a0207bb6a458073c1b7fd1c636
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: ca_LowMat
-    second: {fileID: 2100000, guid: fa81ebe8a9042b245a365c124fc1e562, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: quai_LowMat
-    second: {fileID: 2100000, guid: 6f8e49c117ed5294f82fe7e7fb7c7c1d, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: vong_LowMat
-    second: {fileID: 2100000, guid: 301cccbb2e7287e4fb28bb23f718ac75, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -48,7 +33,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.006
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -103,7 +88,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.006
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

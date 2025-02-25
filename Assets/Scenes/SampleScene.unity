@@ -716,6 +716,13 @@ MonoBehaviour:
   allowMerge: 1
   isLoose: 0
   isWin: 0
+  table: {fileID: 0}
+  puzzleQuestManager: {fileID: 0}
+  gridManager: {fileID: 0}
+  dragDropSystem: {fileID: 0}
+  trayManager: {fileID: 0}
+  levelSelection: {fileID: 0}
+  collectorManager: {fileID: 0}
 --- !u!4 &1393408784
 Transform:
   m_ObjectHideFlags: 0
@@ -1491,7 +1498,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4685705196237754403, guid: 78966a63df5a96f4aae788420de504f7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 261.83002
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4685705196237754403, guid: 78966a63df5a96f4aae788420de504f7, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -1511,7 +1518,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4792998268242445596, guid: 78966a63df5a96f4aae788420de504f7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 87.38446
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4792998268242445596, guid: 78966a63df5a96f4aae788420de504f7, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -1575,7 +1582,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5404256667218594840, guid: 78966a63df5a96f4aae788420de504f7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -87.384476
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5404256667218594840, guid: 78966a63df5a96f4aae788420de504f7, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -1595,7 +1602,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5935890410446902533, guid: 78966a63df5a96f4aae788420de504f7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -261.83002
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5935890410446902533, guid: 78966a63df5a96f4aae788420de504f7, type: 3}
       propertyPath: m_AnchoredPosition.x
