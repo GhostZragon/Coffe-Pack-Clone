@@ -1,3 +1,4 @@
+using System;
 using LitMotion;
 using LitMotion.Extensions;
 using TMPro;
@@ -46,8 +47,8 @@ public class LevelUI : MonoBehaviour
     private void OnSelectLevel()
     {
         Debug.Log("Select Level");
-
-        EventManager.Current._Core.OnSelectLevel(level);
+        UIManager.Instance.menuUI.OnSelectLevel?.Invoke(level);
+        // EventManager.Current._Core.OnSelectLevel(level);
     }
 
 

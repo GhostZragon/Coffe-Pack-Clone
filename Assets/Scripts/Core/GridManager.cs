@@ -88,7 +88,6 @@ public partial class GridManager : MonoBehaviour
         {
             case 2:
                 return SlotType.Blocking;
-                break;
         }
 
         return SlotType.Normal;

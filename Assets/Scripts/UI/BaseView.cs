@@ -6,8 +6,6 @@ public class BaseView : MonoBehaviour
 
     protected virtual void Awake()
     {
-        if (view == null)
-            view = gameObject;
         Register();
     }
 
@@ -35,5 +33,10 @@ public class BaseView : MonoBehaviour
         view.SetActive(false);
     }
 
- 
+
+    public void Initialize()
+    {
+        if (view == null)
+            view = gameObject;
+    }
 }

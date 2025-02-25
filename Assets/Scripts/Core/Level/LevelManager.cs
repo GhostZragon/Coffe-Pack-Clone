@@ -1,49 +1,50 @@
+using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    private static LevelManager instance;
-    public static bool CanMerge => instance.allowMerge;
+    public static LevelManager Instance;
+    public static bool CanMerge => Instance.allowMerge;
 
     [SerializeField] private bool startQuestByButton = false;
     [SerializeField] private int currentLevel = 0;
     [SerializeField] private int maxLevel;
     [Header("Gameplay")]
-    [SerializeField] private QuestStageUI questStageUI;
    
     [SerializeField] private bool allowMerge = true;
     [SerializeField] private bool isLoose = false;
-    [SerializeField] private bool isWin = false; 
+    [SerializeField] private bool isWin = false;
+
+    public Action OnWinGame;
+    public Action OnLooseGame;
    
-    private PuzzleQuestManager puzzleQuestManager;
-    private GridManager gridManager;
-    private DragDropSystem dragDropSystem;
-    private TrayManager trayManager;
-    private LevelSelection levelSelection;
-    private CollectorManager collectorManager;
+    public Table table;
+    public PuzzleQuestManager puzzleQuestManager;
+    public GridManager gridManager;
+    public DragDropSystem dragDropSystem;
+    public TrayManager trayManager;
+    public LevelSelection levelSelection;
+    public CollectorManager collectorManager;
 
     private ItemMananger itemMananger;
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
         
         currentLevel = 0;
         
         CatchedRef();
 
-        Register();
     }
     
-    private void OnDestroy()
-    {
-        UnRegister();
-    }
+
 
     private void CatchedRef()
     {
+        table = FindFirstObjectByType<Table>();
         gridManager = FindFirstObjectByType<GridManager>();
         puzzleQuestManager = FindFirstObjectByType<PuzzleQuestManager>();
         dragDropSystem = FindFirstObjectByType<DragDropSystem>();
@@ -53,45 +54,12 @@ public class LevelManager : MonoBehaviour
         itemMananger = FindFirstObjectByType<ItemMananger>();
     }
 
-    private void Register()
-    {
-     
-        puzzleQuestManager.OnChangedStage += questStageUI.OnStageChanged;
-
-        EventManager.Current._Core.OnLoadLevel += LoadLevel;
-        EventManager.Current._Core.OnUnloadLevel += UnLoadLevel;
-        EventManager.Current._Core.OnReloadGame += ReloadLevel;
-
-        EventManager.Current._Core.OnProcessComplete += OnProcessComplete;
-    }
-
-    private void UnRegister()
-    {
-      
-        puzzleQuestManager.OnChangedStage -= questStageUI.OnStageChanged;
-
-        EventManager.Current._Core.OnLoadLevel -= LoadLevel;
-        EventManager.Current._Core.OnUnloadLevel -= UnLoadLevel;
-        EventManager.Current._Core.OnReloadGame -= ReloadLevel;
-
-        EventManager.Current._Core.OnProcessComplete -= OnProcessComplete;
-    }
-
-    private void Start()
-    {
-       
-        if (startQuestByButton == false)
-        {
-            LoadLevel();
-        }
-    }
-
+ 
     
 
-    private void LoadLevel()
+    public void LoadLevel()
     {
         var levelConfig = levelSelection.GetCurrentLevelConfig();
-
         
         gridManager.SetLevelData(levelConfig.LevelCSV);
         gridManager.InitializeGrid();
@@ -107,7 +75,6 @@ public class LevelManager : MonoBehaviour
         // questStageUI.SetMaxStage();
         trayManager.Initialize();
         
-        UIManager.Instance.ShowGameplayUI();
     }
 
     private int GetEmptySlotCount()
@@ -120,7 +87,7 @@ public class LevelManager : MonoBehaviour
         return puzzleQuestManager.IsItemOnQuesting(itemID);
     }
 
-    private void UnLoadLevel()
+    public void UnLoadLevel()
     {
         // don slot tren scene
         gridManager.ClearGrid();
@@ -131,38 +98,27 @@ public class LevelManager : MonoBehaviour
         // don item drag neu co
         dragDropSystem.ClearDragItem();
         // khoi dong lai UI
-        questStageUI.ResetProgressUI();
-        
-
     }
 
-    private void ReloadLevel()
-    {
-        UnLoadLevel();
-        LoadLevel();
-    }
-
-    
-   
     [Button]
     private void CheckingWinLosseCondition()
     {
         OnProcessComplete();
     }
     
-    private void OnProcessComplete()
+    public void OnProcessComplete()
     {
         if (puzzleQuestManager.IsFinishAllQuestCurrentStage() && puzzleQuestManager.IsFinalStage() || isWin)
         {
             Debug.Log("You Win");
-            ShowResult(true);
+            OnWinGame();
             return;
         }
 
         if (gridManager.IsFullOfSpace() || isLoose)
         {
             Debug.Log("You loose");
-            ShowResult(false);
+            OnLooseGame();
             return;
         }
 
@@ -170,10 +126,5 @@ public class LevelManager : MonoBehaviour
         trayManager.TryCreateNextTrays();
     }
 
-    private void ShowResult(bool isWin)
-    {
-        var resultData = new ResultData(puzzleQuestManager.GetCurrentStage(), 0, isWin);
-        EventManager.Current._UI.OnShowResultUI?.Invoke(resultData);
-        UnLoadLevel();
-    }
+   
 }

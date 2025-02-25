@@ -1,3 +1,4 @@
+using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -10,6 +11,8 @@ public partial class Table : MonoBehaviour
     [SerializeField] private float cellDepth = .25f;
     [SerializeField] private float cameraOffsetZ = .25f;
 
+    public Action OnProcressComplete;
+    
     private bool isRefresh = false;
     public MergeSystem mergeSystem;
 
@@ -27,22 +30,11 @@ public partial class Table : MonoBehaviour
     {
         mainCamera = Camera.main;
         mergeSystem = new MergeSystem(this,gridManager);
-        
-        EventManager.Current._Table.OnDestroyBlockingBlockAround += DestroyBlockingSlotAround;
-        EventManager.Current._Table.OnReplaceSlot += ReplaceSlot;
-
-        EventManager.Current._Game.OnMergeTray += mergeSystem.TryMergeAtSlot;
     }
 
-    private void OnDestroy()
-    {
-        EventManager.Current._Table.OnDestroyBlockingBlockAround -= DestroyBlockingSlotAround;
-        EventManager.Current._Table.OnReplaceSlot -= ReplaceSlot;
 
-        EventManager.Current._Game.OnMergeTray -= mergeSystem.TryMergeAtSlot;
-    }
 
-    private void DestroyBlockingSlotAround(SlotBase slot)
+    public void DestroyBlockingSlotAround(SlotBase slot)
     {
         var cellPosition = gridManager.WorldToGridPosition(slot.transform.position);
         Vector2Int checkingPosition = Vector2Int.zero;
@@ -59,7 +51,7 @@ public partial class Table : MonoBehaviour
         }
     }
 
-    private void ReplaceSlot(SlotBase currentSlot,SlotBase newSlot)
+    public void ReplaceSlot(SlotBase currentSlot,SlotBase newSlot)
     {
         newSlot.transform.position = currentSlot.transform.position;
         
@@ -73,5 +65,10 @@ public partial class Table : MonoBehaviour
     public void IsValidSlot()
     {
         Debug.Log("Is Valid: "+gridManager.IsValidGridPosition(new Vector2Int(x,y)));
+    }
+
+    private void ProcressComplete()
+    {
+        OnProcressComplete();
     }
 }

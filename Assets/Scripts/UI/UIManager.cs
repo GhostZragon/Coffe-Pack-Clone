@@ -7,11 +7,17 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
+        foreach (var view in GetComponentsInChildren<BaseView>())
+        {
+            view.Initialize();
+        }
+        pauseUI.Hide();
     }
 
-    [SerializeField] private GameplayUI gameplayUI;
-    [SerializeField] private MenuUI menuUI;
-
+    public GameplayUI gameplayUI;
+    public MenuUI menuUI;
+    public PauseUI pauseUI;
     public void ShowGameplayUI()
     {
         gameplayUI.Show();

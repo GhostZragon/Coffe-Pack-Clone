@@ -9,15 +9,9 @@ public class PuzzleQuestManagerUI : MonoBehaviour
     private void Awake()
     {
         puzzleQuestUIPrefab.gameObject.SetActive(false);
-        EventManager.Current._UI.OnBindingWithQuestUI += GetPuzzleQuestUI;
     }
 
-    private void OnDestroy()
-    {
-        EventManager.Current._UI.OnBindingWithQuestUI -= GetPuzzleQuestUI;
-    }
-
-    private void GetPuzzleQuestUI(InGameQuestData inGameQuestData)
+    public void Bind(InGameQuestData inGameQuestData)
     {
         var questUI = Instantiate(puzzleQuestUIPrefab, container.transform);
    

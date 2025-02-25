@@ -15,7 +15,7 @@
         public List<Item> items = new();
         [SerializeField] private Transform pointHolder;
         [SerializeField] private Transform itemHolder;
-        [SerializeField] private Collider collider;
+        [SerializeField] private new Collider collider;
         [Header("Settings")] [SerializeField] private int index;
         [SerializeField] private int maxItemCount;
         [Header("Gizmos")] [SerializeField] private Vector3 size;

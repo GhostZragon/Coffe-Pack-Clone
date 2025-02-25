@@ -24,6 +24,7 @@ public class PuzzleQuestManager : MonoBehaviour
     private int maxStage = 0;
     private QuestFactory questFactory;
     private Dictionary<int, QuestData[]> questDataPerStage;
+    
     public Action<int> OnChangedStage;
     
     public static event Action<int> OnSetMaxStage;
@@ -32,13 +33,8 @@ public class PuzzleQuestManager : MonoBehaviour
     {
         questFactory = new(randomItemsList);
 
-        EventManager.Current._Game.OnCompleteItem += OnCompleteItem;
     }
 
-    private void OnDestroy()
-    {
-        EventManager.Current._Game.OnCompleteItem -= OnCompleteItem;
-    }
 
     public void SetPuzzleQuestData(PuzzleQuestData puzzleQuestData)
     {
@@ -70,7 +66,7 @@ public class PuzzleQuestManager : MonoBehaviour
         CreateNewQuest();
     }
 
-    private void OnCompleteItem(ItemInfo itemInfo)
+    public void OnCompleteItem(ItemInfo itemInfo)
     {
         var quest = inGameQuestDataList.FirstOrDefault(q => q.CanUpdateQuest(itemInfo.ItemId));
         if (quest != null)
@@ -137,11 +133,13 @@ public class PuzzleQuestManager : MonoBehaviour
             var inGameQuestData = questFactory.CreateQuest(arrayQuest[i]);
             inGameQuestDataList.Add(inGameQuestData);
 
-            EventManager.Current._UI.OnBindingWithQuestUI?.Invoke(inGameQuestData);
+            OnBindingQuestToUIAction?.Invoke(inGameQuestData);
             Debug.Log($"Create quest {inGameQuestData.ItemID} and {inGameQuestData.TargetQuantity}");
         }
     }
 
+    public Action<InGameQuestData> OnBindingQuestToUIAction;
+    
     public int GetCurrentStage()
     {
         return currentStage;

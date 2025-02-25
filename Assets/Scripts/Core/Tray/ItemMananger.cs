@@ -6,7 +6,6 @@ using UnityEngine;
 public class ItemMananger : MonoBehaviour
 {
     public static ItemMananger Instance;
-    [SerializeField] private GridManager gridManager;
     
     [SerializeField] private int spawnCount = 3;
     

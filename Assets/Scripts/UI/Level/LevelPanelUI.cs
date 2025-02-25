@@ -12,18 +12,9 @@ public class LevelPanelUI : MonoBehaviour
     public Predicate<int> levelUnlockChecking;
     public GameObject avatarAnchor;
 
-    private void Awake()
-    {
-        EventManager.Current._Core.OnSelectLevel += SelectLevelUI;
-    }
-
-    private void OnDestroy()
-    {
-        EventManager.Current._Core.OnSelectLevel -= SelectLevelUI;
-    }
 
     private LevelUI previousLevelUI;
-    private void SelectLevelUI(int level)
+    public void SelectLevelUI(int level)
     {
         foreach (var levelMap in mapLevelUis)
         {
@@ -43,6 +34,7 @@ public class LevelPanelUI : MonoBehaviour
 
     public void Initialize(int maxLevel)
     {
+        Debug.Log("Max Level: "+maxLevel);
         int startLevel = 0;
         foreach (var mapLevel in mapLevelUis)
         {

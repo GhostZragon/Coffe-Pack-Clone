@@ -7,12 +7,10 @@ public class CoinMenuUI : MonoBehaviour
 
     private void Awake()
     {
-        EventManager.Current._Game.OnCoinChanged += CoinChanged;
     }
 
     private void OnDestroy()
     {
-        EventManager.Current._Game.OnCoinChanged -= CoinChanged;
     }
 
 
