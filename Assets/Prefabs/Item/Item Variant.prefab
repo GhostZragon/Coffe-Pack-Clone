@@ -120,6 +120,10 @@ PrefabInstance:
       propertyPath: itemID
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 84894186345341861, guid: d53aa5a7ad72e5e47bee3e8e732a6a84, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 2097960677459334695}
     - target: {fileID: 990836745624851648, guid: d53aa5a7ad72e5e47bee3e8e732a6a84, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.486
@@ -179,6 +183,11 @@ PrefabInstance:
 --- !u!4 &1399620745927256973 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 990836745624851648, guid: d53aa5a7ad72e5e47bee3e8e732a6a84, type: 3}
+  m_PrefabInstance: {fileID: 2210241994001579853}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &2097960677459334695 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 266046066853341546, guid: d53aa5a7ad72e5e47bee3e8e732a6a84, type: 3}
   m_PrefabInstance: {fileID: 2210241994001579853}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8679581319551885256

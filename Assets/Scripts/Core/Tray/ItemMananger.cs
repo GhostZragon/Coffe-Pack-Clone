@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
+
 [DefaultExecutionOrder(-99)]
 public class ItemMananger : MonoBehaviour
 {
     public static ItemMananger Instance;
     
-    [SerializeField] private int spawnCount = 3;
     
     [SerializeField] private List<Item> itemsList;
     private Dictionary<string, float> spawnWeights = new Dictionary<string, float>(); // Trọng số random
     private Dictionary<string, int> itemCounts = new Dictionary<string, int>(); // Số lượng từng item trên bàn
 
+  
     private void Awake()
     {
         Instance = this;

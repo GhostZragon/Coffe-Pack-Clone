@@ -6,15 +6,13 @@ public partial class Table : MonoBehaviour
 {
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Slot slotPrefab;
-    [SerializeField] private float spacing = 1f;
-    [SerializeField] private float cellWidth = .25f;
-    [SerializeField] private float cellDepth = .25f;
-    [SerializeField] private float cameraOffsetZ = .25f;
 
     public Action OnProcressComplete;
     
-    private bool isRefresh = false;
     public MergeSystem mergeSystem;
+
+    private static Table Instance;
+    
 
     [SerializeField] private GridManager gridManager;
 
@@ -28,6 +26,7 @@ public partial class Table : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         mainCamera = Camera.main;
         mergeSystem = new MergeSystem(this,gridManager);
     }
@@ -70,5 +69,16 @@ public partial class Table : MonoBehaviour
     private void ProcressComplete()
     {
         OnProcressComplete();
+    }
+
+    private int itemMoveCount = 0;
+
+    public static void AddItemMoving() => Instance.itemMoveCount++;
+    public static void RemoveItemMoving() => Instance.itemMoveCount--;
+    
+    
+    private bool IsAllItemMoveDone()
+    {
+        return itemMoveCount == 0;
     }
 }

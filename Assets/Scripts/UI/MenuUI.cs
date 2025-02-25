@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class MenuUI : BaseView
 {
     [SerializeField] private ScrollRect scrollRect;
-    [SerializeField] private bool isTestingChangeScreen = false;
     [SerializeField] private Button playButton;
 
     public CurrentLevelText CurrentLevelText;

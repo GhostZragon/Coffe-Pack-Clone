@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Anm_Cfg_Normal
   m_EditorClassIdentifier: 
   itemcfg:
-    itemTransferDuration: 0.2
-    itemTransferStartDelay: 0.2
-    itemTransferEase: 0
+    itemTransferDuration: 0.15
+    itemTransferStartDelay: 0.1
+    itemTransferEase: 7
   trayCfg:
     releaseTrayDuration: 0.1
     releaseTrayEase: 0
@@ -32,6 +32,10 @@ MonoBehaviour:
   levelUIConfig:
     rotateSpeed: 5
     lerpingValue: 5
-  uiConfig:
+  topUIConfig:
     heartDropEase: 26
     heartDropTime: 0.5
+    heartDropDelay: 0.1
+    avatarScaleTime: 0.35
+    scaleUpEase: 5
+    scaleDownEase: 10

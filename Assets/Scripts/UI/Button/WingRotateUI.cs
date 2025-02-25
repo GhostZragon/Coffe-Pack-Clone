@@ -11,7 +11,6 @@ public class WingRotateUI : MonoBehaviour
     [SerializeField] private float min;
     [SerializeField] private float max;
     [SerializeField] private float flapTime = 0.5f;
-    [SerializeField] private int flapCount = 5;
     private CompositeMotionHandle handle = new();
     private void Awake()
     {

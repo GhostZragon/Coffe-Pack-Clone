@@ -9,7 +9,6 @@ public class PuzzleQuestEffectUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI popupTextPrefab;
 
-    [SerializeField] private bool debugView = false;
     [SerializeField] private QuestCollectEffectBase collectEffectStarProgress;
     [SerializeField] private QuestCollectEffectBase collectEffectCoinCollector;
 

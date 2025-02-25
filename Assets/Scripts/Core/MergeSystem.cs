@@ -8,7 +8,7 @@ public partial class Table
 {
     public class MergeSystem
     {
-        private readonly SerializableDictionary<string, List<TrayMergeCandidate>> _mergeableItemGroups;
+        private readonly Dictionary<string, List<TrayMergeCandidate>> _mergeableItemGroups;
         private readonly GridManager _gridManager;
         private readonly Table _table;
         private readonly List<TrayMergeCandidate> _lastProcessedCandidates;
@@ -21,7 +21,7 @@ public partial class Table
         {
             _table = table;
             _gridManager = gridManager;
-            _mergeableItemGroups = new SerializableDictionary<string, List<TrayMergeCandidate>>();
+            _mergeableItemGroups = new Dictionary<string, List<TrayMergeCandidate>>();
             _lastProcessedCandidates = new List<TrayMergeCandidate>();
         }
 
@@ -150,18 +150,19 @@ public partial class Table
             {
                 Debug.Log($"Processing merge group: {group.Key}");
                 MergeTrays(group.Value);
-                yield return waitForCalculator;
+                // yield return waitForCalculator;
                 RecalculateAllGroupPriorities();
             }
 
-            yield return waitAfterMerge;
+            yield return new WaitUntil(() => _table.IsAllItemMoveDone());
             
             AnimateTrayClear();
             
             // Check win loose
             _table.ProcressComplete();
         }
-
+        
+        
         private void RecalculateAllGroupPriorities()
         {
             foreach (var group in _mergeableItemGroups)
