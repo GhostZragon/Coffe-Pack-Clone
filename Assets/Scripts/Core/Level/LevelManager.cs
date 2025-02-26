@@ -98,6 +98,8 @@ public class LevelManager : MonoBehaviour
         // don item drag neu co
         dragDropSystem.ClearDragItem();
         // khoi dong lai UI
+
+        UIManager.Instance.gameplayUI.Reload();
     }
 
     [Button]

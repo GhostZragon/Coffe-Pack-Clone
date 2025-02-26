@@ -6,9 +6,12 @@ public class MainMenuState : BaseState
     
     private LevelSelection levelSelection;
     private LevelPanelUI levelPanelUI;
-    public override void PrepareState()
+    
+
+    protected override void AfterPrepareState()
     {
-        base.PrepareState();
+        base.AfterPrepareState();
+        // loading data here
         
         UIManager.Instance.ShowMenuUI();
         // init level map

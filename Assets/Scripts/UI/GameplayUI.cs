@@ -71,4 +71,8 @@ public class GameplayUI : BaseView
 
     }
 
+    public void Reload()
+    {
+        QuestStageUI.ResetProgressUI();
+    }
 }

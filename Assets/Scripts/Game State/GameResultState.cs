@@ -6,9 +6,13 @@
     {
         this.resultData = resultData;
     }
-    public override void PrepareState()
+
+
+    protected override void AfterPrepareState()
     {
+        base.AfterPrepareState();
         resultUI = UIManager.Instance.gameplayUI.ShowResultMenu(resultData);
+
     }
 
     protected override void Register()

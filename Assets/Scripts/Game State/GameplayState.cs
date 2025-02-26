@@ -11,12 +11,13 @@ public class GameplayState : StateWithSubStates
     // UI
     private PuzzleQuestManagerUI PuzzleQuestManagerUI;
     private QuestStageUI questStageUI;
-    public override void PrepareState()
+
+    protected override void AfterPrepareState()
     {
-        base.PrepareState();
+        base.AfterPrepareState();
+     
         levelManager.LoadLevel();
         UIManager.Instance.ShowGameplayUI();
-        
         ChangeSubState<NormalPlayingState>();
     }
 
@@ -54,15 +55,18 @@ public class GameplayState : StateWithSubStates
 
     }
 
-    public override void DestroyState()
+    protected override void AfterDestroyState()
     {
-        // static action
-        base.DestroyState();
-        
+        base.AfterDestroyState();
+        ResetToDefaultState();
+    }
+
+    private void ResetToDefaultState()
+    {
         levelManager.UnLoadLevel();
         questStageUI.ResetProgressUI();
     }
-
+    
     protected override void UnRegister()
     {
         base.UnRegister();
@@ -145,6 +149,13 @@ public class GameplayState : StateWithSubStates
     {
         ChangeSubState<PauseGameState>();
     }
+
+    private void ResetGameplay()
+    {
+        ResetToDefaultState();
+        levelManager.LoadLevel();
+        ChangeSubState<NormalPlayingState>();
+    }
     
     private class NormalPlayingState : ISubState
     {
@@ -165,7 +176,7 @@ public class GameplayState : StateWithSubStates
     }
     private class PauseGameState : ISubState
     {
-        private GameplayState gameplayState;
+        private readonly GameplayState gameplayState;
         private PauseUI pauseUI;
         public PauseGameState(GameplayState gameplayState)
         {
@@ -179,12 +190,15 @@ public class GameplayState : StateWithSubStates
             
             pauseUI.OnResumeClicked += gameplayState.Resume;
             pauseUI.OnBackMainMenuClicked += gameplayState.BackMenu;
+            pauseUI.OnResetButtonClicked += gameplayState.ResetGameplay;
         }
 
         public void Exit()
         {
             pauseUI.OnResumeClicked += gameplayState.Resume;
             pauseUI.OnBackMainMenuClicked -= gameplayState.BackMenu;
+            pauseUI.OnResetButtonClicked -= gameplayState.ResetGameplay;
+           
             pauseUI.Hide();
             // Hide Pause UI 
         }

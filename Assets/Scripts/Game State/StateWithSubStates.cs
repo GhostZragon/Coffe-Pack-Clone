@@ -26,6 +26,14 @@ public abstract class StateWithSubStates : BaseState
         currentSubState.Enter();
         LogCurrentState();
     }
+
+    public override void DestroyState()
+    {
+        base.DestroyState();
+        if(currentSubState != null)
+            currentSubState.Exit();
+    }
+
     protected void LogCurrentState()
     {
         string currentStateName = currentSubState?.GetType().Name ?? "No active sub-state";
