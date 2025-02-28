@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3442270172610993766
 Transform:
   m_ObjectHideFlags: 0
@@ -164,6 +164,7 @@ MonoBehaviour:
     m_Bits: 64
   selectionObject: {fileID: 0}
   currentSlot: {fileID: 0}
+  CanDragging: 1
 --- !u!54 &7568310331172221679
 Rigidbody:
   m_ObjectHideFlags: 0

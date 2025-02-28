@@ -34,8 +34,8 @@ public class ResultUI : MonoBehaviour
         Debug.Log("Show Result UI");
         gameObject.SetActive(true);
         
-        if(resultData.IsWin)
-            LevelResultStarUI.ActiveStageUnlock(resultData.starUnlocked);
+        if(resultData.Result == GameResult.Win)
+            LevelResultStarUI.ActiveStageUnlock(resultData.StarUnlocked);
     }
 
    

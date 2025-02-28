@@ -114,7 +114,19 @@ public class Tray : MonoBehaviour
 
             if (isUsingAnimation)
             {
-                StartCoroutine(PlayItemAnim(i));
+                float delay = AnimationManager.Cur.config.itemcfg.itemTransferStartDelay + 0.1f * (i + 1);
+                if (items[i].transform.position != points[i].transform.position)
+                {
+                    items[i].PlaySwapSound(delay);
+                }
+        
+                Debug.Log($"Index: {i}",gameObject);
+                LMotion.Create(items[i].transform.position, points[i].transform.position
+                        , AnimationManager.Cur.config.itemcfg.itemTransferDuration)
+                    .WithDelay(delay)
+                    .WithEase(AnimationManager.Cur.config.itemcfg.itemTransferEase)
+                    .WithOnComplete(Table.RemoveItemMoving)
+                    .BindToPosition(items[i].transform);
                 // AnimationManager.Instance.TransferItem(items[i].transform, points[i].position);
             }
             else
@@ -123,25 +135,6 @@ public class Tray : MonoBehaviour
                 Table.RemoveItemMoving();
             }
         }
-    }
-
-    private IEnumerator PlayItemAnim(int i)
-    {
-        yield return new WaitForSeconds(AnimationManager.Cur.config.itemcfg.itemTransferStartDelay +
-                                        0.1f * (i + 1));
-        
-        if (items[i].transform.position != points[i].transform.position)
-        {
-            items[i].PlaySwapSound();
-        }
-        
-        Debug.Log($"Index: {i}",gameObject);
-        LMotion.Create(items[i].transform.position, points[i].transform.position
-                , AnimationManager.Cur.config.itemcfg.itemTransferDuration)
-            .WithEase(AnimationManager.Cur.config.itemcfg.itemTransferEase)
-            .WithOnComplete(Table.RemoveItemMoving)
-            .BindToPosition(items[i].transform);
-    
     }
 
     [Button]

@@ -199,7 +199,7 @@ public partial class Table
                 if (itemToTransfer != null)
                 {
                     sourceTray.Remove(itemToTransfer);
-                    destinationTray.Add(itemToTransfer,false);
+                    destinationTray.Add(itemToTransfer);
 
                     if (sourceTray.GetCountOfItem(targetItemId) == 0)
                     {

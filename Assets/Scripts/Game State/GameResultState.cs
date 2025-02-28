@@ -7,17 +7,11 @@
         this.resultData = resultData;
     }
 
-
-    protected override void AfterPrepareState()
-    {
-        base.AfterPrepareState();
-        resultUI = UIManager.Instance.gameplayUI.ShowResultMenu(resultData);
-
-    }
-
     protected override void Register()
     {
         base.Register();
+        resultUI = UIManager.Instance.gameplayUI.ShowResultMenu(resultData);
+
         resultUI.OnReplayClicked += OnReplayClicked;
         resultUI.OnBackMenuClicked += OnBackMenuClicked;
     }
