@@ -80,41 +80,27 @@ public class Tray : MonoBehaviour
         return items.Count < maxItemCount;
     }
 
-    public List<string> GetUniqueItemIDs()
+    private HashSet<string> _tempUniqueIDs = new HashSet<string>();
+
+    public HashSet<string> GetUniqueItemIDs()
     {
-        List<string> itemIDs = new();
+        _tempUniqueIDs.Clear();
         foreach (var item in items)
         {
-            if (itemIDs.Contains(item.itemID) == false)
-                itemIDs.Add(item.itemID);
+            _tempUniqueIDs.Add(item.itemID);
         }
-
-        return itemIDs;
+        return _tempUniqueIDs;
     }
 
     public int GetCountOfItem(string itemID)
     {
-        int count = 0;
-        foreach (var item in items)
-        {
-            if (item.itemID == itemID)
-                count++;
-        }
-
-        return count;
+        return items.Count(item => item.itemID == itemID);
     }
 
     public Item GetFirstOfItem(string itemID)
     {
-        foreach (var item in items)
-        {
-            if (item.itemID == itemID)
-                return item;
-        }
-
-        return null;
+        return items.FirstOrDefault(item => item.itemID == itemID);
     }
-
 
     private void SetStandPosition(bool isUsingAnimation)
     {
