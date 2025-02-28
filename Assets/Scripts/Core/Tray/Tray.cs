@@ -80,11 +80,10 @@ public class Tray : MonoBehaviour
         return items.Count < maxItemCount;
     }
 
-    private HashSet<string> _tempUniqueIDs = new HashSet<string>();
 
     public HashSet<string> GetUniqueItemIDs()
     {
-        _tempUniqueIDs.Clear();
+        HashSet<string> _tempUniqueIDs = new();
         foreach (var item in items)
         {
             _tempUniqueIDs.Add(item.itemID);
@@ -115,7 +114,19 @@ public class Tray : MonoBehaviour
 
             if (isUsingAnimation)
             {
-                StartCoroutine(PlayItemAnim(i));
+                float delay = AnimationManager.Cur.config.itemcfg.itemTransferStartDelay + 0.1f * (i + 1);
+                if (items[i].transform.position != points[i].transform.position)
+                {
+                    items[i].PlaySwapSound(delay);
+                }
+        
+                Debug.Log($"Index: {i}",gameObject);
+                LMotion.Create(items[i].transform.position, points[i].transform.position
+                        , AnimationManager.Cur.config.itemcfg.itemTransferDuration)
+                    .WithDelay(delay)
+                    .WithEase(AnimationManager.Cur.config.itemcfg.itemTransferEase)
+                    .WithOnComplete(Table.RemoveItemMoving)
+                    .BindToPosition(items[i].transform);
                 // AnimationManager.Instance.TransferItem(items[i].transform, points[i].position);
             }
             else
@@ -124,24 +135,6 @@ public class Tray : MonoBehaviour
                 Table.RemoveItemMoving();
             }
         }
-    }
-
-    private IEnumerator PlayItemAnim(int i)
-    {
-        yield return new WaitForSeconds(AnimationManager.Cur.config.itemcfg.itemTransferStartDelay +
-                                        0.1f * (i + 1));
-        
-        if (items[i].transform.position != points[i].transform.position)
-        {
-            items[i].PlaySwapSound();
-        }
-        
-        LMotion.Create(items[i].transform.position, points[i].transform.position
-                , AnimationManager.Cur.config.itemcfg.itemTransferDuration)
-            .WithEase(AnimationManager.Cur.config.itemcfg.itemTransferEase)
-            .WithOnComplete(Table.RemoveItemMoving)
-            .BindToPosition(items[i].transform);
-    
     }
 
     [Button]
@@ -180,67 +173,22 @@ public class Tray : MonoBehaviour
     [Button]
     public void RequestItem()
     {
-        if (ItemMananger.Instance == null)
+        if (ItemManager.Instance == null)
         {
             Debug.LogWarning("Item Manager is null", gameObject);
             return;
         }
 
-        int count = Random.Range(1, maxItemCount - 1);
+        int count = ItemManager.Instance.GetRandomItemCount();
         for (int i = 0; i < count; i++)
         {
-            var item = ItemMananger.Instance.GetNewItem();
+            var item = ItemManager.Instance.GetNewItem();
             if (item != null)
             {
                 Add(item, false);
             }
         }
     }
-
-
-    #region Debug
-
-#if UNITY_EDITOR
-    [Button]
-    private void CreatePoint()
-    {
-        if (points != null)
-        {
-            foreach (var item in points)
-            {
-                DestroyImmediate(item.gameObject);
-            }
-        }
-
-        points = new Transform[maxItemCount];
-
-        for (int i = 0; i < maxItemCount; i++)
-        {
-            var go = new GameObject();
-            go.transform.parent = pointHolder.transform;
-            go.transform.position = Vector3.zero;
-            go.name = "Point_" + i;
-            points[i] = go.transform;
-        }
-    }
-
-    private void OnDrawGizmos()
-    {
-        DrawPoints();
-    }
-
-    private void DrawPoints()
-    {
-        foreach (var point in points)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(point.transform.position, size);
-        }
-    }
-#endif
-
-    #endregion Debug
-
 
     [Button]
     public void DestroyAnimation()
@@ -255,13 +203,13 @@ public class Tray : MonoBehaviour
     {
         if (items.Count == 0)
         {
-            itemID = "";
+            itemID = string.Empty;
             return false;
         }
 
-        var _itemID = items[0].itemID;
-        itemID = _itemID;
-        return items.All(item => item.itemID == _itemID) && items.Count == maxItemCount;
+        var localItemID = items[0].itemID;
+        itemID = localItemID;
+        return items.All(item => item.itemID == localItemID) && items.Count == maxItemCount;
     }
 
     public void SetMaxCount(int maxCountPerTray)

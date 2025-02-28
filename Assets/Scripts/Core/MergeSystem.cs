@@ -15,6 +15,7 @@ public partial class Table
 
         private readonly YieldInstruction waitForCalculator = new WaitForSeconds(0.2f);
         private readonly YieldInstruction waitAfterMerge = new WaitForSeconds(0.3f);
+        private readonly YieldInstruction waitForExecute = new WaitForSeconds(0.2f);
 
 
         public MergeSystem(Table table, GridManager gridManager)
@@ -44,19 +45,12 @@ public partial class Table
                 ScanNeighborsForMerge(currentCell, gridPosition);
 
             Debug.Log("Merge scan completed");
-            _table.StartCoroutine(ProcessMergeGroups());
+            _table.StartCoroutine(ExecuteMergeGroupsSequentially());
         }
 
-        private IEnumerator ProcessMergeGroups()
-        {
-            yield return new WaitForSeconds(0.2f);
-            ExecuteMergeGroups();
-        }
 
         private void ScanNeighborsForMerge(Cell originCell, Vector2Int position)
         {
-            
-            
             foreach (var itemId in originCell.Tray.GetUniqueItemIDs())
             {
                 InitializeMergeGroupIfNeeded(itemId);
@@ -137,12 +131,6 @@ public partial class Table
                 candidates.Sort();
             }
         }
-
-        private void ExecuteMergeGroups()
-        {
-            _table.StartCoroutine(ExecuteMergeGroupsSequentially());
-        }
-
 
         private IEnumerator ExecuteMergeGroupsSequentially()
         {

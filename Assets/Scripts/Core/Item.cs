@@ -18,10 +18,10 @@ public class Item : MonoBehaviour
 
    
     [Button]
-    public void PlaySwapSound()
+    public void PlaySwapSound(float delay)
     {
         audioSource.pitch = Random.Range(0.8f, 1.5f);
-        audioSource.Play();
+        audioSource.PlayDelayed(delay);
         Debug.Log("Pitch is: " + audioSource.pitch);
     }
 }

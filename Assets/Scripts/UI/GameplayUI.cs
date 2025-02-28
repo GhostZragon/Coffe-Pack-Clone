@@ -2,18 +2,23 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ResultData
+public enum GameResult
 {
-    public ResultData(int star,int coin, bool isWin)
+    Win,
+    Lose
+}
+public readonly struct ResultData
+{
+    public int StarUnlocked { get; }
+    public int CoinReward { get; }
+    public GameResult Result { get; }
+
+    public ResultData(int star, int coin, GameResult _result)
     {
-        starUnlocked = star;
-        coinReward = coin;
-        IsWin = isWin;
+        StarUnlocked = star;
+        CoinReward = coin;
+        Result = _result;
     }
-    
-    public int starUnlocked;
-    public int coinReward;
-    public bool IsWin;
 }
 public class GameplayUI : BaseView
 {
@@ -45,15 +50,14 @@ public class GameplayUI : BaseView
     public ResultUI ShowResultMenu(ResultData resultData)
     {
         panel.gameObject.SetActive(true);
-        var popup = CreatePopup(resultData.IsWin);
+        var popup = CreatePopup(resultData);
         popup.Show(resultData);
         return popup;
     }
 
-    private ResultUI CreatePopup(bool isWin)
+    private ResultUI CreatePopup(ResultData resultData)
     {
-        GameObject prefab = null;
-        prefab = isWin ? winResultPopupPrefab : losseResultPopupPrefab;
+        GameObject prefab = resultData.Result == GameResult.Win ? winResultPopupPrefab : losseResultPopupPrefab;
         return Instantiate(prefab, transform).GetComponent<ResultUI>();
     }
 

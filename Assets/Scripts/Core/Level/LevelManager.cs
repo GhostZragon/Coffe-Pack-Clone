@@ -28,7 +28,7 @@ public class LevelManager : MonoBehaviour
     public LevelSelection levelSelection;
     public CollectorManager collectorManager;
 
-    private ItemMananger itemMananger;
+    private ItemManager itemMananger;
 
     private void Awake()
     {
@@ -51,7 +51,7 @@ public class LevelManager : MonoBehaviour
         trayManager = FindFirstObjectByType<TrayManager>();
         levelSelection = FindFirstObjectByType<LevelSelection>();
         collectorManager = FindFirstObjectByType<CollectorManager>();
-        itemMananger = FindFirstObjectByType<ItemMananger>();
+        itemMananger = FindFirstObjectByType<ItemManager>();
     }
 
  
@@ -64,9 +64,10 @@ public class LevelManager : MonoBehaviour
         gridManager.SetLevelData(levelConfig.LevelCSV);
         gridManager.InitializeGrid();
 
-        itemMananger.SetMaxItemPerTray(trayManager.maxCountPerTray);
-        itemMananger.SetFindEmptySlotCallback(GetEmptySlotCount);
-        itemMananger.SetCheckingItemOnQuestingCallback(IsItemOnQuesting);
+        itemMananger.InitializeAvailableItems(levelConfig.PuzzleQuestData.GetUniqueItemID());
+        itemMananger.SetMaxItemsPerSlot(trayManager.maxCountPerTray);
+        itemMananger.SetEmptySlotCountCallback(GetEmptySlotCount);
+        itemMananger.SetQuestItemCheckCallback(IsItemOnQuesting);
         
         puzzleQuestManager.SetPuzzleQuestData(levelConfig.PuzzleQuestData);
         puzzleQuestManager.SetFirstState();

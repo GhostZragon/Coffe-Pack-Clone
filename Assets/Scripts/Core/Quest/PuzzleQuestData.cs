@@ -9,6 +9,26 @@ public class PuzzleQuestData : ScriptableObject
     public QuestData[] stage1;
     public QuestData[] stage2;
     public QuestData[] stage3;
+
+    public List<string> GetUniqueItemID()
+    {
+        HashSet<string> uniqueID = new();
+        
+        GetUniqueItemID(uniqueID, stage1);
+        GetUniqueItemID(uniqueID, stage2);
+        GetUniqueItemID(uniqueID, stage3);
+        
+        return new List<string>(uniqueID);
+    }
+
+    private void GetUniqueItemID(HashSet<string> hashSet,QuestData[] questDatas)
+    {
+        foreach (var questData in questDatas)
+        {
+            hashSet.Add(questData.ItemID);
+        }
+    }
+    
 }
 
 public enum QuestType
