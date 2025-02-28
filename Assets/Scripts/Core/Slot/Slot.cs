@@ -103,7 +103,7 @@ public class Slot : SlotBase
             OnDestroyBlockingBlockAroundAction(this);
             OnCompleteItemAction(new ItemInfo(itemID, transform.position));
             
-            ItemMananger.Instance.ItemMerged(itemID);
+            ItemManager.Instance.HandleItemMerged(itemID);
             // PuzzleQuestManager.Instance?.OnCompleteItem(itemID);
         }
 

@@ -6,4 +6,6 @@ public class LevelConfig : ScriptableObject
 {
     public TextAsset LevelCSV;
     public PuzzleQuestData PuzzleQuestData;
+
+   
 }
