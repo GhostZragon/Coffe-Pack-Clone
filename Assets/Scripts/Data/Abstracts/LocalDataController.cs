@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -12,10 +11,7 @@ public abstract class LocalDataController<TDataModel> : DataController<TDataMode
 
     public string GetFullPath()
     {
-        if (string.IsNullOrEmpty(_fullPath))
-        {
-            _fullPath = $"{Application.persistentDataPath}/{_filePath}.dat";
-        }
+        _fullPath = $"{Application.persistentDataPath}/{_filePath}.dat";
 
         return _fullPath;
     }
@@ -31,7 +27,7 @@ public abstract class LocalDataController<TDataModel> : DataController<TDataMode
             try
             {
                 var savedData = File.ReadAllText(filePath);
-                result = JsonConvert.DeserializeObject<TDataModel>(savedData);
+                result = JsonUtility.FromJson<TDataModel>(savedData);
                 Debug.Log($"LoadData complete {filePath}\n{savedData}");
             }
             catch (Exception ex)
@@ -57,7 +53,7 @@ public abstract class LocalDataController<TDataModel> : DataController<TDataMode
 
         try
         {
-            var saveData = JsonConvert.SerializeObject(_data);
+            var saveData = JsonUtility.ToJson(_data);
             File.WriteAllText(filePath, saveData);
 
             Debug.Log($"SaveData complete {filePath}\n{saveData}");

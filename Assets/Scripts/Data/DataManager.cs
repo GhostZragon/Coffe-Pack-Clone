@@ -7,9 +7,11 @@ public class DataManager : MonoBehaviour
 {
     [SerializeField] private DataController[] _controllers;
     private Dictionary<Type, DataController> _typeToControllerMap;
-
+    public static DataManager Instance;
     private void Awake()
     {
+        Instance = this;
+
         _typeToControllerMap = new();
 
         foreach(var controller in _controllers)

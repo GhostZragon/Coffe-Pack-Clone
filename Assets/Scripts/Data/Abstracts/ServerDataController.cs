@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
-
 public abstract class ServerDataController<TDataModel> : DataController<TDataModel> where TDataModel : class, new()
 {
     protected const string BASE_URL = "https://example.com";
@@ -18,7 +17,6 @@ public abstract class ServerDataController<TDataModel> : DataController<TDataMod
         {
             _fullPath = $"{BASE_URL}{_path}";
         }
-
         return _fullPath;
     }
     protected abstract UnityWebRequest GetRequest();
@@ -69,7 +67,7 @@ public abstract class ServerDataController<TDataModel> : DataController<TDataMod
 
             if (isSuccess)
             {
-                TDataModel result = JsonConvert.DeserializeObject<TDataModel>(txtResult);
+                TDataModel result = JsonUtility.FromJson<TDataModel>(txtResult);
                 _data = result;
             }
             else

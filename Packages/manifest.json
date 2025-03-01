@@ -56,7 +56,8 @@
         "com.annulusgames.lit-motion",
         "com.dbrizov.naughtyattributes",
         "com.audune.utils.dictionary",
-        "com.audune.utils.unityeditor"
+        "com.audune.utils.unityeditor",
+        "com.unity.nuget.newtonsoft-json"
       ],
       "overrideBuiltIns": false
     }

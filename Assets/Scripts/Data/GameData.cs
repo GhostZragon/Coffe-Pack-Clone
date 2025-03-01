@@ -1,12 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+[Serializable]
 public class GameData
 {
-    [JsonProperty][SerializeField] private string displayName;
-    [JsonProperty][SerializeField] private int currency;
-    [JsonProperty][SerializeField] private int lives;
+    [SerializeField] private string displayName;
+    [SerializeField] private int currency;
+    [SerializeField] private int lives;
 
-    public string DisplayName { get => displayName; }
-    public int Currency { get => currency; }
-    public int Lives { get => lives; }
-
+    public string DisplayName { get => displayName; set => displayName = value; }
+    public int Currency { get => currency; set => currency = value; }
+    public int Lives { get => lives; set => lives = value; }
 }
