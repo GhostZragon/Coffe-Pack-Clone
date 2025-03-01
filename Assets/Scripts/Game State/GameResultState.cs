@@ -1,16 +1,14 @@
 ﻿public class GameResultState : BaseState
 {
-    private ResultData resultData;
     private ResultUI resultUI;
-    public GameResultState(ResultData resultData)
+    public GameResultState()
     {
-        this.resultData = resultData;
     }
 
     protected override void Register()
     {
         base.Register();
-        resultUI = UIManager.Instance.gameplayUI.ShowResultMenu(resultData);
+        resultUI = UIManager.Instance.gameplayUI.ShowResultMenu(null);
 
         resultUI.OnReplayClicked += OnReplayClicked;
         resultUI.OnBackMenuClicked += OnBackMenuClicked;

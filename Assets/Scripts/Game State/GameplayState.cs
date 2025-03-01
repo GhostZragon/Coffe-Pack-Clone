@@ -6,7 +6,6 @@ public class GameplayState : StateWithSubStates
     private PuzzleQuestManager puzzleQuestManager;
     private DragDropSystem dragDropSystem;
     private LevelManager levelManager;
-    private ResultData resultData;
     private Table table;
     // UI
     private PuzzleQuestManagerUI PuzzleQuestManagerUI;
@@ -15,10 +14,11 @@ public class GameplayState : StateWithSubStates
     protected override void AfterPrepareState()
     {
         base.AfterPrepareState();
-     
+        
         levelManager.LoadLevel();
         UIManager.Instance.ShowGameplayUI();
         ChangeSubState<NormalPlayingState>();
+        DataManager.Instance.GetDataController<GameSessionController>().ResetSession();
     }
 
     protected override void CatchRef()
@@ -133,7 +133,7 @@ public class GameplayState : StateWithSubStates
 
     private void ChangeGameResultState()
     {
-        ChangeState(new GameResultState(resultData));
+        ChangeState(new GameResultState());
     }
     private void BackMenu()
     {

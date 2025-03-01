@@ -34,7 +34,7 @@ public class GameplayUI : BaseView
         OpenPauseMenuClicked?.Invoke();
     }
 
-    public ResultUI ShowResultMenu(ResultData resultData)
+    public ResultUI ShowResultMenu(GameSessionData resultData)
     {
         panel.gameObject.SetActive(true);
         var popup = CreatePopup(resultData);
@@ -42,9 +42,9 @@ public class GameplayUI : BaseView
         return popup;
     }
 
-    private ResultUI CreatePopup(ResultData resultData)
+    private ResultUI CreatePopup(GameSessionData resultData)
     {
-        GameObject prefab = resultData.Result == GameResult.Win ? winResultPopupPrefab : losseResultPopupPrefab;
+        GameObject prefab = resultData.GameResult == GameResult.Win ? winResultPopupPrefab : losseResultPopupPrefab;
         return Instantiate(prefab, transform).GetComponent<ResultUI>();
     }
 

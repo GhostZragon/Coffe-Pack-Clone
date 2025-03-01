@@ -29,12 +29,12 @@ public class ResultUI : MonoBehaviour
     }
     
     
-    public void Show(ResultData resultData)
+    public void Show(GameSessionData resultData)
     {
         Debug.Log("Show Result UI");
         gameObject.SetActive(true);
         
-        if(resultData.Result == GameResult.Win)
+        if(resultData.GameResult == GameResult.Win)
             LevelResultStarUI.ActiveStageUnlock(resultData.StarUnlocked);
     }
 
