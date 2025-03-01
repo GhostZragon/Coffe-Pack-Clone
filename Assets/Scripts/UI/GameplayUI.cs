@@ -7,19 +7,6 @@ public enum GameResult
     Win,
     Lose
 }
-public readonly struct ResultData
-{
-    public int StarUnlocked { get; }
-    public int CoinReward { get; }
-    public GameResult Result { get; }
-
-    public ResultData(int star, int coin, GameResult _result)
-    {
-        StarUnlocked = star;
-        CoinReward = coin;
-        Result = _result;
-    }
-}
 public class GameplayUI : BaseView
 {
     [SerializeField] private Button backButton;
@@ -29,7 +16,7 @@ public class GameplayUI : BaseView
     public QuestStageUI QuestStageUI;
     public PuzzleQuestManagerUI PuzzleQuestManagerUI;
     public Action OpenPauseMenuClicked;
-  
+
     protected override void Register()
     {
         backButton.onClick.AddListener(OpenMouseMenu);
@@ -41,7 +28,7 @@ public class GameplayUI : BaseView
         backButton.onClick.RemoveListener(OpenMouseMenu);
 
     }
-  
+
     private void OpenMouseMenu()
     {
         OpenPauseMenuClicked?.Invoke();
@@ -70,7 +57,7 @@ public class GameplayUI : BaseView
 
     public override void Hide()
     {
-        base.Hide(); 
+        base.Hide();
         panel.gameObject.SetActive(false);
 
     }

@@ -16,9 +16,8 @@ public partial class GridManager : MonoBehaviour
 
     [SerializeField] private DropDownEffect dropDownEffect;
     private Dictionary<Vector2Int, Cell> _cells = new();
-    
-    
-    
+
+
     public IReadOnlyDictionary<Vector2Int, Cell> TableMap
     {
         get => _cells;
@@ -58,7 +57,7 @@ public partial class GridManager : MonoBehaviour
         _columns = csvImport.maze.GetLength(1);
         dropDownEffect.Setup(_cells, _rows, _columns);
     }
-    
+
     private void CreateCells()
     {
         for (int i = 0; i < _rows; i++)
@@ -68,13 +67,13 @@ public partial class GridManager : MonoBehaviour
                 int value = csvImport.maze[i, j];
 
                 if (value == 0) continue;
-               
+
                 var gridPos = new Vector2Int(i, j);
                 var slot = SlotManager.Instance.GetSlot(GetSlotTypeByValue(value));
                 slot.name += $"{i} : {j}";
                 PositionSlot(slot.transform, gridPos);
                 _cells[gridPos] = new Cell(slot);
-                slot.SetSize(_cellWidth,_cellDepth);
+                slot.SetSize(_cellWidth, _cellDepth);
             }
         }
 
