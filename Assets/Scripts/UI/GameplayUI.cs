@@ -34,18 +34,22 @@ public class GameplayUI : BaseView
         OpenPauseMenuClicked?.Invoke();
     }
 
-    public ResultUI ShowResultMenu(GameSessionData resultData)
+    public ResultUI ShowResultMenu()
     {
+        var data = DataManager.Instance.GetDataController<GameSessionController>().Data;
+
         panel.gameObject.SetActive(true);
-        var popup = CreatePopup(resultData);
-        popup.Show(resultData);
+        var popup = CreatePopup(data.GameResult);
+        popup.Show();
         return popup;
     }
 
-    private ResultUI CreatePopup(GameSessionData resultData)
+    private ResultUI CreatePopup(GameResult gameResult)
     {
-        GameObject prefab = resultData.GameResult == GameResult.Win ? winResultPopupPrefab : losseResultPopupPrefab;
-        return Instantiate(prefab, transform).GetComponent<ResultUI>();
+        GameObject prefab = gameResult == GameResult.Win ? winResultPopupPrefab : losseResultPopupPrefab;
+        var resultUI = Instantiate(prefab, transform).GetComponent<ResultUI>();
+        resultUI.Initialize();
+        return resultUI;
     }
 
     public override void Show()

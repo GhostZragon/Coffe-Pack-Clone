@@ -15,6 +15,14 @@ public class ResultUI : MonoBehaviour
     public Action OnBackMenuClicked;
     public Action OnReplayClicked;
 
+    private GameSessionController gameSessionController;
+
+
+    public void Initialize()
+    {
+        gameSessionController = DataManager.Instance.GetDataController<GameSessionController>();
+    }
+
     public void BackToMenu()
     {
         OnBackMenuClicked();
@@ -29,13 +37,21 @@ public class ResultUI : MonoBehaviour
     }
     
     
-    public void Show(GameSessionData resultData)
+    public void Show()
     {
         Debug.Log("Show Result UI");
         gameObject.SetActive(true);
-        
-        if(resultData.GameResult == GameResult.Win)
-            LevelResultStarUI.ActiveStageUnlock(resultData.StarUnlocked);
+
+        if(gameSessionController == null)
+        {
+            Debug.LogError("Game session controller is null", gameObject);
+            return;
+        }
+
+        var data = gameSessionController.Data;
+
+        if(data.GameResult == GameResult.Win)
+            LevelResultStarUI.ActiveStageUnlock(data.StarUnlocked);
     }
 
    
@@ -45,4 +61,6 @@ public class ResultUI : MonoBehaviour
         Debug.Log("Hide result UI");
         gameObject.SetActive(false);
     }
+
+    
 }

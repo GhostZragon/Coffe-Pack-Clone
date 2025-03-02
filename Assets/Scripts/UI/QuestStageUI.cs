@@ -7,86 +7,129 @@ using UnityEngine.UI;
 
 public class QuestStageUI : MonoBehaviour
 {
-    [SerializeField] private Slider slider;
-    [SerializeField] private int currentStageUI = 0;
+    [Header("UI Components")]
+    [SerializeField] private Slider progressSlider;
+    [SerializeField] private LevelStarProgressUI levelStarProgressUI;
+    
+    [Header("Stage Configuration")]
+    [SerializeField] private int currentStage = 0;
+    [SerializeField] private int maxStage = 0;
 
-    private int maxStage = 0;
+    private Dictionary<int, float> stageProgressValues;
+    private GameSessionController gameSessionController;
 
-    private Dictionary<int, float> values;
-
-    public LevelStarProgressUI levelStarUI;
 
     public int GetCurrentStageUI()
     {
-        return currentStageUI;
+        return currentStage;
     }
 
-    private void Awake()
+    private void Start()
     {
         Initialize();
+
     }
 
     private void Initialize()
     {
-        slider.value = 0;
-        values = new();
+        progressSlider.value = 0;
+        stageProgressValues = new();
 
-        PuzzleQuestManager.OnSetMaxStage += SetMaxStage;
+        gameSessionController = DataManager.Instance.GetDataController<GameSessionController>();
+
+        gameSessionController.OnMaxStageChange += SetMaxStage;
+        gameSessionController.OnCurrentStageChange += HandleStageChanged;
     }
 
     private void OnDestroy()
     {
-        PuzzleQuestManager.OnSetMaxStage -= SetMaxStage;
+        gameSessionController.OnMaxStageChange -= SetMaxStage;
+        gameSessionController.OnCurrentStageChange -= HandleStageChanged;
     }
 
     [Button]
     public void SetMaxStage(int maxStage)
     {
-        Debug.Log("Set max stage: "+maxStage,gameObject);
-        
-        values.Clear();
-        
+        if (maxStage < 0)
+        {
+            Debug.LogWarning($"Invalid maxStage value: {maxStage}", this);
+            return;
+        }
+
+        Debug.Log("Set max stage: " + maxStage, gameObject);
+
+        stageProgressValues.Clear();
+
         this.maxStage = maxStage;
-        
-        slider.maxValue = this.maxStage;
-        
-        levelStarUI.SetMaxStar(this.maxStage);
-     
-        InitTweenValue(maxStage);
+
+        progressSlider.maxValue = this.maxStage;
+
+        levelStarProgressUI.SetMaxStar(this.maxStage);
+
+        CalculateStageProgressValues(maxStage);
     }
 
-    private void InitTweenValue(int maxStage)
+    private void CalculateStageProgressValues(int maxStage)
     {
-        values[0] = 0;
-        for (int i = 1; i <= maxStage; i++)
+        // Initialize dictionary with expected capacity
+        stageProgressValues = new Dictionary<int, float>(maxStage + 1);
+
+        // Stage 0 always represents 0 progress
+        stageProgressValues[0] = 0;
+
+        // Calculate normalized progress value for each stage
+        for (int stage = 1; stage <= maxStage; stage++)
         {
-            values[i] = (float)i / this.maxStage ;
+            stageProgressValues[stage] = (float)stage / this.maxStage;
         }
     }
 
-    public void OnStageChanged(int stageChanged)
+    public void HandleStageChanged(int newStage)
     {
-        if (stageChanged > maxStage) return;
-        Debug.Log("Changed stage: "+stageChanged,gameObject);
+        if (newStage > maxStage)
+        {
+            Debug.LogWarning($"Stage value {newStage} exceeds max stage {maxStage}", this);
+            return;
+        }
 
-        currentStageUI = stageChanged;
-        TweenSliderByCurrentLevel();
+        Debug.Log($"Changed stage: {newStage}", gameObject);
+        currentStage = newStage;
+        AnimateProgressBar();
     }
-    [Button]
-    private void TweenSliderByCurrentLevel()
+
+    private void AnimateProgressBar()
     {
-        var sliderValue = values[currentStageUI];
-        
-        levelStarUI.ActiveStageUnlock(currentStageUI);
-      
-        LMotion.Create(slider.value, sliderValue, 1)
-            .Bind((x) => { slider.value = x; });
+        if (progressSlider == null || levelStarProgressUI == null || !stageProgressValues.ContainsKey(currentStage))
+        {
+            Debug.LogWarning("Cannot animate progress bar - missing components or invalid stage", this);
+            return;
+        }
+
+        float targetValue = stageProgressValues[currentStage];
+        levelStarProgressUI.ActiveStageUnlock(currentStage);
+
+        // Animate the slider to the new value
+        LMotion.Create(progressSlider.value, targetValue, 1f)
+               .WithEase(Ease.OutQuad)
+               .Bind(value => progressSlider.value = value);
     }
-    
-    [Button]
+
+    /// <summary>
+    /// Resets the progress UI to the initial state
+    /// </summary>
+    [Button("Reset Progress")]
     public void ResetProgressUI()
     {
-        slider.value = 0;
-        levelStarUI.ActiveStageUnlock(0);
+        currentStage = 0;
+
+        if (progressSlider != null)
+        {
+            progressSlider.value = 0;
+        }
+
+        if (levelStarProgressUI != null)
+        {
+            levelStarProgressUI.ActiveStageUnlock(0);
+        }
     }
 }

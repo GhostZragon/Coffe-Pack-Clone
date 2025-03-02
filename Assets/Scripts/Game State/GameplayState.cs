@@ -49,7 +49,7 @@ public class GameplayState : StateWithSubStates
         levelManager.OnLooseGame += LooseGame;
         
         puzzleQuestManager.OnBindingQuestToUIAction += BidingQuestWithUI;
-        puzzleQuestManager.OnChangedStage += questStageUI.OnStageChanged;
+        //puzzleQuestManager.OnChangedStage += questStageUI.OnStageChanged;
 
         UIManager.Instance.gameplayUI.OpenPauseMenuClicked += Pause;
 
@@ -77,7 +77,7 @@ public class GameplayState : StateWithSubStates
         Slot.OnCompleteItemAction -= OnCompleteItem;
 
         puzzleQuestManager.OnBindingQuestToUIAction -= BidingQuestWithUI;
-        puzzleQuestManager.OnChangedStage -= questStageUI.OnStageChanged;
+        //puzzleQuestManager.OnChangedStage -= questStageUI.OnStageChanged;
 
         
         table.OnProcressComplete -= OnProcessComplete;
