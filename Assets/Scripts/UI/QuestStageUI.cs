@@ -57,14 +57,9 @@ public class QuestStageUI : MonoBehaviour
         }
 
         Debug.Log("Set max stage: " + maxStage, gameObject);
-
         stageProgressValues.Clear();
-
+        levelStarProgressUI.SetMaxStar(maxStage);
         this.maxStage = maxStage;
-
-        progressSlider.maxValue = this.maxStage;
-
-        levelStarProgressUI.SetMaxStar(this.maxStage);
 
         CalculateStageProgressValues(maxStage);
     }
@@ -72,15 +67,12 @@ public class QuestStageUI : MonoBehaviour
     private void CalculateStageProgressValues(int maxStage)
     {
         // Initialize dictionary with expected capacity
-        stageProgressValues = new Dictionary<int, float>(maxStage + 1);
+        progressSlider.maxValue = 1f;
 
-        // Stage 0 always represents 0 progress
-        stageProgressValues[0] = 0;
-
-        // Calculate normalized progress value for each stage
+        float progressStep = 1f / maxStage;
         for (int stage = 1; stage <= maxStage; stage++)
         {
-            stageProgressValues[stage] = (float)stage / this.maxStage;
+            stageProgressValues[stage] = stage * progressStep;
         }
     }
 
