@@ -5,11 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GameSessionController", menuName = "DataController/Game Session Controller")]
 public class GameSessionController: RuntimeDataController<GameSessionData>
 {
-    public delegate void DataChangedHandler(GameSessionData data);
-    public delegate void SpecificValueChangedHandler(int newValue);
-
     public event SpecificValueChangedHandler OnMaxStageChange;
     public event SpecificValueChangedHandler OnCurrentStageChange;
+    public event SpecificValueChangedHandler OnRewardCoinChange;
 
     public override Task LoadData()
     {
@@ -44,15 +42,27 @@ public class GameSessionController: RuntimeDataController<GameSessionData>
         _data.MaxStage = newMaxStage;
         OnMaxStageChange?.Invoke(_data.MaxStage);
     }
+    
+    public void AddRewardCoin(int amount)
+    {
+        _data.CoinReward += amount;
+        OnRewardCoinChange?.Invoke(_data.CoinReward);
+    }
 
     public void IncreaseCurrentStage()
     {
         SetCurrentStage(_data.CurrentStage += 1);
+        _data.StarUnlocked += 1;
     }
 
     public int GetCurrentStage()
     {
         return _data.CurrentStage;
+    }
+
+    public void SetGameResult(GameResult gameResult)
+    {
+        _data.GameResult = gameResult;
     }
 
     public GameSessionData Data => _data;

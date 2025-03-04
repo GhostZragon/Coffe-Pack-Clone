@@ -13,21 +13,34 @@ public class GameplayUI : BaseView
     [SerializeField] private GameObject losseResultPopupPrefab;
     [SerializeField] private GameObject winResultPopupPrefab;
     [SerializeField] private GameObject panel;
+
+
     public QuestStageUI QuestStageUI;
     public PuzzleQuestManagerUI PuzzleQuestManagerUI;
     public Action OpenPauseMenuClicked;
+
+    private GameSessionController gameSessionController;
+
+    private void Start()
+    {
+        gameSessionController = DataManager.Instance.GetDataController<GameSessionController>();
+    }
 
     protected override void Register()
     {
         backButton.onClick.AddListener(OpenMouseMenu);
         panel.gameObject.SetActive(false);
+
     }
 
+    
     protected override void UnRegister()
     {
         backButton.onClick.RemoveListener(OpenMouseMenu);
 
     }
+
+  
 
     private void OpenMouseMenu()
     {
@@ -36,7 +49,7 @@ public class GameplayUI : BaseView
 
     public ResultUI ShowResultMenu()
     {
-        var data = DataManager.Instance.GetDataController<GameSessionController>().Data;
+        var data = gameSessionController.Data;
 
         panel.gameObject.SetActive(true);
         var popup = CreatePopup(data.GameResult);

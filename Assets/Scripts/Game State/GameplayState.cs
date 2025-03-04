@@ -1,4 +1,6 @@
-﻿using Object = UnityEngine.Object;
+﻿using System.Collections;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 public class GameplayState : StateWithSubStates
 {
@@ -11,6 +13,8 @@ public class GameplayState : StateWithSubStates
     private PuzzleQuestManagerUI PuzzleQuestManagerUI;
     private QuestStageUI questStageUI;
 
+    private GameSessionController gameSessionController;
+
     protected override void AfterPrepareState()
     {
         base.AfterPrepareState();
@@ -18,7 +22,8 @@ public class GameplayState : StateWithSubStates
         levelManager.LoadLevel();
         UIManager.Instance.ShowGameplayUI();
         ChangeSubState<NormalPlayingState>();
-        DataManager.Instance.GetDataController<GameSessionController>().ResetSession();
+        gameSessionController = DataManager.Instance.GetDataController<GameSessionController>();
+        gameSessionController.ResetSession();
     }
 
     protected override void CatchRef()
@@ -38,6 +43,7 @@ public class GameplayState : StateWithSubStates
         
         RegisterSubState(new NormalPlayingState(this));
         RegisterSubState(new PauseGameState(this));
+        RegisterSubState(new EndGameplayState(this));
 
         Slot.OnMergeSlotAction += MergeSlot;
         BlockingSlot.OnReplaceSlotAction += OnReplaceSlot;
@@ -122,19 +128,24 @@ public class GameplayState : StateWithSubStates
     private void LooseGame()
     {
         // init resultData
-        ChangeGameResultState();
+        gameSessionController.SetGameResult(GameResult.Lose);
+
+        EndGame();
     }
 
     private void WinGame()
     {
         // init resultData
-        ChangeGameResultState();
+        gameSessionController.SetGameResult(GameResult.Win);
+        EndGame();
     }
 
-    private void ChangeGameResultState()
+    private void EndGame()
     {
-        ChangeState(new GameResultState());
+        //ChangeState(new GameResultState());
+        ChangeSubState<EndGameplayState>();
     }
+
     private void BackMenu()
     {
         ChangeState(new MainMenuState());
@@ -143,6 +154,11 @@ public class GameplayState : StateWithSubStates
     private void Resume()
     {       
         ChangeSubState<NormalPlayingState>();
+    }
+
+    private void ChangeToResultState()
+    {
+        ChangeState(new GameResultState());
     }
 
     private void Pause()
@@ -203,7 +219,42 @@ public class GameplayState : StateWithSubStates
             // Hide Pause UI 
         }
     }
-    
+
+    public class EndGameplayState : ISubState
+    {
+        private readonly GameplayState gameplayState;
+        public EndGameplayState(GameplayState gameplayState)
+        {
+            this.gameplayState = gameplayState;
+        }
+        public void Enter()
+        {
+            // chay animation add coin
+            // cứ mỗi star active là + 5 coin
+            // nếu win thì cộng + 10 coin
+            var data = gameplayState.gameSessionController.Data;
+            int rewardCoin = data.StarUnlocked * 5;
+            int winLevelCoin = data.GameResult == GameResult.Win ? 10 : 0;
+
+            gameplayState.gameSessionController.AddRewardCoin(rewardCoin + winLevelCoin);
+            gameplayState.levelManager.StartCoroutine(WaitOneSecond());
+
+            // using some effect for clearing table 
+        }
+
+        private IEnumerator WaitOneSecond()
+        {
+            Debug.Log("================");
+
+            Debug.Log("Wait for one second");
+            yield return new WaitForSeconds(1);
+            gameplayState.ChangeToResultState();
+        }
+
+        public void Exit()
+        {
+        }
+    }
 }
 // tutorial state
 // pause game state

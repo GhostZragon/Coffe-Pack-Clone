@@ -1,4 +1,9 @@
-﻿public class GameResultState : BaseState
+﻿using LitMotion;
+using LitMotion.Extensions;
+using System.Collections;
+using UnityEngine;
+
+public class GameResultState : BaseState
 {
     private ResultUI resultUI;
   
@@ -10,6 +15,7 @@
 
         resultUI.OnReplayClicked += OnReplayClicked;
         resultUI.OnBackMenuClicked += OnBackMenuClicked;
+        PlayIncreaseCoinEffect();
     }
 
     protected override void UnRegister()
@@ -17,6 +23,19 @@
         base.UnRegister();
         resultUI.OnReplayClicked -= OnReplayClicked;
         resultUI.OnBackMenuClicked -= OnBackMenuClicked;
+    }
+
+    private void PlayIncreaseCoinEffect()
+    {
+        var gameSessionController = DataManager.Instance.GetDataController<GameSessionController>();
+
+        resultUI.UpdateRewardCoinText(gameSessionController.Data.CoinReward);
+    }
+
+    private void CompleteEffectImmediate()
+    {
+        // add in future
+        resultUI.motionHandles.Complete();
     }
 
     private void OnBackMenuClicked()
