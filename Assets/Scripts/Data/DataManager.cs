@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
-
+[DefaultExecutionOrder(-99)]
 public class DataManager : MonoBehaviour
 {
     [SerializeField] private DataController[] _controllers;
