@@ -1,37 +1,15 @@
+using LitMotion;
+using LitMotion.Extensions;
+using System;
 using UnityEngine;
-using UnityEngine.UI;
-
-public class LevelStarUI : MonoBehaviour
+public class LevelStarUI : LevelStarUIBase
 {
-    [SerializeField] protected Image[] images;
-
-    [SerializeField] protected LevelStarSprites levelStarSprites;
-    
-    
-    
-    public virtual void ActiveStageUnlock(int count)
+    [SerializeField] private bool canAnimated = false;
+    [SerializeField] private float timer = 0;
+    [SerializeField] private float animatedTimer = 2f;
+    public void SetAnimated(bool canAnimated)
     {
-        count = Mathf.Clamp(count, 0, 3);
-
-        for (int i = 0; i < images.Length; i++)
-        {
-            ActiveStar(i, i <= count - 1);
-        }
+        this.canAnimated = canAnimated;
+        animatedTimer = 0;
     }
-
-    protected virtual void ActiveStar(int index, bool isUnlock)
-    {
-        images[index].sprite =  isUnlock ? levelStarSprites.unlockSprite : levelStarSprites.lockSprite;
-    }
-
-    public Vector3 GetTargetPositionByIndex(int starIndex)
-    {
-        return images[starIndex].transform.position;
-    }
-
-    public virtual void SetMaxStar(int count)
-    {
-        
-    }
-    
 }

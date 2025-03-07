@@ -16,7 +16,9 @@ public class MainMenuState : BaseState
         UIManager.Instance.ShowMenuUI();
         // init level map
         levelSelection.SettingsLevel();
-        levelPanelUI.Initialize(levelSelection.MaxLevel);
+        //levelPanelUI.Initialize(levelSelection.MaxLevel);
+        levelPanelUI.Initialize(25);
+
         // Invoke event
         UIManager.Instance.menuUI.OnSelectLevel?.Invoke(levelSelection.CurrentLevel);
     }

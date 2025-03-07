@@ -31,7 +31,7 @@ public class LevelPanelUI : MonoBehaviour
             break;
         }
     }
-
+    [Button]
     public void Initialize(int maxLevel)
     {
         Debug.Log("Max Level: "+maxLevel);

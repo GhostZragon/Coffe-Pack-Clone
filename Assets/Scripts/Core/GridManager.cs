@@ -35,6 +35,7 @@ public partial class GridManager : MonoBehaviour
     public void InitializeGrid()
     {
         csvImport.Init();
+      
         CalculateGridOrigin();
         SettingBeforeCreateCells();
         CreateCells();
