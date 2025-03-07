@@ -6,6 +6,7 @@ using UnityEngine;
 
 public partial class GridManager : MonoBehaviour
 {
+    public static GridManager instance;
     [SerializeField] private int _rows = 4;
     [SerializeField] private int _columns = 4;
     [SerializeField] private float _spacing = 1f;
@@ -17,7 +18,6 @@ public partial class GridManager : MonoBehaviour
     [SerializeField] private DropDownEffect dropDownEffect;
     private Dictionary<Vector2Int, Cell> _cells = new();
 
-
     public IReadOnlyDictionary<Vector2Int, Cell> TableMap
     {
         get => _cells;
@@ -27,6 +27,7 @@ public partial class GridManager : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
         alignCamera = GetComponent<AlignCamera>();
     }
 
@@ -37,8 +38,16 @@ public partial class GridManager : MonoBehaviour
         CalculateGridOrigin();
         SettingBeforeCreateCells();
         CreateCells();
+        
+        alignCamera.ClearBounds();
         alignCamera.UpdateBound();
         alignCamera.UpdateOffsetLength();
+        alignCamera.SetTrayToCenter();
+    }
+
+    public Vector2 GetCellSize()
+    {
+        return new Vector2(_cellWidth,_cellDepth );
     }
 
     public Cell GetCell(Vector2Int gridPos) => _cells.TryGetValue(gridPos, out var cell) ? cell : null;
@@ -73,7 +82,6 @@ public partial class GridManager : MonoBehaviour
                 slot.name += $"{i} : {j}";
                 PositionSlot(slot.transform, gridPos);
                 _cells[gridPos] = new Cell(slot);
-                slot.SetSize(_cellWidth, _cellDepth);
             }
         }
 

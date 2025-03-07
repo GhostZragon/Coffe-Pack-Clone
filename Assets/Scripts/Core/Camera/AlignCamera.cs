@@ -1,4 +1,5 @@
 using Sirenix.OdinInspector;
+using System;
 using UnityEngine;
 
 public class AlignCamera : MonoBehaviour
@@ -77,5 +78,19 @@ public class AlignCamera : MonoBehaviour
     {
         offsetLength = Mathf.Max(bounds.extents.x, bounds.extents.z) * 10;
         offsetLength += offsetLength * 0.15f;
+    }
+
+    public void ClearBounds()
+    {
+        bounds = new();
+    }
+
+    public void SetTrayToCenter()
+    {
+        var trayPos = TrayManager.instance.transform.position;
+
+        trayPos.x = bounds.center.x;
+
+        TrayManager.instance.transform.position = trayPos;
     }
 }

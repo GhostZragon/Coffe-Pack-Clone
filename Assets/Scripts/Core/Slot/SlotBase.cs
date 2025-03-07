@@ -1,11 +1,18 @@
 ﻿using LitMotion;
 using LitMotion.Extensions;
 using Sirenix.OdinInspector;
+using System;
 using UnityEngine;
 
 public abstract class SlotBase : MonoBehaviour
 {
     [SerializeField] protected Transform model;
+
+    protected virtual void Awake()
+    {
+        InitBySize();
+    }
+
     public abstract bool CanPlacedTray();
     public abstract void ActiveSpecialEffect();
 
@@ -48,6 +55,12 @@ public abstract class SlotBase : MonoBehaviour
     protected virtual void OnDestroy()
     {
         sequenceHandler.TryCancel();
+    }
+
+    public void InitBySize()
+    {
+        var size = GridManager.instance.GetCellSize();
+        SetSize(size.x, size.y);
     }
 }
 
