@@ -18,7 +18,7 @@ public class GameplayState : StateWithSubStates
     protected override void AfterPrepareState()
     {
         base.AfterPrepareState();
-        
+
         levelManager.LoadLevel();
         UIManager.Instance.ShowGameplayUI();
         ChangeSubState<NormalPlayingState>();
@@ -32,7 +32,7 @@ public class GameplayState : StateWithSubStates
         puzzleQuestManager = levelManager.puzzleQuestManager;
         table = levelManager.table;
         dragDropSystem = levelManager.dragDropSystem;
-        
+
         questStageUI = UIManager.Instance.gameplayUI.QuestStageUI;
         PuzzleQuestManagerUI = UIManager.Instance.gameplayUI.PuzzleQuestManagerUI;
     }
@@ -40,7 +40,7 @@ public class GameplayState : StateWithSubStates
     protected override void Register()
     {
         base.Register();
-        
+
         RegisterSubState(new NormalPlayingState(this));
         RegisterSubState(new PauseGameState(this));
         RegisterSubState(new EndGameplayState(this));
@@ -49,11 +49,11 @@ public class GameplayState : StateWithSubStates
         BlockingSlot.OnReplaceSlotAction += OnReplaceSlot;
         Slot.OnDestroyBlockingBlockAroundAction += OnDestroyBlockingBlockAround;
         Slot.OnCompleteItemAction += OnCompleteItem;
-        
+
         table.OnProcressComplete += OnProcessComplete;
         levelManager.OnWinGame += WinGame;
         levelManager.OnLooseGame += LooseGame;
-        
+
         puzzleQuestManager.OnBindingQuestToUIAction += BidingQuestWithUI;
         //puzzleQuestManager.OnChangedStage += questStageUI.OnStageChanged;
 
@@ -72,11 +72,11 @@ public class GameplayState : StateWithSubStates
         levelManager.UnLoadLevel();
         questStageUI.ResetProgressUI();
     }
-    
+
     protected override void UnRegister()
     {
         base.UnRegister();
-        
+
         Slot.OnMergeSlotAction -= MergeSlot;
         BlockingSlot.OnReplaceSlotAction -= OnReplaceSlot;
         Slot.OnDestroyBlockingBlockAroundAction -= OnDestroyBlockingBlockAround;
@@ -85,11 +85,11 @@ public class GameplayState : StateWithSubStates
         puzzleQuestManager.OnBindingQuestToUIAction -= BidingQuestWithUI;
         //puzzleQuestManager.OnChangedStage -= questStageUI.OnStageChanged;
 
-        
+
         table.OnProcressComplete -= OnProcessComplete;
         levelManager.OnWinGame -= WinGame;
         levelManager.OnLooseGame -= LooseGame;
-        
+
         UIManager.Instance.gameplayUI.OpenPauseMenuClicked -= Pause;
     }
 
@@ -97,7 +97,7 @@ public class GameplayState : StateWithSubStates
     {
         puzzleQuestManager.OnCompleteItem(itemInfo);
     }
-    
+
     private void OnDestroyBlockingBlockAround(SlotBase slotBase)
     {
         table.DestroyBlockingSlotAround(slotBase);
@@ -105,14 +105,14 @@ public class GameplayState : StateWithSubStates
 
     private void OnReplaceSlot(SlotBase slot1, SlotBase slot2)
     {
-        table.ReplaceSlot(slot1,slot2);
+        table.ReplaceSlot(slot1, slot2);
     }
 
     private void MergeSlot(Slot slot)
     {
         table.mergeSystem.TryMergeAtSlot(slot);
     }
-    
+
 
     private void BidingQuestWithUI(InGameQuestData inGameQuestData)
     {
@@ -124,7 +124,7 @@ public class GameplayState : StateWithSubStates
     {
         levelManager.OnProcessComplete();
     }
-    
+
     private void LooseGame()
     {
         // init resultData
@@ -152,7 +152,7 @@ public class GameplayState : StateWithSubStates
     }
 
     private void Resume()
-    {       
+    {
         ChangeSubState<NormalPlayingState>();
     }
 
@@ -172,7 +172,7 @@ public class GameplayState : StateWithSubStates
         levelManager.LoadLevel();
         ChangeSubState<NormalPlayingState>();
     }
-    
+
     private class NormalPlayingState : ISubState
     {
         private GameplayState gameplayState;
@@ -203,7 +203,7 @@ public class GameplayState : StateWithSubStates
             // Show Pause UI
             pauseUI = UIManager.Instance.pauseUI;
             pauseUI.Show();
-            
+
             pauseUI.OnResumeClicked += gameplayState.Resume;
             pauseUI.OnBackMainMenuClicked += gameplayState.BackMenu;
             pauseUI.OnResetButtonClicked += gameplayState.ResetGameplay;
@@ -211,10 +211,10 @@ public class GameplayState : StateWithSubStates
 
         public void Exit()
         {
-            pauseUI.OnResumeClicked += gameplayState.Resume;
+            pauseUI.OnResumeClicked -= gameplayState.Resume;
             pauseUI.OnBackMainMenuClicked -= gameplayState.BackMenu;
             pauseUI.OnResetButtonClicked -= gameplayState.ResetGameplay;
-           
+
             pauseUI.Hide();
             // Hide Pause UI 
         }
