@@ -7,58 +7,62 @@ public enum GameResult
     Win,
     Lose
 }
-public readonly struct ResultData
-{
-    public int StarUnlocked { get; }
-    public int CoinReward { get; }
-    public GameResult Result { get; }
-
-    public ResultData(int star, int coin, GameResult _result)
-    {
-        StarUnlocked = star;
-        CoinReward = coin;
-        Result = _result;
-    }
-}
 public class GameplayUI : BaseView
 {
     [SerializeField] private Button backButton;
     [SerializeField] private GameObject losseResultPopupPrefab;
     [SerializeField] private GameObject winResultPopupPrefab;
     [SerializeField] private GameObject panel;
+
+
     public QuestStageUI QuestStageUI;
     public PuzzleQuestManagerUI PuzzleQuestManagerUI;
     public Action OpenPauseMenuClicked;
-  
+
+    private GameSessionController gameSessionController;
+
+    private void Start()
+    {
+        gameSessionController = DataManager.Instance.GetDataController<GameSessionController>();
+    }
+
     protected override void Register()
     {
         backButton.onClick.AddListener(OpenMouseMenu);
         panel.gameObject.SetActive(false);
+
     }
 
+    
     protected override void UnRegister()
     {
         backButton.onClick.RemoveListener(OpenMouseMenu);
 
     }
+
   
+
     private void OpenMouseMenu()
     {
         OpenPauseMenuClicked?.Invoke();
     }
 
-    public ResultUI ShowResultMenu(ResultData resultData)
+    public ResultUI ShowResultMenu()
     {
+        var data = gameSessionController.Data;
+
         panel.gameObject.SetActive(true);
-        var popup = CreatePopup(resultData);
-        popup.Show(resultData);
+        var popup = CreatePopup(data.GameResult);
+        popup.Show();
         return popup;
     }
 
-    private ResultUI CreatePopup(ResultData resultData)
+    private ResultUI CreatePopup(GameResult gameResult)
     {
-        GameObject prefab = resultData.Result == GameResult.Win ? winResultPopupPrefab : losseResultPopupPrefab;
-        return Instantiate(prefab, transform).GetComponent<ResultUI>();
+        GameObject prefab = gameResult == GameResult.Win ? winResultPopupPrefab : losseResultPopupPrefab;
+        var resultUI = Instantiate(prefab, transform).GetComponent<ResultUI>();
+        resultUI.Initialize();
+        return resultUI;
     }
 
     public override void Show()
@@ -70,7 +74,7 @@ public class GameplayUI : BaseView
 
     public override void Hide()
     {
-        base.Hide(); 
+        base.Hide();
         panel.gameObject.SetActive(false);
 
     }

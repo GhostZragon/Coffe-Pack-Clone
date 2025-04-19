@@ -59,8 +59,9 @@ public class LevelUI : MonoBehaviour
         
         lockedButton.gameObject.SetActive(!isUnlock);
         selectButton.gameObject.SetActive(isUnlock);
+       
         levelStarUI.gameObject.SetActive(isUnlock);
-        
+        levelStarUI.SetAnimated(isUnlock);
         levelStarUI.ActiveStageUnlock(GetStageCompleteCount());
     }
 

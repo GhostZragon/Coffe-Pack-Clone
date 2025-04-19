@@ -5,7 +5,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LevelStarProgressUI : LevelStarUI
+public class LevelStarProgressUI : LevelStarUIBase
 {
     [SerializeField] private int Frequency = 2;
     [SerializeField] private int Damping_Ratio  = 10;

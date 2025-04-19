@@ -30,8 +30,9 @@ public class Slot : SlotBase
     public static Action<Slot> OnMergeSlotAction;
     public static Action<SlotBase> OnDestroyBlockingBlockAroundAction;
     public static Action<ItemInfo> OnCompleteItemAction;
-    protected void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         currentScale = transform.localScale;
         handles = new CompositeMotionHandle();
     }

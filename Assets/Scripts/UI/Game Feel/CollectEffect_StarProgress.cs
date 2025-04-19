@@ -5,7 +5,7 @@ using UnityEngine;
 public class CollectEffect_StarProgress : QuestCollectEffectBase
 {
     [SerializeField] private QuestStageUI questStageUI;
-
+    [SerializeField] private LevelStarProgressUI levelStarProgressUI;
     private void Awake()
     {
         trailPrefab.gameObject.SetActive(false);
@@ -14,10 +14,8 @@ public class CollectEffect_StarProgress : QuestCollectEffectBase
     [Button]
     public override void CreateTrail(Vector3 worldPos)
     {
-        // create trail
-
         var currentStage = questStageUI.GetCurrentStageUI();
-        var startWorldPos = questStageUI.levelStarUI.GetStarPositionByIndex(currentStage);
+        var startWorldPos = levelStarProgressUI.GetTargetPositionByIndex(currentStage);
 
         var effect = Instantiate(trailPrefab, worldPos, Quaternion.identity, transform);
         effect.gameObject.SetActive(true);
@@ -27,7 +25,7 @@ public class CollectEffect_StarProgress : QuestCollectEffectBase
         LMotion.Create(0f, 1f, 1)
             .WithOnComplete(() =>
             {
-                questStageUI.levelStarUI.CollectPointEffect(currentStage);
+                levelStarProgressUI.CollectPointEffect(currentStage);
                 Destroy(effect.gameObject);
             })
             .Bind((x) =>

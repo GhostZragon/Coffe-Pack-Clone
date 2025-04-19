@@ -9,6 +9,7 @@ public class LevelSelection : MonoBehaviour
     public int CurrentLevel { get; private set; }
     public int MaxLevel { get; private set; }
 
+    public int UnlockedLevel;
 
     
     public void SetLevel(int levelIndex)
@@ -27,9 +28,9 @@ public class LevelSelection : MonoBehaviour
 
     }
     
-    public bool IsLevelUnlock(int i)
+    public bool IsLevelUnlock(int level)
     {
-        return true;
+        return level <= UnlockedLevel;
     }
 
     public LevelConfig GetCurrentLevelConfig()
