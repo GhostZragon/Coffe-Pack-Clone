@@ -12,4 +12,6 @@
 
 ## Current Project state (Old)
 
-![Unity_FqesxLkf30](https://github.com/user-attachments/assets/54a1b90c-00b4-45a5-9e90-b1ed03d21fcb)
+<img src="https://github.com/user-attachments/assets/54a1b90c-00b4-45a5-9e90-b1ed03d21fcb" alt="Unity_FqesxLkf30" width="300"/>
+<img src="https://github.com/user-attachments/assets/b79a023b-7955-4f7e-8e5c-de61fb69d95b" alt="coffee-pack-1" width="300"/>
+<img src="https://github.com/user-attachments/assets/59f45ab1-a8ce-4934-a793-c4efad7733a7" alt="coffee-pack-2" width="300"/>
