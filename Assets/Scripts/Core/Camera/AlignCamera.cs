@@ -26,6 +26,10 @@ public class AlignCamera : MonoBehaviour
         if (map == null) return;
         Gizmos.DrawWireCube(bounds.center, bounds.size);
         Gizmos.DrawWireSphere(bounds.center, CalculateBoxRadius());
+    }
+
+    private void Update()
+    {
         DrawLine();
     }
 
@@ -66,8 +70,8 @@ public class AlignCamera : MonoBehaviour
         // Tính điểm cuối
         Vector3 endPoint = startPoint + rotatedDirection * (CalculateBoxRadius() + offsetLength);
         
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawLine(startPoint, endPoint);
+        //Gizmos.color = Color.cyan;
+        //Gizmos.DrawLine(startPoint, endPoint);
 
         if (mainCam == null) return;
         mainCam.transform.position = endPoint;
